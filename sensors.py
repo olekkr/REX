@@ -1,5 +1,5 @@
 import robot
-from time import sleep time
+from time import sleeptime
 
 
 arlo = robot.Robot()
@@ -7,5 +7,3 @@ arlo = robot.Robot()
 print("Running")
 
 print(arlo.read_sensor(0))
-
-
