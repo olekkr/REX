@@ -25,8 +25,8 @@ def right():
 
 while 1:
     front = arlo.read_sensor(0)
-    left = arlo.read_sensor(2)
-    right = arlo.read_sensor(3)
+    lefts = arlo.read_sensor(2)
+    rights = arlo.read_sensor(3)
 
     print("Front: ", front)
     if front > 300:
@@ -38,7 +38,7 @@ while 1:
     if can_drive:
         move()
     else:
-        if left > right:
+        if lefts > rights:
             left()
         else:
             right()
