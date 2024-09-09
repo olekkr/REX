@@ -8,6 +8,7 @@ import sys
 arlo = robot.Robot()
 
 speed = 50
+tspeed = 25
 can_drive = True
 
 def move():
@@ -16,11 +17,11 @@ def move():
 
 def left():
     print("running left")
-    print(arlo.go_diff(speed//2, speed//2, 0, 1))
+    print(arlo.go_diff(tspeed,tspeed , 0, 1))
 
 def right():
     print("running right")
-    print(arlo.go_diff(speed//2, speed//2, 1, 0))
+    print(arlo.go_diff(tspeed, tspeed, 1, 0))
 
 
 while 1:
