@@ -1,19 +1,19 @@
 lasse:
-	git checkout lasse
+	git switch lasse
 	git fetch
 	git pull
 
 oliver:
-	git checkout Oliverbranch
+	git switch Oliverbranch
 	git fetch
 	git pull
 
 olek:
-	git checkout olek
+	git switch olek
 	git fetch
 	git pull
 
 shatin:
-	git checkout shatin
+	git switch shatin
 	git fetch
 	git pull
