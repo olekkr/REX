@@ -38,4 +38,7 @@ while 1:
     if can_drive:
         move()
     else:
-        print(arlo.stop())
+        if left > right:
+            left()
+        else:
+            right()
