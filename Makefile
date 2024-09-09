@@ -1,19 +1,19 @@
 lasse:
-	git checkout origin/lasse
+	git checkout lasse
 	git fetch
 	git pull
 
 oliver:
-	git checkout origin/Oliverbranch
+	git checkout Oliverbranch
 	git fetch
 	git pull
 
 olek:
-	git checkout origin/olek
+	git checkout olek
 	git fetch
 	git pull
 
 shatin:
-	git checkout origin/shatin
+	git checkout shatin
 	git fetch
 	git pull
