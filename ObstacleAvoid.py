@@ -28,9 +28,11 @@ while 1:
     left = arlo.read_sensor(2)
     right = arlo.read_sensor(3)
 
+    print("Front: ", front)
     if front < 300:
         can_drive = True
     else:
+        print("Stopping")
         can_drive = False
 
     if can_drive:
