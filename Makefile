@@ -1,3 +1,8 @@
+main:
+	git switch main
+	git fetch
+	git pull
+
 lasse:
 	git switch lasse
 	git fetch
