@@ -1,5 +1,5 @@
 import robot
-from time import sleep time
+from time import sleep 
 
 
 arlo = robot.Robot()
