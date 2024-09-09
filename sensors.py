@@ -8,7 +8,7 @@ print("Running")
 while 1:
     #print(arlo.read_sensor(0))
     print("R")
-    print(arlo.read_sensor(1, 2, 3, 4))
+    print(arlo.read_sensor(1))
     t.sleep(1)
 
 
