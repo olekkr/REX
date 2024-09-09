@@ -7,8 +7,8 @@ import sys
 
 arlo = robot.Robot()
 
-speed = 50
-tspeed = 40
+speed = 40
+tspeed = 35
 can_drive = True
 
 def move():
