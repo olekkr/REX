@@ -37,3 +37,5 @@ while 1:
 
     if can_drive:
         move()
+    else:
+        arlo.stop()
