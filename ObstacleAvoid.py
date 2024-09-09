@@ -30,7 +30,7 @@ while 1:
     rights = arlo.read_sensor(3)
 
     print("Front: ", front)
-    if front > 300:
+    if front > 300 and lefts > 300 and rights > 300:
         can_drive = True
     else:
         print("Stopping")
@@ -43,3 +43,5 @@ while 1:
             left()
         else:
             right()
+
+### MAKE CHECKS ON LEFT AND RIGHT SO IT WONT CRASH INTO WALLS WHEN TURNING LIKE FRONT SENSOR
