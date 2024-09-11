@@ -6,17 +6,18 @@ arlo = robot.Robot()
 print("Running")
 
 i = 1
+sensor = 1
 while i:
     #print(arlo.read_sensor(0))
-    s1 = arlo.read_sensor(1)
+    s1 = arlo.read_sensor(sensor)
     t.sleep(1)
-    s2 = arlo.read_sensor(1)
+    s2 = arlo.read_sensor(sensor)
     t.sleep(1)
-    s3 = arlo.read_sensor(1)
+    s3 = arlo.read_sensor(sensor)
     t.sleep(1)
-    s4 = arlo.read_sensor(1)
+    s4 = arlo.read_sensor(sensor)
     t.sleep(1)
-    s5 = arlo.read_sensor(1)
+    s5 = arlo.read_sensor(sensor)
     t.sleep(1)
     print((s1 + s2 + s3 + s4 + s5) / 5)
     i = 0
