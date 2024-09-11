@@ -6,7 +6,9 @@ arlo = robot.Robot()
 print("Running")
 
 i = 1
-sensor = 1
+sensor = 3
+
+# 0 = front, 2 = left, 3 = right, 1 = back
 while i:
     #print(arlo.read_sensor(0))
     s1 = arlo.read_sensor(sensor)
