@@ -6,7 +6,7 @@ arlo = robot.Robot()
 print("Running")
 
 i = 1
-sensor = 2
+sensor = 1
 while i:
     #print(arlo.read_sensor(0))
     s1 = arlo.read_sensor(sensor)
@@ -28,8 +28,8 @@ while i:
     i = 0
 
 
-#       Front                           Right           Left                Back
-# 10    111 111 111 111 111 = 111.4     10 cm, 120      10 cm, 114          10, 130
+#       Front                           Right           Left                                Back
+# 10    111 111 111 111 111 = 111.4     10 cm, 120      114 114 115 114 115 = 111,4          10, 130
 # 50    506            50 cm, 506      50 cm, 507          50, 517-518
 # 100   1007          100,1015        100, 1015           100, 1025-1028
 # 150   1485          150,1494        150, 1493           150, 1487
