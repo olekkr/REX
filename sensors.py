@@ -10,21 +10,26 @@ sensor = 0
 while i:
     #print(arlo.read_sensor(0))
     s1 = arlo.read_sensor(sensor)
+    print(s1)
     t.sleep(1)
     s2 = arlo.read_sensor(sensor)
+    print(s2)
     t.sleep(1)
     s3 = arlo.read_sensor(sensor)
+    print(s3)
     t.sleep(1)
     s4 = arlo.read_sensor(sensor)
+    print(s4)
     t.sleep(1)
     s5 = arlo.read_sensor(sensor)
+    print(s5)
     t.sleep(1)
     print((s1 + s2 + s3 + s4 + s5) / 5)
     i = 0
 
 
 #       Front                 Right           Left                Back
-# 10    130            10 cm, 120      10 cm, 114          10, 130
+# 10    111.4            10 cm, 120      10 cm, 114          10, 130
 # 50    506            50 cm, 506      50 cm, 507          50, 517-518
 # 100   1007          100,1015        100, 1015           100, 1025-1028
 # 150   1485          150,1494        150, 1493           150, 1487
