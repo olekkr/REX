@@ -169,7 +169,7 @@ while 1:
 
         if imgcX in close_x and imgcY in close_y:
             drive_straight(i)
-        elif bottomLeft[0] < imgcX and bottomRight[1] < imgcY:
+        elif bottomLeft[0] > imgcX:
             turn_right()
         else:
             i = turn_left(i)
