@@ -129,7 +129,7 @@ while 1 and __name__ == "__main__":
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
-        print("a",np.linalg.norm(a))
+        # print("a",np.linalg.norm(a))
         marker_map = ([ax for ((ax, ay, az),) in a],[az for ((ax, ay, az),) in a])
         update_line(hl, marker_map)
     try:
