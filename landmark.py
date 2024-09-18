@@ -147,13 +147,13 @@ while 1 and __name__ == "__main__":
                 2,
             )
             print("[INFO] ArUco marker ID: {}".format(markerID))
-
+            print(len(corners), CameraMatrix(preview_downscale), DistortionCoefficient)
             print(
                 cv2.aruco.estimatePoseSingleMarkers(
                     corners,
                     markerHeight,
-                    CameraMatrix(preview_downscale).astype('float32'),
-                    DistortionCoefficient.astype('float32'),
+                    CameraMatrix(preview_downscale),
+                    DistortionCoefficient,
                 )
             )
 
