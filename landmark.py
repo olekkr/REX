@@ -38,7 +38,7 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 def detect(image_inp):
-    print(image_inp.shape)
+    # print(image_inp.shape)
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
@@ -83,7 +83,7 @@ def cam_on():
 
     while True:
         im = picam2.capture_array("main")
-        print(im.shape)
+        # print(im.shape)
         return im
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         print(detect(grey))
@@ -116,8 +116,8 @@ while 1 and __name__ == "__main__":
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
         # flatten the ArUco IDs list
-        print("id", ids)
-        print("corners", corners)
+        # print("id", ids)
+        # print("corners", corners)
         # ids = ids.flatten()
         # loop over the detected ArUCo corners
         # for markerCorner, markerID in zip(corners, ids):
@@ -151,13 +151,13 @@ while 1 and __name__ == "__main__":
         #         2,
         #     )
         #     print("[INFO] ArUco marker ID: {}".format(markerID))
-        print(
-            len(corners),
-            corners,
-            CameraMatrix,
-            DistortionCoefficient,
-            sep="\n",
-        )
+        # print(
+        #     len(corners),
+        #     corners,
+        #     CameraMatrix,
+        #     DistortionCoefficient,
+        #     sep="\n",
+        # )
         #     cv2.aruco.estimatePoseSingleMarkers(
         #         corners,
         #         markerHeight,
@@ -193,7 +193,7 @@ while 1 and __name__ == "__main__":
         thresholdY = int(imgcY * 0.5)
         close_x = range(cX - thresholdX, cX + thresholdX)
         close_y = range(cY - thresholdY, cY + thresholdY)
-        print(close_x, close_y, cX, cY, imgcX, imgcY)
+        # print(close_x, close_y, cX, cY, imgcX, imgcY)
 
         if imgcX in close_x and imgcY in close_y:
             drive_straight(i)
