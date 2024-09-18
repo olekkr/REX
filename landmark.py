@@ -51,7 +51,7 @@ def turn_left(i):
     print("moving left")
     if i < 20:
         arlo.go_diff(tspeed, tspeed, 0, 1)
-    elif i < 20:
+    elif i > 100:
         i = 0
     return i + 1
 
