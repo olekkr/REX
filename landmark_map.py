@@ -93,6 +93,12 @@ def cam_on():
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
 
+hl, = plt.plot([], [])
+
+def update_line(hl, new_data):
+    hl.set_xdata(np.append(hl.get_xdata(), new_data))
+    hl.set_ydata(np.append(hl.get_ydata(), new_data))
+    plt.draw()
 
 i = 0
 stop_and_see = 5
@@ -125,7 +131,7 @@ while 1 and __name__ == "__main__":
         )
         print("a",np.linalg.norm(a))
         marker_map = ([ax for ((ax, ay, az),) in a],[az for ((ax, ay, az),) in a])
-        plt.plot(marker_map)
+        update_line(hl, marker_map)
     try:
         for corner in corners:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
