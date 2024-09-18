@@ -41,17 +41,18 @@ def detect(image_inp):
 
 
 def drive_straight(i: int = 1):
-    if i % 10 == 0:
-        print("Found target")
+    print("Found target")
     arlo.go_diff(speed, speed, 1, 1)
     return i + 1
 
 
 def turn_left():
+    print("moving left")
     arlo.go_diff(tspeed, tspeed, 0, 1)
 
 
 def turn_right():
+    print("moving right")
     arlo.go_diff(tspeed, tspeed, 1, 0)
 
 
@@ -133,8 +134,10 @@ while 1:
 
     # middle = (qr_leftdown + qr_rightdown) / 2
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-        close_x = range(cX-25,cX+25)
-        close_y = range(cY-25,cY+25)
+        threshold = 5
+        close_x = range(cX-threshold,cX+threshold)
+        close_y = range(cY-threshold,cY+threshold)
+        print(cX, cY, close_x, close_y)
         if cX in close_x and cY in close_y:
             i = drive_straight(i)
         elif bottomLeft[0] < cX and bottomRight[1] < cY:
