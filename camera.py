@@ -1,9 +1,12 @@
 import time
 
 import cv2
-from picamera2 import Picamera2, Preview
+import matplotlib.pyplot as plt
+import numpy as np
+from picamera2 import Picamera2
 
 import robot
+from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
 
 arlo = robot.Robot()
 
@@ -36,9 +39,8 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 def detect(image_inp):
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(
-        image=image_inp, dictionary=arucoDict, parameters=arucoParams
-    )
+    # print(image_inp.shape)
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
 
@@ -46,8 +48,7 @@ def cam_on():
     while True:
         im = picam2.capture_array()
 
-        grey = cv2.cvtColor(im, cv2.COLOR_RGB2RGBA)
-        return grey
+        return im
 
 
 markerDist = int(input("Distance from marker: "))
