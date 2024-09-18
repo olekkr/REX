@@ -1,7 +1,7 @@
 import robot
 import cv2
 from picamera2 import Picamera2
-
+import time
 arlo = robot.Robot()
 cap = cv2.VideoCapture(0)
 
@@ -13,6 +13,7 @@ arucoDict = cv2.aruco.DICT_6X6_250
 
 picam2 = Picamera2()
 picam2.start()
+time.sleep(2)
 cap = picam2.capture()
 
 def drive_straight():
