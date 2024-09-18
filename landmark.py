@@ -28,8 +28,11 @@ picam2.configure(picam2_config)  # Not really necessary
 picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
-cap = cv2.VideoCapture()
-rawCapture = PiRGBArray(picam2, size=(640, 480))
+# cap = cv2.VideoCapture()
+arucoDict = cv2.aruco.Dictionary_get(arucoDict)
+arucoParams = cv2.aruco.DetectorParameters_create()
+(corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict,
+	parameters=arucoParams)
 
 def drive_straight():
     print("Found target")
@@ -54,19 +57,17 @@ def cam_on():
     #     time.sleep(5)
     #     ret, frame = cap.read()
 
-    for frame in picam2.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        # grab the raw NumPy array representing the image, then initialize the timestamp
-        # and occupied/unoccupied text
-        image = frame.array
-        # show the frame
-        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        cv2.imshow(image, rgb)
-        cv2.imshow("Frame", image)
-        # clear the stream in preparation for the next frame
-        rawCapture.truncate(0)
-        key = cv2.waitKey(1) & 0xFF
-        if key == ord("q"):
-            break
+    while True:
+        im = picam2.capture_array()
+
+        grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+        # faces = cv2.aruco.detectMarkers(arucoDict)
+
+        for (x, y, w, h) in faces:
+            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
+
+        cv2.imshow("Camera", im)
+        cv2.waitKey(1)
 
 
 
