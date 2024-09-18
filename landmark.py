@@ -6,7 +6,7 @@ from picamera2 import Picamera2
 import robot
 
 arlo = robot.Robot()
-cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture(0)
 
 speed = 40
 tspeed = 32
