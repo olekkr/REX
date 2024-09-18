@@ -1,13 +1,12 @@
 import time
 
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 from picamera2 import Picamera2
 
 import robot
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
-import matplotlib.pyplot as plt
-
 
 arlo = robot.Robot()
 
@@ -93,12 +92,15 @@ def cam_on():
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
 
-hl, = plt.plot([], [])
+
+(hl,) = plt.plot([], [])
+
 
 def update_line(hl, new_data):
     hl.set_xdata(np.append(hl.get_xdata(), new_data))
     hl.set_ydata(np.append(hl.get_ydata(), new_data))
     plt.draw()
+
 
 # plt.show()
 
@@ -131,8 +133,8 @@ while 1 and __name__ == "__main__":
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
-        print("a",a)
-        marker_map = ([ax for ((ax, ay, az),) in a],[az for ((ax, ay, az),) in a])
+        print("a", a)
+        marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
         update_line(hl, marker_map)
     try:
         for corner in corners:
