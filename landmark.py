@@ -32,13 +32,13 @@ picam2.start()
 
 arucoParams = cv2.aruco.DetectorParameters()
 
+
 def detect(image_inp):
     (corners, ids, rejected) = cv2.aruco.detectMarkers(
-        image=image_inp,
-        dictionary=arucoDict,
-        parameters=arucoParams
+        image=image_inp, dictionary=arucoDict, parameters=arucoParams
     )
     return corners, ids, rejected
+
 
 def drive_straight():
     print("Found target")
@@ -74,8 +74,6 @@ def cam_on():
         cv2.waitKey(1)
 
 
-
-
 while 1:
     image = cam_on()
     (corners, ids, rejected) = detect(image)
@@ -88,7 +86,7 @@ while 1:
         # flatten the ArUco IDs list
         ids = ids.flatten()
         # loop over the detected ArUCo corners
-        for (markerCorner, markerID) in zip(corners, ids):
+        for markerCorner, markerID in zip(corners, ids):
             # extract the marker corners (which are always returned in
             # top-left, top-right, bottom-right, and bottom-left order)
             corners = markerCorner.reshape((4, 2))
@@ -110,13 +108,19 @@ while 1:
             cY = int((topLeft[1] + bottomRight[1]) / 2.0)
             cv2.circle(image, (cX, cY), 4, (0, 0, 255), -1)
             # draw the ArUco marker ID on the image
-            cv2.putText(image, str(markerID),
-                (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
-                0.5, (0, 255, 0), 2)
+            cv2.putText(
+                image,
+                str(markerID),
+                (topLeft[0], topLeft[1] - 15),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 255, 0),
+                2,
+            )
             print("[INFO] ArUco marker ID: {}".format(markerID))
             # show the output image
             cv2.imshow("Image", image)
-            time.sleep(0.5)
+            cv2.waitKey(1)
 
     # qr_leftdown = bottomLeft
     # qr_rightdown = bottomRight
@@ -135,7 +139,6 @@ while 1:
     # cv2.line(image, topRight, bottomRight, (0, 255, 0), 2)
     # cv2.line(image, bottomRight, bottomLeft, (0, 255, 0), 2)
     # cv2.line(image, bottomLeft, topLeft, (0, 255, 0), 2)
-
 
     # # compute and draw the center (x, y)-coordinates of the ArUco
     # # marker
