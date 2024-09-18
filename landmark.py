@@ -1,7 +1,10 @@
-import robot
+import time
+
 import cv2
 from picamera2 import Picamera2
-import time
+
+import robot
+
 arlo = robot.Robot()
 cap = cv2.VideoCapture(0)
 
@@ -13,23 +16,30 @@ arucoDict = cv2.aruco.DICT_6X6_250
 
 picam2 = Picamera2()
 picam2.start()
+camera_config = picam2.create_still_configuration()
+picam2.configure(camera_config)
 time.sleep(2)
 cap = picam2.capture()
+
 
 def drive_straight():
     print("Found target")
     # arlo.go_diff(speed, speed, 1, 1)
 
+
 def turn_left():
     arlo.go_diff(tspeed, tspeed, 0, 1)
+
 
 def turn_right():
     arlo.go_diff(tspeed, tspeed, 1, 0)
 
+
 def cam_on():
     ret, frame = cap.read()
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    cv2.imshow('frame', rgb)
+    cv2.imshow("frame", rgb)
+
 
 while 1:
     cam_on()
@@ -49,7 +59,6 @@ while 1:
     qr_rightUp = corners[1][1]
     print("LU: ", qr_leftUp)
     print("RU: ", qr_rightUp)
-
 
     middle = (qr_leftdown + qr_rightdown) / 2
     close_middle = [middle - 50, middle + 50]
