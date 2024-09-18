@@ -15,10 +15,10 @@ image = "aruco.png"
 arucoDict = cv2.aruco.DICT_6X6_250
 
 picam2 = Picamera2()
-picam2.start()
 camera_config = picam2.create_still_configuration()
 picam2.configure(camera_config)
 time.sleep(2)
+picam2.start()
 cap = picam2.capture()
 
 
