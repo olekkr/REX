@@ -116,3 +116,5 @@ def get_marker_dim():
 while 1:
     time.sleep(0.1)
     get_marker_dim()
+    if input("1") == "1":
+        picam2.capture_file(f"img_{markerDist}.jpg")
