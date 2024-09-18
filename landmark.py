@@ -118,7 +118,7 @@ while 1 and __name__ == "__main__":
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
-            CameraMatrix(0),
+            CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
         print("a",a)
