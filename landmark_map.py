@@ -100,6 +100,8 @@ def update_line(hl, new_data):
     hl.set_ydata(np.append(hl.get_ydata(), new_data))
     plt.draw()
 
+plt.show()
+
 i = 0
 stop_and_see = 5
 j = 0
@@ -143,7 +145,7 @@ while 1 and __name__ == "__main__":
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
-    plt.draw()
+
     # if len(corners) == 0 and j < stop_and_see:
     #     j += 1
     #     continue
