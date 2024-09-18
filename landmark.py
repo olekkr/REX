@@ -170,7 +170,8 @@ while 1 and __name__ == "__main__":
         #         DistortionCoefficient,
         #     )
         # )
-        cv2.aruco.drawDetectedCornersCharuco(image, corners)
+        for idd, corner in zip(ids, corners):
+            cv2.aruco.drawDetectedCornersCharuco(image, corner, idd)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
