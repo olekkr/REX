@@ -44,6 +44,7 @@ def detect(image_inp):
 def drive_straight(i: int = 1):
     print("Found target")
     arlo.go_diff(speed, speed, 1, 1)
+    time.sleep(0.5)
     return i + 1
 
 
@@ -65,6 +66,7 @@ def turn_left(i):
 def turn_right():
     print("moving right")
     arlo.go_diff(tspeed, tspeed, 1, 0)
+    time.sleep(0.5)
 
 
 def cam_on():
