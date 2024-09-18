@@ -166,7 +166,7 @@ while 1 and __name__ == "__main__":
         #     )
         # )
         if len(ids) > 0 and len(corners) == ids[0][0]:
-            cv2.aruco.drawDetectedCornersCharuco(image, corners, ids)
+            cv2.aruco.drawDetectedCornersCharuco(image, corners, ids, (220,20,20))
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
