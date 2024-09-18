@@ -44,6 +44,10 @@ def turn_right():
 
 def cam_on():
     ret, frame = cap.read()
+    while not ret:
+        print("Frame unavailable waiting...")
+        time.sleep(1)
+        ret, frame = cap.read()
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     cv2.imshow(frame, rgb)
 
