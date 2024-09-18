@@ -94,7 +94,7 @@ def cam_on():
 i = 0
 stop_and_see = 5
 j = 0
-while 1:
+while 1 and __name__ == "__main__":
     arlo.stop()
     image = cam_on()
     (corners, ids, rejected) = detect(image)

@@ -1,8 +1,38 @@
 from picamera2 import Picamera2
 from picamera2 import Preview
 import time
+from landmark import cam_on, detect
 
+markerDist = int(input("Distance from marker: "))
+markerHeight = 50  # mm
 
+def get_marker_dim():
+    image = cam_on()
+    (corners, ids, rejected) = detect(image)
+    if len(corners) > 0:
+        # flatten the ArUco IDs list
+        ids = ids.flatten()
+        # loop over the detected ArUCo corners
+        for markerCorner, markerID in zip(corners, ids):
+            # extract the marker corners (which are always returned in
+            # top-left, top-right, bottom-right, and bottom-left order)
+            corners = markerCorner.reshape((4, 2))
+            (topLeft, topRight, bottomRight, bottomLeft) = corners
+            # convert each of the (x, y)-coordinate pairs to integers
+            topRight = (int(topRight[0]), int(topRight[1]))
+            bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
+            bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
+            topLeft = (int(topLeft[0]), int(topLeft[1]))
+        leftHeight = topLeft[1] - bottomLeft[1]
+        rightHeight = topRight[1] - bottomRight[1]
+        pixels = (leftHeight + rightHeight) // 2
+        print("Right height", rightHeight)
+        print("Left height", leftHeight)
+        print("avg height", pixels)
+        x = pixels
+        X = markerHeight
+        Z = markerDist
+        print("focal length", x*(Z/X))
 
 picam2 = Picamera2()
 full = (1920, 1080)
