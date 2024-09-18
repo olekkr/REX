@@ -14,6 +14,7 @@ image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
 imageSize = (1920//4, 1080//4)
+center_image = (imageSize[0]//2, imageSize[1]//2)
 FPS = 10
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
@@ -135,12 +136,15 @@ while 1:
     # middle = (qr_leftdown + qr_rightdown) / 2
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
         threshold = 5
-        close_x = range(cX-threshold,cX+threshold)
-        close_y = range(cY-threshold,cY+threshold)
-        print(cX, cY, close_x, close_y)
-        if cX in close_x and cY in close_y:
+
+        imgcX, imgcY = center_image
+
+        close_x = range(cX - threshold, cX + threshold)
+        close_y = range(cY - threshold, cY + threshold)
+
+        if imgcX in close_x and imgcY in close_y:
             i = drive_straight(i)
-        elif bottomLeft[0] < cX and bottomRight[1] < cY:
+        elif bottomLeft[0] < imgcX and bottomRight[1] < imgcY:
             turn_right()
         else:
             turn_left()
