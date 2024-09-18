@@ -148,14 +148,21 @@ while 1 and __name__ == "__main__":
             )
             print("[INFO] ArUco marker ID: {}".format(markerID))
             print(len(corners), corners, CameraMatrix(preview_downscale), DistortionCoefficient, sep="\n")
-            print(
-                cv2.aruco.estimatePoseSingleMarkers(
-                    corners,
-                    markerHeight,
-                    CameraMatrix(preview_downscale),
-                    DistortionCoefficient,
-                )
+            # print(
+            #     cv2.aruco.estimatePoseSingleMarkers(
+            #         corners,
+            #         markerHeight,
+            #         CameraMatrix(preview_downscale),
+            #         DistortionCoefficient,
+            #     )
+            # )
+            a,b,c = cv2.aruco.estimatePoseSingleMarkers(
+                corners,
+                markerHeight,
+                CameraMatrix(preview_downscale),
+                DistortionCoefficient,
             )
+            print(a,b,c)
 
             # show the output image
     cv2.imshow("Image", image)
