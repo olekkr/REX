@@ -83,7 +83,7 @@ def cam_on():
     while True:
         im = picam2.capture_array()
 
-        grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+        grey = cv2.cvtColor(im, cv2.COLOR_RGB2RGBA)
         return grey
         print(detect(grey))
 
