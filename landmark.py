@@ -90,7 +90,7 @@ def cam_on():
         cv2.waitKey(1)
 
 i = 0
-stop_and_see = 100
+stop_and_see = 20
 j = 0
 while 1:
     arlo.stop()
@@ -147,10 +147,15 @@ while 1:
             # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)
+    if cv2.getWindowProperty('Image', 0) == -1:
+        arlo.stop()
+        exit()
 
     if len(corners) == 0 and j < stop_and_see:
         j += 1
         continue
+    elif len(corners) == 0 and j >= stop_and_see:
+        j = 0
 
     # middle = (qr_leftdown + qr_rightdown) / 2
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
