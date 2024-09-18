@@ -164,9 +164,9 @@ while 1:
         imgcX, imgcY = center_image
         thresholdX = int(imgcX * 0.5)
         thresholdY = int(imgcY * 0.5)
-
         close_x = range(cX - thresholdX, cX + thresholdX)
         close_y = range(cY - thresholdY, cY + thresholdY)
+        print(close_x, close_y, cX, cY, imgcX, imgcY)
 
         if imgcX in close_x and imgcY in close_y:
             drive_straight(i)
