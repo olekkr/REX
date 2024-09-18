@@ -13,8 +13,8 @@ aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
-imageSize = (1920//4, 1080//4)
-center_image = (imageSize[0]//2, imageSize[1]//2)
+imageSize = (1920 // 4, 1080 // 4)
+center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 10
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
@@ -89,8 +89,9 @@ def cam_on():
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
 
+
 i = 0
-stop_and_see = 20
+stop_and_see = 5
 j = 0
 while 1:
     arlo.stop()
@@ -147,7 +148,7 @@ while 1:
             # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)
-    if cv2.getWindowProperty('Image', 0) == -1:
+    if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
 
@@ -159,10 +160,9 @@ while 1:
 
     # middle = (qr_leftdown + qr_rightdown) / 2
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-
         imgcX, imgcY = center_image
-        thresholdX = int(imgcX*0.5)
-        thresholdY = int(imgcY*0.5)
+        thresholdX = int(imgcX * 0.5)
+        thresholdY = int(imgcY * 0.5)
 
         close_x = range(cX - thresholdX, cX + thresholdX)
         close_y = range(cY - thresholdY, cY + thresholdY)
