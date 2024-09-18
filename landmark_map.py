@@ -127,14 +127,15 @@ while 1 and __name__ == "__main__":
 
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
-        b, a, c = cv2.aruco.estimatePoseSingleMarkers(
+        a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
-        print("a", [np.sqrt(ax**2+ay**2+az**2) for ((ax, ay, az),) in a])
-        print(a)
+        print(corners)
+        # print("a", [np.sqrt(ax**2+ay**2+az**2) for ((ax, ay, az),) in a])
+        # print(a)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
         # update_line(hl, marker_map)
     try:
