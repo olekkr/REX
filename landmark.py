@@ -165,7 +165,7 @@ while 1 and __name__ == "__main__":
         #         DistortionCoefficient,
         #     )
         # )
-
+        print(corners)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
