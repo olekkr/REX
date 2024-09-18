@@ -67,7 +67,7 @@ def cam_on():
         im = picam2.capture_array()
 
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        print(detect(im))
+        print(detect(grey))
 
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
