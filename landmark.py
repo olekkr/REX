@@ -9,7 +9,7 @@ arlo = robot.Robot()
 
 speed = 60
 tspeed_slow = 32
-tspeed = 52
+tspeed = 40
 aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
