@@ -13,9 +13,17 @@ aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.DICT_6X6_250
 
+imageSize = (1280, 720)
+FPS = 30
+frame_duration_limit = int(1/FPS * 1000000) # Microseconds
+
+
 picam2 = Picamera2()
-camera_config = picam2.create_still_configuration()
-picam2.configure(camera_config)
+picam2_config = picam2.create_video_configuration({"size": imageSize, "format": 'RGB888'},
+                                                            controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
+                                                            queue=False)
+picam2.configure(picam2_config) # Not really necessary
+picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
 cap = cv2.VideoCapture(-1)
