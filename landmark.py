@@ -166,20 +166,18 @@ while 1 and __name__ == "__main__":
         #     )
         # )
 
-        try:
-            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners, ids))
-            print("succeeded")
-        except:
-            print("failed to draw")
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
+    try:
+        cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners, ids))
+    except:
+        cv2.imshow("Image", image)
         # print(a, b, c)
     # show the output image
-    cv2.imshow("Image", image)
     cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
