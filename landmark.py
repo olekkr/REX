@@ -148,3 +148,5 @@ while 1:
             turn_right()
         else:
             turn_left()
+    else:
+        turn_left()
