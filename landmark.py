@@ -47,9 +47,13 @@ def drive_straight(i: int = 1):
     return i + 1
 
 
-def turn_left():
+def turn_left(i):
     print("moving left")
-    arlo.go_diff(tspeed, tspeed, 0, 1)
+    if i < 20:
+        arlo.go_diff(tspeed, tspeed, 0, 1)
+    elif i < 20:
+        i = 0
+    return i + 1
 
 
 def turn_right():
@@ -143,10 +147,10 @@ while 1:
         close_y = range(cY - threshold, cY + threshold)
 
         if imgcX in close_x and imgcY in close_y:
-            i = drive_straight(i)
+            drive_straight(i)
         elif bottomLeft[0] < imgcX and bottomRight[1] < imgcY:
             turn_right()
         else:
-            turn_left()
+            i = turn_left(i)
     else:
-        turn_left()
+        i = turn_left(i)
