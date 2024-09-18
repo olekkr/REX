@@ -1,6 +1,7 @@
 import time
 
 import cv2
+import numpy as np
 from picamera2 import Picamera2
 
 import robot
@@ -119,7 +120,7 @@ while 1 and __name__ == "__main__":
         # flatten the ArUco IDs list
         print("id", ids)
         print("corners", corners)
-        ids = ids.flatten()
+        # ids = ids.flatten()
         print(2)
         # loop over the detected ArUCo corners
         # for markerCorner, markerID in zip(corners, ids):
@@ -171,7 +172,7 @@ while 1 and __name__ == "__main__":
         #     )
         # )
         for idd, corner in zip(ids, corners):
-            cv2.aruco.drawDetectedCornersCharuco(image, corner, idd)
+            cv2.aruco.drawDetectedCornersCharuco(image, np.array(corner), np.array(idd))
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
