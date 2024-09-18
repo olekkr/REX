@@ -8,6 +8,7 @@ import robot
 arlo = robot.Robot()
 
 speed = 60
+tspeed_slow = 32
 tspeed = 52
 aruco = False
 image = "aruco.png"
@@ -65,7 +66,7 @@ def turn_left(i):
 
 def turn_right():
     print("moving right")
-    arlo.go_diff(tspeed, tspeed, 1, 0)
+    arlo.go_diff(tspeed_slow, tspeed_slow, 1, 0)
     time.sleep(0.5)
 
 
