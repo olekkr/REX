@@ -173,8 +173,9 @@ while 1 and __name__ == "__main__":
             DistortionCoefficient,
         )
     try:
-        cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners, ids))
-    except:
+        cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners))
+    except Exception as e:
+        print(e)
         cv2.imshow("Image", image)
         # print(a, b, c)
     # show the output image
