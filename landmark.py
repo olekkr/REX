@@ -37,9 +37,7 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 def detect(image_inp):
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(
-        image=image_inp, dictionary=arucoDict, parameters=arucoParams
-    )
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
 
@@ -154,7 +152,13 @@ while 1 and __name__ == "__main__":
             )
             print(4)
             print("[INFO] ArUco marker ID: {}".format(markerID))
-            print(len(corners), corners, CameraMatrix(preview_downscale), DistortionCoefficient, sep="\n")
+            print(
+                len(corners),
+                corners,
+                CameraMatrix(preview_downscale),
+                DistortionCoefficient,
+                sep="\n",
+            )
             # print(5)
             #     cv2.aruco.estimatePoseSingleMarkers(
             #         corners,
@@ -163,15 +167,15 @@ while 1 and __name__ == "__main__":
             #         DistortionCoefficient,
             #     )
             # )
-            a,b,c = cv2.aruco.estimatePoseSingleMarkers(
+            a, b, c = cv2.aruco.estimatePoseSingleMarkers(
                 corners,
                 markerHeight,
                 CameraMatrix(preview_downscale),
                 DistortionCoefficient,
             )
-            print(a,b,c)
+            print(a, b, c)
     print(6)
-            # show the output image
+    # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)
     print(7)
