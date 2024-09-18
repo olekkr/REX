@@ -26,7 +26,7 @@ picam2.configure(picam2_config) # Not really necessary
 picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
-cap = cv2.VideoCapture(-1)
+cap = cv2.VideoCapture()
 
 
 def drive_straight():
@@ -46,7 +46,7 @@ def cam_on():
     ret, frame = cap.read()
     while not ret:
         print("Frame unavailable waiting...")
-        time.sleep(1)
+        time.sleep(5)
         ret, frame = cap.read()
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     cv2.imshow(frame, rgb)
