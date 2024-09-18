@@ -52,6 +52,7 @@ def cam_on():
 
 markerDist = int(input("Distance from marker: "))
 markerHeight = 50  # mm
+focalLength = 1880
 
 
 def get_marker_dim():
@@ -72,6 +73,29 @@ def get_marker_dim():
             bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
             bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
             topLeft = (int(topLeft[0]), int(topLeft[1]))
+
+
+        # draw the bounding box of the ArUCo detection
+        cv2.line(image, topLeft, topRight, (0, 255, 0), 2)
+        cv2.line(image, topRight, bottomRight, (0, 255, 0), 2)
+        cv2.line(image, bottomRight, bottomLeft, (0, 255, 0), 2)
+        cv2.line(image, bottomLeft, topLeft, (0, 255, 0), 2)
+        # compute and draw the center (x, y)-coordinates of the ArUco
+        # marker
+        cX = int((topLeft[0] + bottomRight[0]) / 2.0)
+        cY = int((topLeft[1] + bottomRight[1]) / 2.0)
+        cv2.circle(image, (cX, cY), 4, (0, 0, 255), -1)
+        # draw the ArUco marker ID on the image
+        cv2.putText(
+            image,
+            str(markerID),
+            (topLeft[0], topLeft[1] - 15),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            (0, 255, 0),
+            2,
+        )
+
         leftHeight = bottomLeft[1] - topLeft[1]
         rightHeight = bottomRight[1] - topRight[1]
         pixels = (leftHeight + rightHeight) // 2
@@ -86,28 +110,7 @@ def get_marker_dim():
     cv2.waitKey(1)
 
 
-# picam2 = Picamera2()
-# full = (1920, 1080)
-# preview_downscale = 2
-# raw = {'size': full}
-# main = {'size': (full[0]//(2**preview_downscale),full[1]//(2**preview_downscale))}
-# preview_controls = {'FrameRate': 15}
-# preview_config = picam2.create_preview_configuration(main, raw=raw, controls=preview_controls)
-# capture_controls = {'FrameRate': (2, 20)}
-# capture_config = picam2.create_still_configuration(controls=capture_controls)
-# picam2.configure(preview_config)
-# camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (240, 135)}, display="lores")
-
-# camera_config = picam2.create_still_configuration()
-# picam2.configure(camera_config)
-# picam2.start_preview(Preview.QTGL)
-# picam2.start()
 
 while 1:
     time.sleep(0.1)
-    # inp = input("name (q for quit): ").replace(" ", "_")
-    # if inp.lower() == "q":
-    #     exit()
     get_marker_dim()
-
-    # picam2.capture_file(f"img{i}_{inp}.jpg")
