@@ -80,8 +80,8 @@ def cam_on():
     #     ret, frame = cap.read()
 
     while True:
-        im = picam2.capture_array()
-
+        im = picam2.capture_array("main")
+        print(im.shape)
         return im
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         print(detect(grey))
