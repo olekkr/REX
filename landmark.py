@@ -11,7 +11,7 @@ speed = 40
 tspeed = 32
 aruco = False
 image = "aruco.png"
-arucoDict = cv2.aruco.DICT_6X6_250
+arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
 imageSize = (1280, 720)
 FPS = 30
@@ -29,10 +29,16 @@ picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
 # cap = cv2.VideoCapture()
-arucoDict = cv2.aruco.Dictionary_get(arucoDict)
-arucoParams = cv2.aruco.DetectorParameters_create()
-(corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict,
-	parameters=arucoParams)
+
+arucoParams = cv2.aruco.DetectorParameters()
+
+def detect(image_inp):
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(
+        image=image_inp,
+        dictionary=arucoDict,
+        parameters=arucoParams
+    )
+    return corners, ids, rejected
 
 def drive_straight():
     print("Found target")
@@ -58,10 +64,10 @@ def cam_on():
     #     ret, frame = cap.read()
 
     while True:
-        im = picam2.capture_array()
+        im = picam2.capture_array("main")
 
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        # faces = cv2.aruco.detectMarkers(arucoDict)
+        print(detect(im))
 
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
