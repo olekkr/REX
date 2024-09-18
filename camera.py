@@ -1,7 +1,7 @@
 import time
 
 import cv2
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 
 import robot
 
@@ -27,7 +27,7 @@ picam2_config = picam2.create_video_configuration(
     queue=False,
 )
 picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
+picam2.start(show_preview=True)
 time.sleep(2)
 picam2.start()
 # cap = cv2.VideoCapture()
@@ -80,22 +80,22 @@ def get_marker_dim():
         Z = markerDist
         print("focal length", x*(Z/X))
 
-picam2 = Picamera2()
-full = (1920, 1080)
-preview_downscale = 2
-raw = {'size': full}
-main = {'size': (full[0]//(2**preview_downscale),full[1]//(2**preview_downscale))}
-preview_controls = {'FrameRate': 15}
-preview_config = picam2.create_preview_configuration(main, raw=raw, controls=preview_controls)
-capture_controls = {'FrameRate': (2, 20)}
-capture_config = picam2.create_still_configuration(controls=capture_controls)
-picam2.configure(preview_config)
+# picam2 = Picamera2()
+# full = (1920, 1080)
+# preview_downscale = 2
+# raw = {'size': full}
+# main = {'size': (full[0]//(2**preview_downscale),full[1]//(2**preview_downscale))}
+# preview_controls = {'FrameRate': 15}
+# preview_config = picam2.create_preview_configuration(main, raw=raw, controls=preview_controls)
+# capture_controls = {'FrameRate': (2, 20)}
+# capture_config = picam2.create_still_configuration(controls=capture_controls)
+# picam2.configure(preview_config)
 #camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (240, 135)}, display="lores")
 
 #camera_config = picam2.create_still_configuration()
 #picam2.configure(camera_config)
-picam2.start_preview(Preview.QTGL)
-picam2.start()
+# picam2.start_preview(Preview.QTGL)
+# picam2.start()
 
 for i in range(100):
     time.sleep(2)
