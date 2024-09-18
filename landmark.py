@@ -165,8 +165,8 @@ while 1 and __name__ == "__main__":
         #         DistortionCoefficient,
         #     )
         # )
-        if len(ids) > 0 and len(corners) == ids[0][0]:
-            cv2.aruco.drawDetectedCornersCharuco(image, corners, ids, (220,20,20))
+
+        cv2.aruco.drawDetectedCornersCharuco(image, corners, ids)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
