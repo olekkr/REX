@@ -100,9 +100,7 @@ while 1 and __name__ == "__main__":
     image = cam_on()
     cv2.imshow("Image", image)
     cv2.waitKey(1)
-    print(1)
     (corners, ids, rejected) = detect(image)
-    print(0)
 
     front = arlo.read_sensor(0)
     lefts = arlo.read_sensor(2)
@@ -121,7 +119,6 @@ while 1 and __name__ == "__main__":
         print("id", ids)
         print("corners", corners)
         # ids = ids.flatten()
-        print(2)
         # loop over the detected ArUCo corners
         # for markerCorner, markerID in zip(corners, ids):
         #     # extract the marker corners (which are always returned in
@@ -133,7 +130,6 @@ while 1 and __name__ == "__main__":
         #     bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
         #     bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
         #     topLeft = (int(topLeft[0]), int(topLeft[1]))
-        #     print(3)
         #     # draw the bounding box of the ArUCo detection
         #     cv2.line(image, topLeft, topRight, (0, 255, 0), 2)
         #     cv2.line(image, topRight, bottomRight, (0, 255, 0), 2)
@@ -154,7 +150,6 @@ while 1 and __name__ == "__main__":
         #         (0, 255, 0),
         #         2,
         #     )
-        #     print(4)
         #     print("[INFO] ArUco marker ID: {}".format(markerID))
         print(
             len(corners),
@@ -163,7 +158,6 @@ while 1 and __name__ == "__main__":
             DistortionCoefficient,
             sep="\n",
         )
-        # print(5)
         #     cv2.aruco.estimatePoseSingleMarkers(
         #         corners,
         #         markerHeight,
@@ -171,7 +165,8 @@ while 1 and __name__ == "__main__":
         #         DistortionCoefficient,
         #     )
         # )
-        cv2.aruco.drawDetectedCornersCharuco(image, corners, ids)
+        if len(corners) == ids.flatten():
+            cv2.aruco.drawDetectedCornersCharuco(image, corners, ids)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
@@ -179,15 +174,12 @@ while 1 and __name__ == "__main__":
             DistortionCoefficient,
         )
         print(a, b, c)
-    print(6)
     # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)
-    print(7)
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
-    print(8)
     if len(corners) == 0 and j < stop_and_see:
         j += 1
         continue
