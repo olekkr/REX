@@ -37,6 +37,7 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 def detect(image_inp):
+    print(image_inp.shape)
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
@@ -116,6 +117,7 @@ while 1 and __name__ == "__main__":
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
         # flatten the ArUco IDs list
+        print(len(ids))
         ids = ids.flatten()
         print(2)
         # loop over the detected ArUCo corners
@@ -152,28 +154,28 @@ while 1 and __name__ == "__main__":
             )
             print(4)
             print("[INFO] ArUco marker ID: {}".format(markerID))
-            print(
-                len(corners),
-                corners,
-                CameraMatrix,
-                DistortionCoefficient,
-                sep="\n",
-            )
-            # print(5)
-            #     cv2.aruco.estimatePoseSingleMarkers(
-            #         corners,
-            #         markerHeight,
-            #         CameraMatrix(preview_downscale),
-            #         DistortionCoefficient,
-            #     )
-            # )
-            a, b, c = cv2.aruco.estimatePoseSingleMarkers(
-                corners.astype("float64"),
-                markerHeight,
-                CameraMatrix,
-                DistortionCoefficient,
-            )
-            print(a, b, c)
+        print(
+            len(corners),
+            corners,
+            CameraMatrix,
+            DistortionCoefficient,
+            sep="\n",
+        )
+        # print(5)
+        #     cv2.aruco.estimatePoseSingleMarkers(
+        #         corners,
+        #         markerHeight,
+        #         CameraMatrix(preview_downscale),
+        #         DistortionCoefficient,
+        #     )
+        # )
+        a, b, c = cv2.aruco.estimatePoseSingleMarkers(
+            corners.astype("float64"),
+            markerHeight,
+            CameraMatrix,
+            DistortionCoefficient,
+        )
+        print(a, b, c)
     print(6)
     # show the output image
     cv2.imshow("Image", image)
