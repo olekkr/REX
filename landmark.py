@@ -14,7 +14,7 @@ tspeed = 32
 aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
-preview_downscale = 0
+preview_downscale = 2
 imageSize = (1920 // 2**preview_downscale, 1080 // 2**preview_downscale)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
@@ -170,10 +170,11 @@ while 1 and __name__ == "__main__":
         #         DistortionCoefficient,
         #     )
         # )
+        cv2.aruco.drawDetectedCornersCharuco(image, corners)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
-            CameraMatrix,
+            CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
         print(a, b, c)
