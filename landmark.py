@@ -117,7 +117,8 @@ while 1 and __name__ == "__main__":
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
         # flatten the ArUco IDs list
-        print(len(ids))
+        print("id", ids)
+        print("corners", corners)
         ids = ids.flatten()
         print(2)
         # loop over the detected ArUCo corners
