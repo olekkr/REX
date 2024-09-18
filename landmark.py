@@ -88,7 +88,7 @@ def cam_on():
         cv2.waitKey(1)
 
 i = 0
-stop_and_see = 10
+stop_and_see = 100
 j = 0
 while 1:
     arlo.stop()
