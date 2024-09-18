@@ -92,7 +92,7 @@ def cam_on():
 
 
 i = 0
-stop_and_see = 5
+stop_and_see = 2
 j = 0
 while 1:
     arlo.stop()
