@@ -1,7 +1,7 @@
 import time
 
 import cv2
-from picamera2 import Picamera2, PiRGBArray
+from picamera2 import Picamera2
 
 import robot
 
@@ -62,9 +62,6 @@ def cam_on():
 
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         # faces = cv2.aruco.detectMarkers(arucoDict)
-
-        for (x, y, w, h) in faces:
-            cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0))
 
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
