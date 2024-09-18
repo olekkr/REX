@@ -1,8 +1,11 @@
 import numpy as np
 
-FocalLength = 1880.0
+FocalLength = 648.0
 
-markerHeight = 50.0  # mm
+markerHeight = 145.0  # mm
+
+# 94 * (1000 / 145) = 648.2758620689655
+# 1880 / (1000/50) = 94
 
 CameraMatrix = lambda downscale: np.array(
     [
