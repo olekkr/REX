@@ -51,8 +51,8 @@ def turn_left(i):
     print("moving left")
     arlo.go_diff(tspeed, tspeed, 0, 1)
     time.sleep(0.5)
-    arlo.stop()
-    time.sleep(2)
+    # arlo.stop()
+    # time.sleep(2)
     # if i < 20:
     #     arlo.go_diff(tspeed, tspeed, 0, 1)
     # elif i > 100:
@@ -89,6 +89,7 @@ def cam_on():
 
 i = 0
 while 1:
+    arlo.stop()
     image = cam_on()
     (corners, ids, rejected) = detect(image)
     front = arlo.read_sensor(0)
@@ -145,12 +146,13 @@ while 1:
 
     # middle = (qr_leftdown + qr_rightdown) / 2
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-        threshold = 5
 
         imgcX, imgcY = center_image
+        thresholdX = int(imgcX*0.5)
+        thresholdY = int(imgcY*0.5)
 
-        close_x = range(cX - threshold, cX + threshold)
-        close_y = range(cY - threshold, cY + threshold)
+        close_x = range(cX - thresholdX, cX + thresholdX)
+        close_y = range(cY - thresholdY, cY + thresholdY)
 
         if imgcX in close_x and imgcY in close_y:
             drive_straight(i)
