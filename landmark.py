@@ -15,14 +15,16 @@ arucoDict = cv2.aruco.DICT_6X6_250
 
 imageSize = (1280, 720)
 FPS = 30
-frame_duration_limit = int(1/FPS * 1000000) # Microseconds
+frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 
 picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration({"size": imageSize, "format": 'RGB888'},
-                                                            controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
-                                                            queue=False)
-picam2.configure(picam2_config) # Not really necessary
+picam2_config = picam2.create_video_configuration(
+    {"size": imageSize, "format": "RGB888"},
+    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
+    queue=False,
+)
+picam2.configure(picam2_config)  # Not really necessary
 picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
@@ -43,6 +45,9 @@ def turn_right():
 
 
 def cam_on():
+    if not cap.isOpened():
+        print("Camera not opened")
+        exit()
     ret, frame = cap.read()
     while not ret:
         print("Frame unavailable waiting...")
