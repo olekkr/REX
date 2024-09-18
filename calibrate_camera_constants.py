@@ -9,8 +9,8 @@ markerHeight = 145.0  # mm
 
 CameraMatrix = lambda downscale: np.array(
     [
-        [FocalLength, 0.0, (1920 / (2**1)) / 2],
-        [0.0, FocalLength, 1080.0 // (2**1) / 2],
+        [FocalLength, 0.0, (1920 / (2**1))],
+        [0.0, FocalLength, 1080.0 // (2**1)],
         [0, 0, 1],
     ],
     dtype=np.float64,
