@@ -99,8 +99,8 @@ def get_marker_dim():
 # picam2.start_preview(Preview.QTGL)
 # picam2.start()
 
-for i in range(100):
-    time.sleep(2)
+while 1:
+    time.sleep(0.1)
     inp = input("name (q for quit): ").replace(" ", "_")
     if inp.lower() == "q":
         exit()
