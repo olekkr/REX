@@ -168,6 +168,7 @@ while 1 and __name__ == "__main__":
 
         try:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners, ids))
+            print("succeeded")
         except:
             print("failed to draw")
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
@@ -176,7 +177,7 @@ while 1 and __name__ == "__main__":
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
-        print(a, b, c)
+        # print(a, b, c)
     # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)
