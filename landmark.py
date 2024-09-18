@@ -49,12 +49,15 @@ def drive_straight(i: int = 1):
 
 def turn_left(i):
     print("moving left")
-    if i < 20:
-        arlo.go_diff(tspeed, tspeed, 0, 1)
-    elif i > 100:
-        i = 0
-    else:
-        arlo.stop()
+    arlo.go_diff(tspeed, tspeed, 0, 1)
+    time.sleep(0.5)
+    arlo.stop()
+    # if i < 20:
+    #     arlo.go_diff(tspeed, tspeed, 0, 1)
+    # elif i > 100:
+    #     i = 0
+    # else:
+    #     arlo.stop()
     return i + 1
 
 
