@@ -5,8 +5,10 @@ import time
 
 
 picam2 = Picamera2()
-main = {'size': (640, 360)}
-raw = {'size': (1920, 1080)}
+full = (1920, 1080)
+preview_downscale = 2
+raw = {'size': full}
+main = {'size': (full[0]//(2**preview_downscale),full[1]//(2**preview_downscale))}
 preview_controls = {'FrameRate': 15}
 preview_config = picam2.create_preview_configuration(main, raw=raw, controls=preview_controls)
 capture_controls = {'FrameRate': (2, 20)}
