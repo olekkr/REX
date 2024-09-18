@@ -16,7 +16,7 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
 imageSize = (1920 // 2, 1080 // 2)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = 10
+FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 
