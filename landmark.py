@@ -13,7 +13,7 @@ aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
-imageSize = (1280, 720)
+imageSize = (320, 120)
 FPS = 30
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
