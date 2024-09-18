@@ -41,6 +41,7 @@ def detect(image_inp):
     )
     return corners, ids, rejected
 
+
 def cam_on():
     while True:
         im = picam2.capture_array()
@@ -51,6 +52,7 @@ def cam_on():
 
 markerDist = int(input("Distance from marker: "))
 markerHeight = 50  # mm
+
 
 def get_marker_dim():
     image = cam_on()
@@ -71,8 +73,8 @@ def get_marker_dim():
             bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
             bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
             topLeft = (int(topLeft[0]), int(topLeft[1]))
-        leftHeight = topLeft[1] - bottomLeft[1]
-        rightHeight = topRight[1] - bottomRight[1]
+        leftHeight = bottomLeft[1] - topLeft[1]
+        rightHeight = bottomRight[1] - topRight[1]
         pixels = (leftHeight + rightHeight) // 2
         print("Right height", rightHeight)
         print("Left height", leftHeight)
@@ -80,7 +82,8 @@ def get_marker_dim():
         x = pixels
         X = markerHeight
         Z = markerDist
-        print("focal length", x*(Z/X))
+        print("focal length", x * (Z / X))
+
 
 # picam2 = Picamera2()
 # full = (1920, 1080)
@@ -92,10 +95,10 @@ def get_marker_dim():
 # capture_controls = {'FrameRate': (2, 20)}
 # capture_config = picam2.create_still_configuration(controls=capture_controls)
 # picam2.configure(preview_config)
-#camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (240, 135)}, display="lores")
+# camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (240, 135)}, display="lores")
 
-#camera_config = picam2.create_still_configuration()
-#picam2.configure(camera_config)
+# camera_config = picam2.create_still_configuration()
+# picam2.configure(camera_config)
 # picam2.start_preview(Preview.QTGL)
 # picam2.start()
 
@@ -107,4 +110,3 @@ while 1:
     get_marker_dim()
 
     # picam2.capture_file(f"img{i}_{inp}.jpg")
-
