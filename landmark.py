@@ -43,14 +43,14 @@ def detect(image_inp):
 
 def drive_straight(i: int = 1):
     print("Found target")
-    arlo.go_diff(speed, speed, 1, 1)
-    time.sleep(0.5)
+    # arlo.go_diff(speed, speed, 1, 1)
+    time.sleep(1)
     return i + 1
 
 
 def turn_left(i):
     print("moving left")
-    arlo.go_diff(tspeed, tspeed, 0, 1)
+    # arlo.go_diff(tspeed, tspeed, 0, 1)
     time.sleep(0.5)
     # arlo.stop()
     # time.sleep(2)
@@ -65,7 +65,7 @@ def turn_left(i):
 
 def turn_right():
     print("moving right")
-    arlo.go_diff(tspeed, tspeed, 1, 0)
+    # arlo.go_diff(tspeed, tspeed, 1, 0)
     time.sleep(0.5)
 
 
