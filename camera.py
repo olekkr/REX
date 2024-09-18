@@ -56,8 +56,7 @@ markerHeight = 50  # mm
 
 def get_marker_dim():
     image = cam_on()
-    cv2.imshow("Image", image)
-    cv2.waitKey(1)
+
     (corners, ids, rejected) = detect(image)
     if len(corners) > 0:
         # flatten the ArUco IDs list
@@ -83,6 +82,8 @@ def get_marker_dim():
         X = markerHeight
         Z = markerDist
         print("focal length", x * (Z / X))
+    cv2.imshow("Image", image)
+    cv2.waitKey(1)
 
 
 # picam2 = Picamera2()
