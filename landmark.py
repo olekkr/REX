@@ -172,7 +172,7 @@ while 1 and __name__ == "__main__":
         #     )
         # )
         for idd, corner in zip(ids, corners):
-            cv2.aruco.drawDetectedCornersCharuco(image, np.array(corner), np.array(idd))
+            cv2.aruco.drawDetectedCornersCharuco(image, np.array(corner), ids)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
