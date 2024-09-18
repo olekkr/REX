@@ -121,9 +121,7 @@ while 1 and __name__ == "__main__":
             CameraMatrix(preview_downscale),
             DistortionCoefficient,
         )
-        print("a",a)
-        print("b",b)
-        print("c",c)
+        print("a",np.linalg.norm(a))
     try:
         for corner in corners:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
