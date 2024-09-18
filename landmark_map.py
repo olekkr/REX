@@ -137,6 +137,7 @@ while 1 and __name__ == "__main__":
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
+    plt.show()
     # if len(corners) == 0 and j < stop_and_see:
     #     j += 1
     #     continue
