@@ -167,9 +167,9 @@ while 1 and __name__ == "__main__":
         # )
 
         try:
-            cv2.aruco.drawDetectedCornersCharuco(image, corners, ids)
+            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corners, ids))
         except:
-            pass
+            print("failed to draw")
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
