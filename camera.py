@@ -27,7 +27,7 @@ picam2_config = picam2.create_video_configuration(
     queue=False,
 )
 picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=True)
+picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
 # cap = cv2.VideoCapture()
@@ -54,6 +54,8 @@ markerHeight = 50  # mm
 
 def get_marker_dim():
     image = cam_on()
+    cv2.imshow("Image", image)
+    cv2.waitKey(1)
     (corners, ids, rejected) = detect(image)
     if len(corners) > 0:
         # flatten the ArUco IDs list
@@ -103,5 +105,6 @@ for i in range(100):
     if inp.lower() == "q":
         exit()
     get_marker_dim()
+
     picam2.capture_file(f"img{i}_{inp}.jpg")
 
