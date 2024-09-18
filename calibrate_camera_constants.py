@@ -13,4 +13,4 @@ CameraMatrix = lambda downscale: np.array(
     dtype=float,
 )
 
-DistortionCoefficient = np.array([0, 0, 0, 0], dtype=float)
+DistortionCoefficient = np.array([0, 0, 0, 0, 0], dtype=float)
