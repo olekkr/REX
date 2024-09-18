@@ -1,7 +1,7 @@
 import time
 
 import cv2
-from picamera2 import Picamera2
+from picamera2 import Picamera2, PiRGBArray
 
 import robot
 
@@ -29,7 +29,7 @@ picam2.start(show_preview=False)
 time.sleep(2)
 picam2.start()
 cap = cv2.VideoCapture()
-
+rawCapture = PiRGBArray(picam2, size=(640, 480))
 
 def drive_straight():
     print("Found target")
@@ -45,16 +45,30 @@ def turn_right():
 
 
 def cam_on():
-    if not cap.isOpened():
-        print("Camera not opened")
-        exit()
-    ret, frame = cap.read()
-    while not ret:
-        print("Frame unavailable waiting...")
-        time.sleep(5)
-        ret, frame = cap.read()
-    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    cv2.imshow(frame, rgb)
+    # if not cap.isOpened():
+    #     print("Camera not opened")
+    #     exit()
+    # ret, frame = cap.read()
+    # while not ret:
+    #     print("Frame unavailable waiting...")
+    #     time.sleep(5)
+    #     ret, frame = cap.read()
+
+    for frame in picam2.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        # grab the raw NumPy array representing the image, then initialize the timestamp
+        # and occupied/unoccupied text
+        image = frame.array
+        # show the frame
+        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        cv2.imshow(image, rgb)
+        cv2.imshow("Frame", image)
+        # clear the stream in preparation for the next frame
+        rawCapture.truncate(0)
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+
 
 
 while 1:
