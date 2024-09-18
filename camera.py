@@ -51,8 +51,8 @@ def cam_on():
 
 
 markerDist = int(input("Distance from marker: "))
-markerHeight = 50  # mm
-focalLength = 1880
+markerHeight = 145  # mm
+focalLength = 648
 
 
 def get_marker_dim():

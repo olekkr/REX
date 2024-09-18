@@ -1,6 +1,6 @@
 import numpy as np
 
-FocalLength = 1687.0
+FocalLength = 1000.0
 
 markerHeight = 145.0  # mm
 
