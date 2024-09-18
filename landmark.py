@@ -13,7 +13,7 @@ aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
-imageSize = (320, 120)
+imageSize = (1920//4, 1080//4)
 FPS = 10
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
@@ -81,6 +81,13 @@ while 1:
     lefts = arlo.read_sensor(2)
     rights = arlo.read_sensor(3)
 
+    cX = None
+    cY = None
+    topRight = None
+    bottomRight = None
+    bottomLeft = None
+    topLeft = None
+
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
         # flatten the ArUco IDs list
@@ -122,44 +129,14 @@ while 1:
     cv2.imshow("Image", image)
     cv2.waitKey(1)
 
-    # qr_leftdown = bottomLeft
-    # qr_rightdown = bottomRight
-
-    # # TESTING
-    # print("LD: ", qr_leftdown)
-    # print("RD: ", qr_rightdown)
-
-    # qr_leftUp = topLeft
-    # qr_rightUp = topRight
-    # print("LU: ", qr_leftUp)
-    # print("RU: ", qr_rightUp)
-
-    # # draw the bounding box of the ArUCo detection
-    # cv2.line(image, topLeft, topRight, (0, 255, 0), 2)
-    # cv2.line(image, topRight, bottomRight, (0, 255, 0), 2)
-    # cv2.line(image, bottomRight, bottomLeft, (0, 255, 0), 2)
-    # cv2.line(image, bottomLeft, topLeft, (0, 255, 0), 2)
-
-    # # compute and draw the center (x, y)-coordinates of the ArUco
-    # # marker
-    # cX = int((topLeft[0] + bottomRight[0]) / 2.0)
-    # cY = int((topLeft[1] + bottomRight[1]) / 2.0)
-    # cv2.circle(image, (cX, cY), 4, (0, 0, 255), -1)
-    # # draw the ArUco marker ID on the image
-    # cv2.putText(image, str(markerID),
-    #     (topLeft[0], topLeft[1] - 15), cv2.FONT_HERSHEY_SIMPLEX,
-    #     0.5, (0, 255, 0), 2)
-    # print("[INFO] ArUco marker ID: {}".format(markerID))
-    # # show the output image
-    # cv2.imshow("Image", image)
-    # cv2.waitKey(0)
-
     # middle = (qr_leftdown + qr_rightdown) / 2
-    # close_middle = [middle - 50, middle + 50]
+    if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
+        close_x = range(cX-25,cX+25)
+        close_y = range(cY-25,cY+25)
 
-    # if middle > close_middle[0] and middle < close_middle[1]:
-    #     drive_straight()
-    # elif qr_leftdown < middle and qr_rightdown < middle:
-    #     turn_right()
-    # else:
-    #     turn_left()
+        if cX in close_x and cY in close_y:
+            drive_straight()
+        elif bottomLeft[0] < cX and bottomRight[1] < cY:
+            turn_right()
+        else:
+            turn_left()
