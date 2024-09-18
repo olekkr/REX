@@ -67,6 +67,7 @@ def cam_on():
         im = picam2.capture_array()
 
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+        return grey
         print(detect(grey))
 
         cv2.imshow("Camera", im)
@@ -76,8 +77,8 @@ def cam_on():
 
 
 while 1:
-    cam_on()
-    (corners, ids, rejected) = cv2.auro.detectMarkers(arucoDict)
+    
+    (corners, ids, rejected) = detect(cam_on())
     front = arlo.read_sensor(0)
     lefts = arlo.read_sensor(2)
     rights = arlo.read_sensor(3)
