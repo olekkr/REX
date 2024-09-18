@@ -40,9 +40,11 @@ def detect(image_inp):
     return corners, ids, rejected
 
 
-def drive_straight():
-    print("Found target")
-    # arlo.go_diff(speed, speed, 1, 1)
+def drive_straight(i: int = 1):
+    if i % 10 == 0:
+        print("Found target")
+    arlo.go_diff(speed, speed, 1, 1)
+    return i + 1
 
 
 def turn_left():
@@ -73,7 +75,7 @@ def cam_on():
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
 
-
+i = 0
 while 1:
     image = cam_on()
     (corners, ids, rejected) = detect(image)
@@ -133,9 +135,8 @@ while 1:
     if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
         close_x = range(cX-25,cX+25)
         close_y = range(cY-25,cY+25)
-
         if cX in close_x and cY in close_y:
-            drive_straight()
+            i = drive_straight(i)
         elif bottomLeft[0] < cX and bottomRight[1] < cY:
             turn_right()
         else:
