@@ -120,7 +120,7 @@ while 1:
             print("[INFO] ArUco marker ID: {}".format(markerID))
             # show the output image
             cv2.imshow("Image", image)
-            # cv2.waitKey()
+            cv2.waitKey()
 
     # qr_leftdown = bottomLeft
     # qr_rightdown = bottomRight
