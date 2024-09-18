@@ -2,7 +2,7 @@ import time
 
 import cv2
 from picamera2 import Picamera2
-
+from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
 import robot
 
 arlo = robot.Robot()
@@ -146,6 +146,9 @@ while 1 and __name__ == "__main__":
                 2,
             )
             print("[INFO] ArUco marker ID: {}".format(markerID))
+            
+        print(cv2.aruco.estimatePoseSingleMarkers(corners, markerHeight, CameraMatrix(preview_downscale), DistortionCoefficient))
+
             # show the output image
     cv2.imshow("Image", image)
     cv2.waitKey(1)

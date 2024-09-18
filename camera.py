@@ -106,6 +106,7 @@ def get_marker_dim():
         X = markerHeight
         Z = markerDist
         print("focal length", x * (Z / X))
+
     cv2.imshow("Image", image)
     cv2.waitKey(1)
 
