@@ -14,7 +14,7 @@ image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 
 imageSize = (320, 120)
-FPS = 30
+FPS = 10
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 
@@ -120,7 +120,7 @@ while 1:
             print("[INFO] ArUco marker ID: {}".format(markerID))
             # show the output image
             cv2.imshow("Image", image)
-            cv2.waitKey(0)
+            cv2.waitKey(1)
 
     # qr_leftdown = bottomLeft
     # qr_rightdown = bottomRight
