@@ -124,7 +124,7 @@ while 1 and __name__ == "__main__":
             DistortionCoefficient,
         )
         print("a",np.linalg.norm(a))
-        marker_map = [(ax, az) for ax, ay, az in a]
+        marker_map = [(ax, az) for ((ax, ay, az),) in a]
         plt.plot(marker_map)
     try:
         for corner in corners:
