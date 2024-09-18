@@ -101,10 +101,10 @@ def get_marker_dim():
 
 while 1:
     time.sleep(0.1)
-    inp = input("name (q for quit): ").replace(" ", "_")
-    if inp.lower() == "q":
-        exit()
+    # inp = input("name (q for quit): ").replace(" ", "_")
+    # if inp.lower() == "q":
+    #     exit()
     get_marker_dim()
 
-    picam2.capture_file(f"img{i}_{inp}.jpg")
+    # picam2.capture_file(f"img{i}_{inp}.jpg")
 
