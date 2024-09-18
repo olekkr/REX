@@ -24,7 +24,7 @@ CameraMatrix = np.array(
     dtype=np.float64,
 )
 
-DistortionCoefficient = np.array([0, 0, 0, 0, 0], dtype=np.float64)
+DistortionCoefficient = np.array([0, 0, 0, 0], dtype=np.float64)
 # FocalLength = 648.0
 
 # markerHeight = 145.0  # mm
