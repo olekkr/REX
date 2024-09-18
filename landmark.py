@@ -115,7 +115,6 @@ while 1 and __name__ == "__main__":
 
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
-        print(corners)
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
