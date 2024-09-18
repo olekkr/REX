@@ -135,26 +135,26 @@ while 1 and __name__ == "__main__":
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
-    if len(corners) == 0 and j < stop_and_see:
-        j += 1
-        continue
-    elif len(corners) == 0 and j >= stop_and_see:
-        j = 0
+    # if len(corners) == 0 and j < stop_and_see:
+    #     j += 1
+    #     continue
+    # elif len(corners) == 0 and j >= stop_and_see:
+    #     j = 0
 
-    # middle = (qr_leftdown + qr_rightdown) / 2
-    if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-        imgcX, imgcY = center_image
-        thresholdX = int(imgcX * 0.5)
-        thresholdY = int(imgcY * 0.5)
-        close_x = range(cX - thresholdX, cX + thresholdX)
-        close_y = range(cY - thresholdY, cY + thresholdY)
-        # print(close_x, close_y, cX, cY, imgcX, imgcY)
+    # # middle = (qr_leftdown + qr_rightdown) / 2
+    # if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
+    #     imgcX, imgcY = center_image
+    #     thresholdX = int(imgcX * 0.5)
+    #     thresholdY = int(imgcY * 0.5)
+    #     close_x = range(cX - thresholdX, cX + thresholdX)
+    #     close_y = range(cY - thresholdY, cY + thresholdY)
+    #     # print(close_x, close_y, cX, cY, imgcX, imgcY)
 
-        if imgcX in close_x and imgcY in close_y:
-            drive_straight(i)
-        elif bottomLeft[0] > imgcX:
-            turn_right()
-        else:
-            i = turn_left(i)
-    else:
-        i = turn_left(i)
+    #     if imgcX in close_x and imgcY in close_y:
+    #         drive_straight(i)
+    #     elif bottomLeft[0] > imgcX:
+    #         turn_right()
+    #     else:
+    #         i = turn_left(i)
+    # else:
+    #     i = turn_left(i)
