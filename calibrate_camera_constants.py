@@ -9,7 +9,8 @@ CameraMatrix = lambda downscale: np.array(
         [FocalLength, 0.0, 1920 / (2**downscale)],
         [0.0, FocalLength, 1080.0 // (2**downscale)],
         [0, 0, 1],
-    ]
+    ],
+    dtype=float,
 )
 
-DistortionCoefficient = np.array([0, 0, 0, 0])
+DistortionCoefficient = np.array([0, 0, 0, 0], dtype=float)
