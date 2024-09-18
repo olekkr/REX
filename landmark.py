@@ -7,9 +7,9 @@ import robot
 
 arlo = robot.Robot()
 
-speed = 60
+speed = 40
 tspeed_slow = 32
-tspeed = 40
+tspeed = 32
 aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
@@ -52,7 +52,7 @@ def drive_straight(i: int = 1):
 def turn_left(i):
     print("moving left")
     arlo.go_diff(tspeed, tspeed, 0, 1)
-    time.sleep(0.5)
+    time.sleep(0.7)
     # arlo.stop()
     # time.sleep(2)
     # if i < 20:
