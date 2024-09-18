@@ -8,7 +8,7 @@ speed = 40
 tspeed = 32
 aruco = False
 image = "aruco.png"
-arucoDict = cv2.aruco.DICT_6X6_250()
+arucoDict = cv2.aruco.DICT_6X6_250
 
 def drive_straight():
     print("Found target")
