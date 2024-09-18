@@ -52,6 +52,7 @@ def turn_left(i):
     arlo.go_diff(tspeed, tspeed, 0, 1)
     time.sleep(0.5)
     arlo.stop()
+    time.sleep(2)
     # if i < 20:
     #     arlo.go_diff(tspeed, tspeed, 0, 1)
     # elif i > 100:
