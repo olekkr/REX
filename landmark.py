@@ -6,7 +6,6 @@ from picamera2 import Picamera2
 import robot
 
 arlo = robot.Robot()
-# cap = cv2.VideoCapture(0)
 
 speed = 40
 tspeed = 32
@@ -19,7 +18,7 @@ camera_config = picam2.create_still_configuration()
 picam2.configure(camera_config)
 time.sleep(2)
 picam2.start()
-cap = picam2.capture()
+cap = cv2.VideoCapture(0)
 
 
 def drive_straight():
