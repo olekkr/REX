@@ -138,9 +138,9 @@ while 1 and __name__ == "__main__":
             DistortionCoefficient,
         )
         print(corners)
-        marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
-        map_x.append(marker_map[0])
-        map_y.append(marker_map[1])
+        marker_map = ([int(ax*100) for ((ax, ay, az),) in a], [int(az*100) for ((ax, ay, az),) in a])
+        map_x += marker_map[0]
+        map_y += marker_map[1]
     try:
         for corner in corners:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
