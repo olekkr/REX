@@ -1,8 +1,5 @@
 from time import sleep
-import constants
-import calculations
 import robot
-import sys
 
 
 arlo = robot.Robot()
@@ -43,5 +40,3 @@ while 1:
             left()
         else:
             right()
-
-### MAKE CHECKS ON LEFT AND RIGHT SO IT WONT CRASH INTO WALLS WHEN TURNING LIKE FRONT SENSOR

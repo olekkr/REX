@@ -1,13 +1,10 @@
 import time
-
 import cv2
-from picamera2 import Picamera2
-
 import robot
+from picamera2 import Picamera2
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
 
 arlo = robot.Robot()
-
 speed = 40
 tspeed_slow = 32
 tspeed = 32
@@ -20,13 +17,13 @@ center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
-
 picam2 = Picamera2()
 picam2_config = picam2.create_video_configuration(
     {"size": imageSize, "format": "RGB888"},
     controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
     queue=False,
 )
+
 picam2.configure(picam2_config)  # Not really necessary
 picam2.start(show_preview=False)
 time.sleep(2)
@@ -35,19 +32,16 @@ picam2.start()
 
 arucoParams = cv2.aruco.DetectorParameters()
 
-
 def detect(image_inp):
     print(image_inp.shape)
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
-
 
 def drive_straight(i: int = 1):
     print("Found target")
     arlo.go_diff(speed, speed, 1, 1)
     time.sleep(1)
     return i + 1
-
 
 def turn_left(i):
     print("moving left")
@@ -69,7 +63,6 @@ def turn_right():
     arlo.go_diff(tspeed_slow, tspeed_slow, 1, 0)
     time.sleep(0.5)
 
-
 def cam_on():
     # if not cap.isOpened():
     #     print("Camera not opened")
@@ -86,7 +79,6 @@ def cam_on():
         return im
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         print(detect(grey))
-
         cv2.imshow("Camera", im)
         cv2.waitKey(1)
 

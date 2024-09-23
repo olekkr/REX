@@ -2,9 +2,7 @@ import robot
 import time as t
 
 arlo = robot.Robot()
-
 print("Running")
-
 i = 1
 sensor = 3
 
