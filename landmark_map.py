@@ -100,16 +100,18 @@ fig, ax = plt.subplots()
 img = None
 
 def update(frame):
-    if img:
-        cv2.imshow("Image", img)
-    cv2.waitKey(1)
-
     plt.draw()
     ax.clear()  # clearing the axes
     ax.scatter(
         map_x, map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
+    if img:
+        cv2.imshow("Image", img)
+        cv2.waitKey(1)
+        if cv2.getWindowProperty("Image", 0) == -1:
+            arlo.stop()
+            exit()
 
 
 anim = FuncAnimation(fig, update)
@@ -154,8 +156,6 @@ while 1 and __name__ == "__main__":
         # for corner in corners:
         #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
     # else:
-    cv2.imshow("Image", image)
+    # cv2.imshow("Image", image)
 
-    if cv2.getWindowProperty("Image", 0) == -1:
-        arlo.stop()
-        exit()
+    
