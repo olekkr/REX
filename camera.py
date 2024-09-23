@@ -99,21 +99,33 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
 
         leftHeight = bottomLeft[1] - topLeft[1]
         rightHeight = bottomRight[1] - topRight[1]
-        pixels = (leftHeight + rightHeight) // 2
+        heightPixels = (leftHeight + rightHeight) // 2
+        topWidth = topRight[0] - topLeft[0]
+        bottomWidth = bottomRight[0] - bottomLeft[0]
+        heightPixels = (leftHeight + rightHeight) // 2
+        widthPixels = (topWidth + bottomWidth) // 2
         # print("Right height", rightHeight)
         # print("Left height", leftHeight)
         # print("avg height", pixels)
-        x = pixels
+        y = heightPixels
+        Y = markerHeight
+        x = widthPixels
         X = markerHeight
         Z = markerDist
+        print()
         if calc_f:
-            f = x * (Z / X)
-            print(f"{x=}, {X=}, {Z=}, x * (Z / X) = {f=}")
+            fx = x * (Z / X)
+            fy = y * (Z / Y)
+            print(f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}")
+            print(f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}")
         else:
             if markerDist:
-                print(f"{x=}, {X=}, {Z=}")
+                print(f"height params: {y=}, {Y=}, {Z=}")
+                print(f"width params : {x=}, {X=}, {Z=}")
             else:
-                print(f"{x=}, {X=}")
+                print(f"height params: {y=}, {Y=}")
+                print(f"width params : {x=}, {X=}")
+        print()
 
     cv2.imshow("Image", image)
     cv2.waitKey(1)
