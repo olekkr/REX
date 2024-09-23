@@ -116,8 +116,8 @@ j = 0
 while 1 and __name__ == "__main__":
     arlo.stop()
     image = cam_on()
-    cv2.imshow("Image", image)
-    cv2.waitKey(1)
+    # cv2.imshow("Image", image)
+    plt.imshow(image)
     (corners, ids, rejected) = detect(image)
 
     # front = arlo.read_sensor(0)
