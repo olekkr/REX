@@ -116,8 +116,8 @@ j = 0
 while 1 and __name__ == "__main__":
     arlo.stop()
     image = cam_on()
-    # cv2.imshow("Image", image)
-    # cv2.waitKey(1)
+    cv2.imshow("Image", image)
+    cv2.waitKey(0)
     (corners, ids, rejected) = detect(image)
 
     # front = arlo.read_sensor(0)
@@ -144,10 +144,10 @@ while 1 and __name__ == "__main__":
         print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-        for corner in corners:
-            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
-    else:
-        cv2.imshow("Image", image)
+        # for corner in corners:
+        #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
+    # else:
+    # cv2.imshow("Image", image)
 
     cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
