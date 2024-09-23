@@ -78,9 +78,10 @@ def cam_on(preview: bool = False):
 
     while True:
         im = picam2.capture_array("main")
+
         # print(im.shape)
         if preview:
-            cv2.imshow("Camera", im)
+            cv2.imshow("Camera", picam2.read())
             cv2.waitKey(1)
         return im
 
@@ -110,7 +111,7 @@ j = 0
 while 1 and __name__ == "__main__":
     if cv2.waitKey(1) == ord("q"):
         break
-    arlo.stop()
+    # arlo.stop()
     image = cam_on()
     img = image
 
