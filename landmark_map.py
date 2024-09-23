@@ -97,8 +97,10 @@ def cam_on():
 map_x, map_y = ([], [])
 fig, ax = plt.subplots()
 
+img = None
 
 def update(frame):
+    cv2.imshow("Image", img)
     plt.draw()
     ax.clear()  # clearing the axes
     ax.scatter(
@@ -108,7 +110,7 @@ def update(frame):
 
 
 anim = FuncAnimation(fig, update)
-plt.show()
+plt.show(block=False)
 
 i = 0
 stop_and_see = 5
@@ -117,7 +119,6 @@ while 1 and __name__ == "__main__":
     arlo.stop()
     image = cam_on()
     # cv2.imshow("Image", image)
-    plt.imshow(image)
 
     (corners, ids, rejected) = detect(image)
 
@@ -147,6 +148,7 @@ while 1 and __name__ == "__main__":
         map_y += marker_map[1]
         # for corner in corners:
         #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
+    img = image
     # else:
     # cv2.imshow("Image", image)
 
