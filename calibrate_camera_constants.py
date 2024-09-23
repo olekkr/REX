@@ -3,7 +3,7 @@ import numpy as np
 dimensions = (480, 270)
 
 # FocalLength = 620.0
-FocalLength = 630.0
+FocalLength = 625.0
 
 markerHeight = 145.0  # mm
 
