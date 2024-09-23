@@ -1,8 +1,9 @@
 import numpy as np
 
-dimensions = (480,270)
+dimensions = (480, 270)
 
-FocalLength = 620.0
+# FocalLength = 620.0
+FocalLength = 630.0
 
 markerHeight = 145.0  # mm
 
@@ -11,7 +12,7 @@ CameraMatrix = np.array(
     [
         [FocalLength, 0, dimensions[0] / 2],
         [0, FocalLength, dimensions[1] / 2],
-        [0,           0, 1],
+        [0, 0, 1],
     ],
     dtype=float,
 )
