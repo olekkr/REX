@@ -112,6 +112,7 @@ def update(frame):
 
 anim = FuncAnimation(fig, update)
 plt.show(block=False)
+preview_thread.start()
 
 i = 0
 stop_and_see = 5
@@ -121,7 +122,6 @@ while 1 and __name__ == "__main__":
     image = cam_on()
     img = image
     data_queue.put(img)
-    preview_thread.start()
     (corners, ids, rejected) = detect(image)
 
     cX = None
