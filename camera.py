@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from picamera2 import Picamera2
+from datetime import datetime
 
 import robot
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
@@ -58,7 +59,7 @@ focalLength = 648
 
 def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = False):
     image = cam_on()
-
+    s = ""
     (corners, ids, rejected) = detect(image)
     if len(corners) > 0:
         # flatten the ArUco IDs list
@@ -116,22 +117,25 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
         if calc_f:
             fx = x * (Z / X)
             fy = y * (Z / Y)
-            print(f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}")
-            print(f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}")
+            s += f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}\n"
+            s += f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}\n"
         else:
             if markerDist:
-                print(f"height params: {y=}, {Y=}, {Z=}")
-                print(f"width params : {x=}, {X=}, {Z=}")
+                s+= f"height params: {y=}, {Y=}, {Z=}\n"
+                s+= f"width params : {x=}, {X=}, {Z=}\n"
             else:
-                print(f"height params: {y=}, {Y=}")
-                print(f"width params : {x=}, {X=}")
-        print()
+                s+= f"height params: {y=}, {Y=}\n"
+                s+= f"width params : {x=}, {X=}\n"
+        print(s)
+
 
     cv2.imshow("Image", image)
     cv2.waitKey(1)
 
+    return s
 
 
+output_log = f"log{int(datetime.now().timestamp())}.log"
 while 1:
     time.sleep(0.1)
     get_marker_dim(0, calc_f=False)
@@ -139,6 +143,8 @@ while 1:
     if nam != "":
         markDist = int(input("Distance from marker (default 1000): ") or 1000)
         markHeight = 145
-        get_marker_dim(markDist, markHeight, calc_f=True)
+        marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
+        with open(output_log, "a+") as f:
+            f.write(marker_res)
         picam2.capture_file(f"img_Z{markDist}_X{markHeight}_{nam}.jpg")
         print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
