@@ -118,6 +118,8 @@ while 1 and __name__ == "__main__":
     image = cam_on()
     # cv2.imshow("Image", image)
     plt.imshow(image)
+    plt.show(block=False)
+
     (corners, ids, rejected) = detect(image)
 
     # front = arlo.read_sensor(0)
