@@ -102,6 +102,8 @@ img = None
 def update(frame):
     if img:
         cv2.imshow("Image", img)
+    cv2.waitKey(1)
+
     plt.draw()
     ax.clear()  # clearing the axes
     ax.scatter(
@@ -154,7 +156,6 @@ while 1 and __name__ == "__main__":
     # else:
     cv2.imshow("Image", image)
 
-    cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
