@@ -94,7 +94,7 @@ def cam_on():
         cv2.waitKey(1)
 
 
-map_x, map_y = ([0,-1000, 1000], [0, 0, 1000])
+map_x, map_y = ([0, -1000, 1000], [0, 0, 1000])
 fig, ax = plt.subplots()
 
 
@@ -142,8 +142,10 @@ while 1 and __name__ == "__main__":
         print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-    # for corner in corners:
-    #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
+        for corner in corners:
+            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
+    else:
+        cv2.imshow("Image", image)
 
     # cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
