@@ -51,12 +51,12 @@ def cam_on():
         return im
 
 
-markerDist = int(input("Distance from marker: "))
-markerHeight = 145  # mm
+# markerDist = int(input("Distance from marker: "))
+# markerHeight = 145  # mm
 focalLength = 648
 
 
-def get_marker_dim():
+def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = False):
     image = cam_on()
 
     (corners, ids, rejected) = detect(image)
@@ -100,13 +100,20 @@ def get_marker_dim():
         leftHeight = bottomLeft[1] - topLeft[1]
         rightHeight = bottomRight[1] - topRight[1]
         pixels = (leftHeight + rightHeight) // 2
-        print("Right height", rightHeight)
-        print("Left height", leftHeight)
-        print("avg height", pixels)
+        # print("Right height", rightHeight)
+        # print("Left height", leftHeight)
+        # print("avg height", pixels)
         x = pixels
         X = markerHeight
         Z = markerDist
-        print("focal length", x * (Z / X))
+        if calc_f:
+            f = x * (Z / X)
+            print(f"{x=}, {X=}, {Z=}, x * (Z / X) = {f=}")
+        else:
+            if markerDist:
+                print(f"{x=}, {X=}, {Z=}")
+            else:
+                print(f"{x=}, {X=}")
 
     cv2.imshow("Image", image)
     cv2.waitKey(1)
@@ -115,6 +122,11 @@ def get_marker_dim():
 
 while 1:
     time.sleep(0.1)
-    get_marker_dim()
-    if input("1") == "1":
-        picam2.capture_file(f"img_{markerDist}.jpg")
+    get_marker_dim(0, calc_f=False)
+    nam = input("Enter to proceed next frame, otherwise write name")
+    if nam != "":
+        markDist = int(input("Distance from marker (default 1000): ") or 1000)
+        markHeight = 145
+        get_marker_dim(markDist, markHeight, calc_f=True)
+        picam2.capture_file(f"img_Z{markDist}_X{markHeight}_{nam}.jpg")
+        print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
