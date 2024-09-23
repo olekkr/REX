@@ -102,7 +102,7 @@ def update(frame):
     plt.draw()
     ax.clear()  # clearing the axes
     ax.scatter(
-        map_x, map_y, s=map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
+        map_x, map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
 
