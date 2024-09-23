@@ -94,7 +94,7 @@ def cam_on():
         cv2.waitKey(1)
 
 
-map_x, map_y = ([], [])
+map_x, map_y = ([0], [0])
 fig, ax = plt.subplots()
 
 img = None
