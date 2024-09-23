@@ -94,7 +94,7 @@ def cam_on():
         cv2.waitKey(1)
 
 
-map_x, map_y = ([0], [0])
+map_x, map_y = ([0,-1000, 1000], [0, 0, 1000])
 fig, ax = plt.subplots()
 
 
@@ -118,9 +118,9 @@ while 1 and __name__ == "__main__":
     cv2.waitKey(1)
     (corners, ids, rejected) = detect(image)
 
-    front = arlo.read_sensor(0)
-    lefts = arlo.read_sensor(2)
-    rights = arlo.read_sensor(3)
+    # front = arlo.read_sensor(0)
+    # lefts = arlo.read_sensor(2)
+    # rights = arlo.read_sensor(3)
 
     cX = None
     cY = None
