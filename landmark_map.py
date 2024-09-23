@@ -145,7 +145,7 @@ while 1 and __name__ == "__main__":
     # for corner in corners:
     #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
 
-    cv2.waitKey(1)
+    # cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
