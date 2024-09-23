@@ -86,6 +86,8 @@ def cam_on():
     while True:
         im = picam2.capture_array("main")
         # print(im.shape)
+        cv2.imshow("Camera", im)
+        cv2.waitKey(1)
         return im
         grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         print(detect(grey))
@@ -99,19 +101,22 @@ fig, ax = plt.subplots()
 
 img = None
 
+
 def update(frame):
     plt.draw()
+    plt.xscale("linear")
+    plt.yscale("linear")
     ax.clear()  # clearing the axes
     ax.scatter(
         map_x, map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
-    if img:
-        cv2.imshow("Image", img)
-        cv2.waitKey(1)
-        if cv2.getWindowProperty("Image", 0) == -1:
-            arlo.stop()
-            exit()
+    # if img:
+    #     cv2.imshow("Image", img)
+    #     cv2.waitKey(1)
+    #     if cv2.getWindowProperty("Image", 0) == -1:
+    #         arlo.stop()
+    #         exit()
 
 
 anim = FuncAnimation(fig, update)
@@ -157,5 +162,3 @@ while 1 and __name__ == "__main__":
         #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
     # else:
     # cv2.imshow("Image", image)
-
-    
