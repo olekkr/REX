@@ -1,8 +1,11 @@
 import time
 import cv2
-from picamera2 import Picamera2, Preview
+import matplotlib.pyplot as plt
+import numpy as np
+from picamera2 import Picamera2
 
 import robot
+from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
 
 arlo = robot.Robot()
 
@@ -35,9 +38,8 @@ arucoParams = cv2.aruco.DetectorParameters()
 
 
 def detect(image_inp):
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(
-        image=image_inp, dictionary=arucoDict, parameters=arucoParams
-    )
+    # print(image_inp.shape)
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
 
@@ -45,16 +47,15 @@ def cam_on():
     while True:
         im = picam2.capture_array()
 
-        grey = cv2.cvtColor(im, cv2.COLOR_RGB2RGBA)
-        return grey
+        return im
 
 
-markerDist = int(input("Distance from marker: "))
-markerHeight = 145  # mm
+# markerDist = int(input("Distance from marker: "))
+# markerHeight = 145  # mm
 focalLength = 648
 
 
-def get_marker_dim():
+def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = False):
     image = cam_on()
 
     (corners, ids, rejected) = detect(image)
@@ -97,14 +98,33 @@ def get_marker_dim():
 
         leftHeight = bottomLeft[1] - topLeft[1]
         rightHeight = bottomRight[1] - topRight[1]
-        pixels = (leftHeight + rightHeight) // 2
-        print("Right height", rightHeight)
-        print("Left height", leftHeight)
-        print("avg height", pixels)
-        x = pixels
+        heightPixels = (leftHeight + rightHeight) // 2
+        topWidth = topRight[0] - topLeft[0]
+        bottomWidth = bottomRight[0] - bottomLeft[0]
+        heightPixels = (leftHeight + rightHeight) // 2
+        widthPixels = (topWidth + bottomWidth) // 2
+        # print("Right height", rightHeight)
+        # print("Left height", leftHeight)
+        # print("avg height", pixels)
+        y = heightPixels
+        Y = markerHeight
+        x = widthPixels
         X = markerHeight
         Z = markerDist
-        print("focal length", x * (Z / X))
+        print()
+        if calc_f:
+            fx = x * (Z / X)
+            fy = y * (Z / Y)
+            print(f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}")
+            print(f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}")
+        else:
+            if markerDist:
+                print(f"height params: {y=}, {Y=}, {Z=}")
+                print(f"width params : {x=}, {X=}, {Z=}")
+            else:
+                print(f"height params: {y=}, {Y=}")
+                print(f"width params : {x=}, {X=}")
+        print()
 
     cv2.imshow("Image", image)
     cv2.waitKey(1)
@@ -113,4 +133,11 @@ def get_marker_dim():
 
 while 1:
     time.sleep(0.1)
-    get_marker_dim()
+    get_marker_dim(0, calc_f=False)
+    nam = input("Enter to proceed next frame, otherwise write name")
+    if nam != "":
+        markDist = int(input("Distance from marker (default 1000): ") or 1000)
+        markHeight = 145
+        get_marker_dim(markDist, markHeight, calc_f=True)
+        picam2.capture_file(f"img_Z{markDist}_X{markHeight}_{nam}.jpg")
+        print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
