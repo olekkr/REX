@@ -135,7 +135,7 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
     return s
 
 
-output_log = f"log{int(datetime.now().timestamp())}.log"
+output_log = f"output/log{int(datetime.now().timestamp())}.log"
 while 1:
     time.sleep(0.1)
     get_marker_dim(0, calc_f=False)
@@ -146,5 +146,5 @@ while 1:
         marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
         with open(output_log, "a+") as f:
             f.write(marker_res)
-        picam2.capture_file(f"img_Z{markDist}_X{markHeight}_{nam}.jpg")
+        picam2.capture_file(f"output/img_Z{markDist}_X{markHeight}_{nam}.jpg")
         print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
