@@ -2,6 +2,7 @@ import time
 
 import cv2
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle, Rectangle
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from picamera2 import Picamera2
@@ -92,11 +93,9 @@ img = None
 
 def update(frame):
     plt.draw()
-    plt.xscale("linear")
-    plt.yscale("linear")
     ax.clear()  # clearing the axes
     ax.scatter(
-        map_x, map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
+        map_x, map_y, c="b", alpha=0.5,
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
 
@@ -109,6 +108,8 @@ i = 0
 stop_and_see = 5
 j = 0
 while 1 and __name__ == "__main__":
+    if cv2.waitKey(1) == ord("q"):
+        break
     arlo.stop()
     image = cam_on()
     img = image
@@ -136,3 +137,4 @@ while 1 and __name__ == "__main__":
         print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
+    cv2.imshow("Image", image)
