@@ -135,7 +135,7 @@ while 1 and __name__ == "__main__":
         )
         # print(corners)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
-        print(np.linalg.norm(a))
+        # print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
     cv2.imshow("Image", image)
