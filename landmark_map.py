@@ -73,27 +73,15 @@ def turn_right():
     time.sleep(0.5)
 
 
-def cam_on():
-    # if not cap.isOpened():
-    #     print("Camera not opened")
-    #     exit()
-    # ret, frame = cap.read()
-    # while not ret:
-    #     print("Frame unavailable waiting...")
-    #     time.sleep(5)
-    #     ret, frame = cap.read()
+def cam_on(preview: bool = False):
 
     while True:
         im = picam2.capture_array("main")
         # print(im.shape)
-        cv2.imshow("Camera", im)
-        cv2.waitKey(1)
+        if preview:
+            cv2.imshow("Camera", im)
+            cv2.waitKey(1)
         return im
-        grey = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
-        print(detect(grey))
-
-        cv2.imshow("Camera", im)
-        cv2.waitKey(1)
 
 
 map_x, map_y = ([0], [0])
@@ -111,12 +99,7 @@ def update(frame):
         map_x, map_y, c="b", alpha=0.5, vmin=-1000, vmax=1000
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
-    # if img:
-    #     cv2.imshow("Image", img)
-    #     cv2.waitKey(1)
-    #     if cv2.getWindowProperty("Image", 0) == -1:
-    #         arlo.stop()
-    #         exit()
+
 
 
 anim = FuncAnimation(fig, update)
@@ -130,13 +113,8 @@ while 1 and __name__ == "__main__":
     image = cam_on()
     img = image
 
-    # cv2.imshow("Image", image)
-
     (corners, ids, rejected) = detect(image)
 
-    # front = arlo.read_sensor(0)
-    # lefts = arlo.read_sensor(2)
-    # rights = arlo.read_sensor(3)
 
     cX = None
     cY = None
@@ -158,7 +136,3 @@ while 1 and __name__ == "__main__":
         print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-        # for corner in corners:
-        #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
-    # else:
-    # cv2.imshow("Image", image)
