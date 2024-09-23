@@ -2,7 +2,7 @@ import numpy as np
 
 dimensions = (480,270)
 
-FocalLength = 648.0
+FocalLength = 620.0
 
 markerHeight = 145.0  # mm
 

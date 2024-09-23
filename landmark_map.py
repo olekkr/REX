@@ -137,13 +137,13 @@ while 1 and __name__ == "__main__":
             CameraMatrix,
             DistortionCoefficient,
         )
-        print(corners)
+        # print(corners)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
         print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-    for corner in corners:
-        cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
+    # for corner in corners:
+    #     cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
 
     cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
