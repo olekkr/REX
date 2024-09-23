@@ -106,7 +106,7 @@ def update(frame):
 
 
 anim = FuncAnimation(fig, update)
-plt.show()
+plt.show(block=False)
 
 i = 0
 stop_and_see = 5
