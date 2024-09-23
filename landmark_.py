@@ -1,18 +1,19 @@
+import queue
+import threading
 import time
 
 import cv2
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle, Rectangle
 import numpy as np
 from matplotlib.animation import FuncAnimation
+from matplotlib.patches import Circle, Rectangle
 from picamera2 import Picamera2
-import threading
 
 import robot
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
 
 arlo = robot.Robot()
-
+data_queue = queue.Queue()
 speed = 40
 tspeed_slow = 32
 tspeed = 32
@@ -74,16 +75,18 @@ def turn_right():
     arlo.go_diff(tspeed_slow, tspeed_slow, 1, 0)
     time.sleep(0.5)
 
+
 def preview():
-    if img:
-        cv2.imshow("Camera", img)
+    queued_img = data_queue.get()
+    if queued_img:
+        cv2.imshow("Camera", queued_img)
         cv2.waitKey(1)
 
-def cam_on():
 
+def cam_on():
     while True:
         im = picam2.capture_array("main")
-            
+
         return im
 
 
@@ -94,14 +97,17 @@ img = None
 
 preview_thread = threading.Thread(target=preview)
 
+
 def update(frame):
     plt.draw()
     ax.clear()  # clearing the axes
     ax.scatter(
-        map_x, map_y, c="b", alpha=0.5,
+        map_x,
+        map_y,
+        c="b",
+        alpha=0.5,
     )  # creating new scatter chart with updated data
     fig.canvas.draw()  # forcing the artist to redraw itself
-
 
 
 anim = FuncAnimation(fig, update)
@@ -111,13 +117,12 @@ i = 0
 stop_and_see = 5
 j = 0
 while 1 and __name__ == "__main__":
-
     # arlo.stop()
     image = cam_on()
     img = image
+    data_queue.put(img)
     preview_thread.start()
     (corners, ids, rejected) = detect(image)
-
 
     cX = None
     cY = None
@@ -139,5 +144,4 @@ while 1 and __name__ == "__main__":
         # print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-    preview_thread.join()
-
+preview_thread.join()
