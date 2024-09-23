@@ -6,6 +6,7 @@ from matplotlib.patches import Circle, Rectangle
 import numpy as np
 from matplotlib.animation import FuncAnimation
 from picamera2 import Picamera2
+import threading
 
 import robot
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
@@ -73,16 +74,16 @@ def turn_right():
     arlo.go_diff(tspeed_slow, tspeed_slow, 1, 0)
     time.sleep(0.5)
 
+def preview():
+    if img:
+        cv2.imshow("Camera", img)
+        cv2.waitKey(1)
 
-def cam_on(preview: bool = False):
+def cam_on():
 
     while True:
         im = picam2.capture_array("main")
-
-        # print(im.shape)
-        if preview:
-            cv2.imshow("Camera", picam2.read())
-            cv2.waitKey(1)
+            
         return im
 
 
@@ -91,6 +92,7 @@ fig, ax = plt.subplots()
 
 img = None
 
+preview_thread = threading.Thread(target=preview)
 
 def update(frame):
     plt.draw()
@@ -109,12 +111,11 @@ i = 0
 stop_and_see = 5
 j = 0
 while 1 and __name__ == "__main__":
-    if cv2.waitKey(1) == ord("q"):
-        break
+
     # arlo.stop()
     image = cam_on()
     img = image
-
+    preview_thread.start()
     (corners, ids, rejected) = detect(image)
 
 
@@ -138,4 +139,5 @@ while 1 and __name__ == "__main__":
         # print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-    cv2.imshow("Image", image)
+    preview_thread.join()
+
