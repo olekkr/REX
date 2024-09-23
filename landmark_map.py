@@ -131,7 +131,7 @@ while 1 and __name__ == "__main__":
 
     # verify *at least* one ArUco marker was detected
     if len(corners) > 0:
-        a, b, c = cv2.aruco.estimatePoseSingleMarkers(
+        b, a, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
             CameraMatrix,
@@ -139,14 +139,11 @@ while 1 and __name__ == "__main__":
         )
         print(corners)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
+        print(np.linalg.norm(a))
         map_x += marker_map[0]
         map_y += marker_map[1]
-    try:
-        for corner in corners:
-            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
-    except Exception as e:
-        print(e)
-        cv2.imshow("Image", image)
+    for corner in corners:
+        cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
 
     cv2.waitKey(1)
     if cv2.getWindowProperty("Image", 0) == -1:
