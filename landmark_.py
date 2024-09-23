@@ -77,10 +77,14 @@ def turn_right():
 
 
 def preview():
-    queued_img = data_queue.get()
-    if queued_img:
-        cv2.imshow("Camera", queued_img)
-        cv2.waitKey(1)
+
+    try:
+        queued_img = data_queue.get(timeout=0.1)
+        if queued_img:
+            cv2.imshow("Camera", queued_img)
+            cv2.waitKey(1)
+    except queue.Empty:
+        return
 
 
 def cam_on():
