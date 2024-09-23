@@ -3,6 +3,7 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.animation import FuncAnimation
 from picamera2 import Picamera2
 
 import robot
@@ -93,16 +94,21 @@ def cam_on():
         cv2.waitKey(1)
 
 
-(hl,) = plt.plot([], [])
+map_x, map_y = ([], [])
+fig, ax = plt.subplots()
 
 
-def update_line(hl, new_data):
-    hl.set_xdata(np.append(hl.get_xdata(), new_data))
-    hl.set_ydata(np.append(hl.get_ydata(), new_data))
+def update(frame):
     plt.draw()
+    ax.clear()  # clearing the axes
+    ax.scatter(
+        map_x, map_y, s=map_y, c="b", alpha=0.5
+    )  # creating new scatter chart with updated data
+    fig.canvas.draw()  # forcing the artist to redraw itself
 
 
-# plt.show()
+anim = FuncAnimation(fig, update)
+plt.show()
 
 i = 0
 stop_and_see = 5
@@ -130,14 +136,13 @@ while 1 and __name__ == "__main__":
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             markerHeight,
-            CameraMatrix(preview_downscale),
+            CameraMatrix,
             DistortionCoefficient,
         )
         print(corners)
-        # print("a", [np.sqrt(ax**2+ay**2+az**2) for ((ax, ay, az),) in a])
-        # print(a)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])
-        # update_line(hl, marker_map)
+        map_x.append(marker_map[0])
+        map_y.append(marker_map[1])
     try:
         for corner in corners:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
@@ -149,27 +154,3 @@ while 1 and __name__ == "__main__":
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
-
-    # if len(corners) == 0 and j < stop_and_see:
-    #     j += 1
-    #     continue
-    # elif len(corners) == 0 and j >= stop_and_see:
-    #     j = 0
-
-    # # middle = (qr_leftdown + qr_rightdown) / 2
-    # if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-    #     imgcX, imgcY = center_image
-    #     thresholdX = int(imgcX * 0.5)
-    #     thresholdY = int(imgcY * 0.5)
-    #     close_x = range(cX - thresholdX, cX + thresholdX)
-    #     close_y = range(cY - thresholdY, cY + thresholdY)
-    #     # print(close_x, close_y, cX, cY, imgcX, imgcY)
-
-    #     if imgcX in close_x and imgcY in close_y:
-    #         drive_straight(i)
-    #     elif bottomLeft[0] > imgcX:
-    #         turn_right()
-    #     else:
-    #         i = turn_left(i)
-    # else:
-    #     i = turn_left(i)
