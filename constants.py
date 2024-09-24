@@ -1,9 +1,9 @@
-import numpy
+import numpy as np
 
 MAX_VOLT = 12
 MAX_RPM = 100
-ROBOT_DIAMETER = 39.5  # cm +- 5 mm
-WHEEL_DIAMETER = 15.5 # cm
+ROBOT_DIAMETER = 395  # mm +- 5 mm
+WHEEL_DIAMETER = 155 # mm
 ROBOT_RADIUS = ROBOT_DIAMETER/2
 WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER*3.14  # cm
 ROBOT_CIRCUMFERENCE = 39.5*3.14  # cm
@@ -28,19 +28,29 @@ OBSITCLE_SHAPE_MAX = 250 # in mm
 OBSITCLE_SHAPE = OBSITCLE_SHAPE_MAX
 
 
+FOCALLENGTH = 648.0
+MARKER_HEIGHT = 145.0
+DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
-# Constants for the camera (MACBOOK AIR)
+# # ON PI
+# SCREEN_RESOLUTION = [480, 270]
+# CAMERA_MATRIX = np.array(
+#     [
+#         [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
+#         [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
+#         [0,           0, 1],
+#     ],
+#     dtype=float,
+# )
+
+
+# FOR TESTING
 SCREEN_RESOLUTION = [1280, 720]
-CAMERA_FPS = 30
-# Constants for the aruco markers (MACBOOK AIR)
-FOCALLENGTH = 650.5
-MARKER_HEIGHT = 100.0
-CAMERA_MATRIX = numpy.array([
+CAMERA_MATRIX = np.array([
         [FOCALLENGTH, 0.0, 1280.0/2],
         [0.0, FOCALLENGTH, 720.0/2],
         [0.0, 0.0, 1.0],
     ],
     dtype=float,
 )
-DISTORTION_COEFFICIENT = numpy.array([0, 0, 0, 0, 0], dtype=float)

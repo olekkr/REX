@@ -1,7 +1,6 @@
 from time import sleep
 import robot
 
-
 arlo = robot.Robot()
 
 speed = 40

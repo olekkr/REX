@@ -1,5 +1,7 @@
-from constants import MARKER_HEIGHT, CAMERA_MATRIX, DISTORTION_COEFFICIENT
 import cv2
+import numpy
+from constants import MARKER_HEIGHT, CAMERA_MATRIX, DISTORTION_COEFFICIENT
+
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
@@ -31,3 +33,6 @@ def BOTTOM_LEFT_CORNER(corners):
 
 def CENTER(x1, x2):
     return (x1 + x2) / 2
+
+def DISTANCES(x, xi, y, yi):
+    return numpy.sqrt((x - xi) ** 2 + (y - yi) ** 2)

@@ -39,6 +39,13 @@ def FIND_TARGET(arlo, last_seen):
     else:
         TURN_RIGHT(arlo)
 
+def AVOID_OBSTACLE(arlo):
+    arlo.stop()
+    time.sleep(0.5)
+    print("OBJECT DETECTED: TURNING LEFT")
+    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 0, 1)
+
+
 
 
 def TEST_TOWARDS_TARGET(corners, arlo, last_seen):
@@ -56,9 +63,19 @@ def TEST_TOWARDS_TARGET(corners, arlo, last_seen):
             MOVE_LEFT(arlo)
             last_seen = "right"
 
+def EIGHT(arlo, n):
+    for _ in range(n):
+        for i in range(4):
+            print("moving straight")
+            time.straight_move()
+            print("waiting to rotate")
+            time.sleep(2)
+            print("rotating")
+            print(arlo.rotate_move(sleep_s=0.725,mdir=(0,1)))
+            time.sleep(2)
+        time.sleep(1)
 
 # Test functions
-
 def TEST_STRAIGHT():
     print("FOUND TARGET: MOVING STRAIGHT")
 
@@ -77,7 +94,6 @@ def TEST_MOVE_LEFT():
 def TEST_MOVE_RIGHT():
     print("FOUND TARGET: MOVING RIGHT")
 
-
 def TEST_FIND_TARGET(last_seen):
     if last_seen is not None:
         if last_seen == "left":
@@ -86,7 +102,6 @@ def TEST_FIND_TARGET(last_seen):
             print("DETECTING: TURNING RIGHT")
     else:
         print("DETECTING: TURNING RIGHT")
-
 
 def TEST_TOWARDS_TARGET(corners, last_seen):
     x1, x2 = detection.TOP_LEFT_CORNER(corners)[0], detection.TOP_RIGHT_CORNER(corners)[0]
@@ -104,4 +119,4 @@ def TEST_TOWARDS_TARGET(corners, last_seen):
             last_seen = "right"
     
 def TEST_AVOID_OBSTACLE():
-    print("OBJECT DETECTED: TURNING BACK")
+    print("OBJECT DETECTED: TURNING LEFT")
