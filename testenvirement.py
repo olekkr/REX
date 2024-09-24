@@ -88,7 +88,11 @@ ax.set_ylim(0, 2000)
 
 robot_area = plt.Circle((0.0, 0.0), constants.ROBOT_RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
+
+
 landmark_areas = []
+text_annotations = []
+
 
 def update(frame):
     """"
@@ -104,9 +108,15 @@ def update(frame):
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
     
+    # YEETER ALLE LANDMARKS 
     for landmark in landmark_areas:
         landmark.remove()
     landmark_areas.clear()
+
+    # YEETER ALLE TEKST
+    for text in text_annotations:
+        text.remove()
+    text_annotations.clear()
 
     collision = False
     if ids is not None:
@@ -117,10 +127,14 @@ def update(frame):
             m_x = tvecs[i][0][0]
             m_z = tvecs[i][0][2]
             
-            obstacle_circle = plt.Circle((m_x, m_z), constants.OBSITCLE_SHAPE_MAX, color="b", alpha=0.5)
-            ax.add_artist(obstacle_circle)
-            landmark_areas.append(obstacle_circle)
+            landmark_obstacle = plt.Circle((m_x, m_z), constants.OBSITCLE_SHAPE_MAX, color="b", alpha=0.5)
+            landmkar_id = ax.text(m_x, m_z, str(ids[i][0]), color='b', fontsize=constants.OBSITCLE_SHAPE_MIN/10, ha='center', va='center')
+            ax.add_artist(landmark_obstacle)
+            landmark_areas.append(landmark_obstacle)
+            landmark_areas.append(landmkar_id)
             
+
+
             if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()
@@ -134,7 +148,7 @@ def update(frame):
     
     #cv2.imshow("Image", imageCopy)
 
-    return landmark_areas + [robot_area]
+    return landmark_areas + [robot_area] + text_annotations
 
 
 ani = FuncAnimation(fig, update, interval=10, blit=False, repeat=True, cache_frame_data=False)
