@@ -54,6 +54,24 @@ def update(frame):
     fig.canvas.draw()    
 anim = FuncAnimation(fig, update)
 
+diction = {}
+
+scatter_plot = plt.scatter([], [], c="b")
+def update_plot(m_x, m_z):
+    scatter_plot.set_offsets(list(zip(m_x, m_z)))  # Update the x, z points
+    plt.draw()
+    plt.pause(0.7)  # Pause to show the update
+
+
+plt.ion()
+
+
+def distance(x, xi, y, yi, ri, r):
+    if np.sqrt((x - xi) ** 2 + (y - yi) ** 2) <= ri + r:
+        return True
+    else:
+        return False
+
 while 1 and __name__ == "__main__":
     if cv2.waitKey(1) == ord('q'):
         break
@@ -65,6 +83,11 @@ while 1 and __name__ == "__main__":
         print("Error: Failed to capture image.")
         break
 
+    # # Only for plotting
+    # ax.scatter(0, 0, c="r", s=constants.OBSITCLE_SHAPE_MAX, edgecolors="b")
+    # ax.set_xlim(-400, 400)
+    # ax.set_ylim(-10, 1000)
+
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
 
@@ -72,25 +95,48 @@ while 1 and __name__ == "__main__":
         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
         tvecs = detection.estimateDistance(corners)
         # Udregner afstand (idk om det er rigtigt)
-        print(ids)
-        for i in range(len(ids)):
-            marker_map = ([x for ((x, y, z),) in tvecs], [z for ((x, y, z),) in tvecs])
-            map_x.append(marker_map[0])
-            map_y.append(marker_map[1])
-            map_x.append([0.0])
-            map_y.append([0.0])
-            plt.scatter(0.0, 0.0, c="b")
-            plt.scatter(map_x, map_y)
-            plt.pause(0.7)
-        # movement.TEST_TOWARDS_TARGET(corners, last_seen)
-    else:
-        pass
-        # movement.TEST_FIND_TARGET(last_seen)
-    
 
+        for i in range(len(ids)):
+            marker_id = ids[i][0]
+            x_pos = tvecs[i][0][0]
+            z_pos = tvecs[i][0][2]
+            diction[marker_id] = (x_pos, z_pos)
+            print(f"ID: {marker_id} - x: {x_pos} - z: {z_pos}")
+            # m_id, m_x, m_z = (i for i in ids), [x for ((x, y, z),) in tvecs], [z for ((x, y, z),) in tvecs]
+            # diction[m_id] = (m_x, m_z)
+            if distance(0, x_pos, 0, z_pos, constants.OBSITCLE_SHAPE_MAX, constants.ROBOT_RADIUS):
+                movement.TEST_AVOID_OBSTACLE()
+                # movement.TEST_AVOID_OBSTACLE()
+
+
+        # for marker_id, (x, z) in diction.items():
+        #     ax.scatter(x, z, c="b", s=constants.OBSITCLE_SHAPE_MAX, edgecolors="r")
+        # plt.draw()
+        # plt.pause(0.01)
+
+            # map_x.append(marker_map[0])
+            # map_y.append(marker_map[1])
+            # map_x.append([0.0])
+            # map_y.append([0.0])
+            # plt.scatter(0.0, 0.0, c="b")
+            # plt.scatter(map_x, map_y)
+            # plt.pause(0.7)
+        # movement.TEST_TOWARDS_TARGET(corners, last_seen)
+    
+    else:
+        # ax.clear()
+        # ax.set_xlim(-400, 400)
+        # ax.set_ylim(0, 1000)
+        movement.TEST_FIND_TARGET(last_seen)
 
     # # Show preview but is not needed cuz it is laggy
-    cv2.imshow("Image", imageCopy)
+    #cv2.imshow("Image", imageCopy)
+
+
+
+# ani = FuncAnimation(fig, update, interval=2000)
+# plt.show()
+
 
 cap.release()
 cv2.destroyAllWindows()

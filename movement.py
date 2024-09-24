@@ -103,3 +103,5 @@ def TEST_TOWARDS_TARGET(corners, last_seen):
             TEST_MOVE_LEFT()
             last_seen = "right"
     
+def TEST_AVOID_OBSTACLE():
+    print("OBJECT DETECTED: TURNING BACK")
