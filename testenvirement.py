@@ -4,7 +4,10 @@ import constants
 import matplotlib.pyplot as plt
 import detection
 import movement
-import numpy
+import numpy as np
+plt.rcParams["figure.figsize"] = 4,3
+from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
+from matplotlib.animation import FuncAnimation
 
 """"
 from picamera2 import Picamera2, Preview
@@ -38,7 +41,18 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 last_seen = None
 
-landmarks = []
+map_x, map_y = ([], [])
+fig, ax = plt.subplots()
+img = None
+
+def update(frame):
+    # if img:
+    #     cv2.imshow("Image", img)
+    plt.draw()
+    ax.clear()
+    ax.scatter(map_x, map_y, c="w", alpha=0.5, vmin=-1000, vmax=1000, s=constants.OBSITCLE_SHAPE_MAX, edgecolors="r")
+    fig.canvas.draw()    
+anim = FuncAnimation(fig, update)
 
 while 1 and __name__ == "__main__":
     if cv2.waitKey(1) == ord('q'):
@@ -53,33 +67,44 @@ while 1 and __name__ == "__main__":
 
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
+
     if ids is not None:
         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
         tvecs = detection.estimateDistance(corners)
-
         # Udregner afstand (idk om det er rigtigt)
-        for i in range(len(ids)):            
-            x, y, z = tvecs[i][0][0], tvecs[i][0][1], tvecs[i][0][2]
-            # dist = numpy.sqrt(x**2 + y**2 + z**2)
-            landmarks.append([x,y])
-            #print("ID: ",ids[i][0], "| Distance: ", dist)
-
-        movement.TEST_TOWARDS_TARGET(corners, last_seen)
+        print(ids)
+        for i in range(len(ids)):
+            marker_map = ([x for ((x, y, z),) in tvecs], [z for ((x, y, z),) in tvecs])
+            map_x.append(marker_map[0])
+            map_y.append(marker_map[1])
+            map_x.append([0.0])
+            map_y.append([0.0])
+            plt.scatter(0.0, 0.0, c="b")
+            plt.scatter(map_x, map_y)
+            plt.pause(0.7)
+        # movement.TEST_TOWARDS_TARGET(corners, last_seen)
     else:
-        movement.TEST_FIND_TARGET(last_seen)
+        pass
+        # movement.TEST_FIND_TARGET(last_seen)
+    
 
+
+    # # Show preview but is not needed cuz it is laggy
     cv2.imshow("Image", imageCopy)
+
 cap.release()
 cv2.destroyAllWindows()
+plt.close()
 
-# IDK HAR BARE PLOTTET AFSTANDEN MED ID
-if landmarks:
-    x = [landmark[0] for landmark in landmarks]
-    y = [landmark[1] for landmark in landmarks]
-    plt.axhline(y=0, color='k')
-    plt.ayhline(x=0, color='k')
-    plt.scatter(x,y)
-    plt.xlabel("ID")
-    plt.ylabel("Distance")
-    plt.legend()
-    plt.show()
+
+# # # IDK HAR BARE PLOTTET AFSTANDEN MED ID
+# # if landmarks:
+# #     x = [landmark[0] for landmark in landmarks]
+# #     y = [landmark[1] for landmark in landmarks]
+# #     # plt.axhline(x=0)
+# #     # plt.axvline(y=0, color='k')
+# #     plt.scatter(x,y)
+# #     plt.xlabel("x")
+# #     plt.ylabel("y")
+# #     plt.legend()
+# #     plt.show()

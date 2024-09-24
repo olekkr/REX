@@ -39,6 +39,8 @@ def FIND_TARGET(arlo, last_seen):
     else:
         TURN_RIGHT(arlo)
 
+
+
 def TEST_TOWARDS_TARGET(corners, arlo, last_seen):
     x1, x2 = detection.TOP_LEFT_CORNER(corners)[0], detection.TOP_RIGHT_CORNER(corners)[0]
     center = constants.SCREEN_RESOLUTION[0] / 2
