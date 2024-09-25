@@ -11,7 +11,7 @@ import time
 arlo = robot.Robot()
 
 preview_downscale = 2
-imageSize = (1280 // 2**preview_downscale, 720 // 2**preview_downscale)
+imageSize = (constants.SCREEN_RESOLUTION)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
