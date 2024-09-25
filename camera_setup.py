@@ -12,7 +12,7 @@ def camera_setup():
     picam2_config = picam2.create_video_configuration(
         {"size": (1640//2,1232//2), "format": "RGB888"},
         controls={
-            "ScalerCrop": (0, 0, 3280,2464),
+            "ScalerCrop": (0, 0, 1640,1232),
             "FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, 
             queue=False,
         )
