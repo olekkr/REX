@@ -2,7 +2,7 @@ import numpy as np
 
 downscale_factor = 1
 
-dimensions = (1920 // 2**downscale_factor, 1080 // 2**downscale_factor)
+dimensions = (int(1920 // 2**downscale_factor), int(1080 // 2**downscale_factor))
 
 # FocalLength = 620.0
 FocalLengthArr = [2540, 1270, 625.0]
