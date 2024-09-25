@@ -45,16 +45,16 @@ ax.add_artist(robot_area)
 landmark_areas = []
 
 def update(frame):
-    print("1")
+
     image = picam2.capture_array("main")
     cv2.waitKey(1)
-    print("2")
+  
     
 
     corners, ids, _ = detection.detect(image)
-    print("3")
+
     imageCopy = image.copy()
-    print("4")
+
     
     # YEETER ALLE LANDMARKS 
     for landmark in landmark_areas:
@@ -78,13 +78,15 @@ def update(frame):
 
             if detection.DISTANCES(0, m_x, -constants.ROBOT_RADIUS, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
-                movement.TEST_AVOID_OBSTACLE()
+                #movement.TEST_AVOID_OBSTACLE()
                 break
         
         if not collision: 
-            movement.TEST_TOWARDS_TARGET(corners, last_seen)
+            pass
+            #movement.TEST_TOWARDS_TARGET(corners, last_seen)
     else:
-        movement.TEST_FIND_TARGET(last_seen)
+        pass
+        #movement.TEST_FIND_TARGET(last_seen)
 
     #cv2.imshow("Image", imageCopy)
 
