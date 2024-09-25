@@ -36,6 +36,7 @@ def draw_radius(px, py, r, grid):
 
 
 def draw_landmarks(landmarks, grid):
+    print(landmarks)
     for xyz in landmarks:
         x, y = from_cam_pos(xyz)
         print(x, y)
