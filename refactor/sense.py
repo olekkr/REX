@@ -3,6 +3,7 @@ import constants
 import local_planning
 from picamera2 import Picamera2
 import cv2
+import time
 
 dimensions = (1920, 1080)
 
@@ -76,7 +77,6 @@ def sense_camera(grid):
     
 
 
-import time
 if __name__ == "__main__":
     grid = init()
     while True:
