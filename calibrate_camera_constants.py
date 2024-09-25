@@ -1,6 +1,6 @@
 import numpy as np
 
-downscale_factor = 1
+downscale_factor = 0
 
 dimensions = (int(1920 // 2**downscale_factor), int(1080 // 2**downscale_factor))
 
