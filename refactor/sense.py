@@ -53,7 +53,7 @@ def init():
     return local_planning.empty_grid()
 
 def sense(grid): # map, 
-    sense_camera(grid)
+    return sense_camera(grid)
 
 
 
