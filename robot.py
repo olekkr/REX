@@ -4,7 +4,6 @@ from time import sleep
 import serial
 
 
-
 class Robot(object):
     """Defines the Arlo robot API
     
@@ -203,4 +202,5 @@ class Robot(object):
         cmd='y' + str(turntime) + '\n'
         return self.send_command(cmd)
         
+
 
