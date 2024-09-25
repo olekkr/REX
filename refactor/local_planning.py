@@ -1,16 +1,16 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 from math import sqrt
+from constants import *
 
 # AN occupancy grid implementation 
 
 GRID_FIDELITY = 1000 # size of each grid square in mm 
-ROBO_DIAMETER = 450 # in mm 
 LANDMARK_DIAMETER = 450
 
 # from camera position to robo position
 def from_cam_pos(x): 
-    return x[0], x[2] - ROBO_DIAMETER/2
+    return x[0], x[2] - ROBOT_DIAMETER/2
 
 def from_grid_pos(x):
     return x * GRID_FIDELITY
@@ -28,7 +28,7 @@ def draw_radius(px, py, r, grid):
 def draw_landmarks(landmarks, grid):
     for xyz in landmarks:
         x,y = from_cam_pos(xyz)
-        draw_radius(x,y, ROBO_DIAMETER+LANDMARK_DIAMETER, grid)
+        draw_radius(x,y, ROBOT_DIAMETER+LANDMARK_DIAMETER, grid)
 
 def robo_pos_avail(pos, grid):
     pass
