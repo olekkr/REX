@@ -84,7 +84,7 @@ def sense_camera(grid):
 
 if __name__ == "__main__":
     grid = init()
-    
+    print(grid)
 
     while True:
         time.sleep(1)
