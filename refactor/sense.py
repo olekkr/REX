@@ -77,7 +77,7 @@ def sense_camera(grid):
         tv = []
 
     for t in tv:
-        draw_landmarks(t, grid)
+        local_planning.draw_landmarks(t, grid)
 
     return grid
     
