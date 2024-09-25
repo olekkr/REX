@@ -35,12 +35,13 @@ DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
 # ON PI
+DOWNSCALE = 4
 #SCREEN_RESOLUTION = [480, 270]
 SCREEN_RESOLUTION = [1920, 1080]
 CAMERA_MATRIX = np.array(
     [
-        [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
-        [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
+        [FOCALLENGTH, 0, (SCREEN_RESOLUTION[0] / DOWNSCALE) / 2],
+        [0, (FOCALLENGTH / DOWNSCALE), (SCREEN_RESOLUTION[1] / DOWNSCALE) / 2],
         [0,           0, 1],
     ],
     dtype=float,

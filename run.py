@@ -10,7 +10,6 @@ import time
 
 arlo = robot.Robot()
 
-preview_downscale = 2
 imageSize = (constants.SCREEN_RESOLUTION)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
@@ -36,8 +35,8 @@ landmark_dict = {}
 # ONLY FOR PLOTTING
 plt.rcParams["figure.figsize"] = 4, 8
 fig, ax = plt.subplots()
-ax.set_xlim(-1000, 1000)
-ax.set_ylim(-500, 3500)
+ax.set_xlim(-750, 750)
+ax.set_ylim(-500, 3000)
 
 robot_area = plt.Circle((0.0, -constants.ROBOT_RADIUS), constants.ROBOT_RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
