@@ -22,3 +22,8 @@ shatin:
 	git switch shatin
 	git fetch
 	git pull
+
+test:
+	git switch test
+	git fetch
+	git pull
