@@ -9,4 +9,4 @@ while 1:
     image = picam2.capture_array("main")
     if constants.ENABLE_PREVIEW:
         cv2.waitKey(1)
-        cv2.imshow("Image", cv2.resize(image, (640, 360), interpolation=cv2.INTER_AREA))
+        cv2.imshow("Image", cv2.resize(image, (800, 600), interpolation=cv2.INTER_AREA))
