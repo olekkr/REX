@@ -37,9 +37,9 @@ landmark_dict = {}
 plt.rcParams["figure.figsize"] = 4, 4
 fig, ax = plt.subplots()
 ax.set_xlim(-1000, 1000)
-ax.set_ylim(0, 2000)
+ax.set_ylim(-50, 1950)
 
-robot_area = plt.Circle((0.0, 0.0), constants.ROBOT_RADIUS, color="r", fill=False)
+robot_area = plt.Circle((0.0, -constants.ROBOT_RADIUS), constants.ROBOT_RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
 
 landmark_areas = []
@@ -91,4 +91,5 @@ def update(frame):
     return landmark_areas + [robot_area]
 
 ani = FuncAnimation(fig, update, interval=10, cache_frame_data=False)
+plt.grid()
 plt.show()
