@@ -125,8 +125,8 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
             else:
                 s += ",".join([str(i) for i in [x,X,y,Y," "," "," "]])
 
-    cv2.imshow("Image", image)
-    cv2.waitKey(1)
+    # cv2.imshow("Image", image)
+    # cv2.waitKey(1)
 
     return s
 
