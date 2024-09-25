@@ -89,9 +89,7 @@ ax.set_ylim(0, 2000)
 robot_area = plt.Circle((0.0, 0.0), constants.ROBOT_RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
 
-
 landmark_areas = []
-text_annotations = []
 
 
 def update(frame):
@@ -113,11 +111,6 @@ def update(frame):
         landmark.remove()
     landmark_areas.clear()
 
-    # YEETER ALLE TEKST
-    for text in text_annotations:
-        text.remove()
-    text_annotations.clear()
-
     collision = False
     if ids is not None:
         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
@@ -132,8 +125,6 @@ def update(frame):
             ax.add_artist(landmark_obstacle)
             landmark_areas.append(landmark_obstacle)
             landmark_areas.append(landmkar_id)
-            
-
 
             if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
@@ -145,11 +136,9 @@ def update(frame):
     else:
         movement.TEST_FIND_TARGET(last_seen)
 
-    
-    #cv2.imshow("Image", imageCopy)
+    cv2.imshow("Image", imageCopy)
 
-    return landmark_areas + [robot_area] + text_annotations
+    return landmark_areas + [robot_area]
 
-
-ani = FuncAnimation(fig, update, interval=10, blit=False, repeat=True, cache_frame_data=False)
+ani = FuncAnimation(fig, update, interval=10, cache_frame_data=False)
 plt.show()
