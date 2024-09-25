@@ -18,7 +18,7 @@ frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 picam2 = Picamera2()
 picam2_config = picam2.create_video_configuration(
     {"size": imageSize, "format": "RGB888"},
-    controls={"ScalerCrop": {0, 0, 1920, 1080},"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, queue=False,
+    controls={"ScalerCrop": {0, 0, 1080, 1920},"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, queue=False,
     )
 picam2.configure(picam2_config)  # Not really necessary
 picam2.start(show_preview=False)
