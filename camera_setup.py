@@ -4,7 +4,7 @@ import time
 
 imageSize = (constants.SCREEN_RESOLUTION)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = constants.FPS
+FPS = constants.CAMERA_FPS
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 def camera_setup():
