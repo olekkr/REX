@@ -76,7 +76,7 @@ def update(frame):
             landmark_areas.append(landmark_obstacle)
             landmark_areas.append(landmkar_id)
 
-            if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
+            if detection.DISTANCES(0, m_x, -constants.ROBOT_RADIUS, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()
                 break
