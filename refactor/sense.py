@@ -1,5 +1,6 @@
 import numpy as np 
 import ../constants
+import local_planning
 
 
 dimensions = (1920, 1080)
@@ -44,6 +45,9 @@ def init():
     time.sleep(2)
     picam2.start()
 
+    # grid init
+    return local_planning.empty_grid()
+
 def sense(grid): # map, 
     sense_camera(grid)
 
@@ -69,4 +73,9 @@ def sense_camera(grid):
     
 
 
-
+import time
+if __name__ == "__main__":
+    grid = init()
+    time.sleep(1)
+    while True:
+        sense(grid)

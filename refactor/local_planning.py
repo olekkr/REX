@@ -8,6 +8,10 @@ from constants import *
 GRID_FIDELITY = 1000 # size of each grid square in mm 
 LANDMARK_DIAMETER = 450
 
+
+def empty_grid():
+    return np.zeros((100,100)).astype(int)
+
 # from camera position to robo position
 def from_cam_pos(x): 
     return x[0], x[2] - ROBOT_DIAMETER/2
