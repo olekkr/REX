@@ -13,7 +13,6 @@ from calibrate_camera_constants import FocalLength, CameraMatrix, dimensions, do
 #FOCALLENGTH = 625.0
 FOCALLENGTH = FocalLength
 MARKER_HEIGHT = 145.0
-DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
 # ON PId
