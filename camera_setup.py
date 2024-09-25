@@ -1,5 +1,5 @@
 from picamera2 import Picamera2, Preview
-from picamera2 import constants
+import constants
 import time
 
 imageSize = (constants.SCREEN_RESOLUTION)
