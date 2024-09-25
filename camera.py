@@ -137,13 +137,13 @@ with open(output_log, "a+") as f:
 
 while 1:
     time.sleep(0.1)
-    markerDist = arlo.read_front_ping_sensor()
-    get_marker_dim(markerDist, calc_f=False)
+    markDist = arlo.read_front_ping_sensor()
+    # get_marker_dim(markerDist, calc_f=False)
     # nam = input("Enter to proceed next frame, otherwise write name")
     # if nam == "d":
     #     print(markerDist)
     # elif nam != "":
-    markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
+    # markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
     markHeight = 145
     marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
     # with open(output_log, "a+") as f:
