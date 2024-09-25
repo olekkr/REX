@@ -7,7 +7,7 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 
 def detect(image):
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(image, arucoDict, parameters=arucoParams)
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image, dictionary=arucoDict)
     return corners, ids, rejected
 
 def estimateDistance(corners, marker_height=MARKER_HEIGHT, camera_matrix=CAMERA_MATRIX, distortion_coefficient=DISTORTION_COEFFICIENT):
