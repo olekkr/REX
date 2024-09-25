@@ -118,7 +118,7 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
             fx = x * (Z / X)
             fy = y * (Z / Y)
             s += ",".join([str(i) for i in [x,X,y,Y,Z,fx,fy]])
-            print(y,Y,fy)
+            print(y,Y,Z,fy)
         else:
             if markerDist:
                 s += ",".join([str(i) for i in [x,X,y,Y,Z," "," "]])
