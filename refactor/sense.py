@@ -4,6 +4,7 @@ import local_planning
 from picamera2 import Picamera2
 import cv2
 import time
+import matplotlib.pyplot as plt
 
 dimensions = (1920, 1080)
 
