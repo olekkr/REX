@@ -37,9 +37,10 @@ def draw_radius(px, py, r, grid):
 
 def draw_landmarks(landmarks, grid):
     for xyz in landmarks:
-        x,y = from_cam_pos(xyz)
-        print(x,y)
-        draw_radius(x,y, ROBOT_DIAMETER+LANDMARK_DIAMETER, grid)
+        x, y = from_cam_pos(xyz)
+        print(x, y)
+        draw_radius(x, y, ROBOT_DIAMETER + LANDMARK_DIAMETER, grid)
+
 
 def robo_pos_avail(pos, grid):
     pass
@@ -50,7 +51,7 @@ def show_grid(grid, robo_pos):
     plt.imshow(grid.astype(int))
     plt.scatter([robo_pos[0]], [robo_pos[1]])
     plt.draw()
-    plt.pause(0.001)
+    plt.pause(0.1)
 
 
 landmarks = None
