@@ -35,7 +35,7 @@ MARKER_HEIGHT = 145.0
 DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
-# ON PI
+# ON PId
 DOWNSCALE = downscale_factor
 SCREEN_RESOLUTION = dimensions
 CAMERA_MATRIX = CameraMatrix
