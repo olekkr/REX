@@ -19,4 +19,8 @@ CameraMatrix = np.array(
     ],
     dtype=float,
 )
+
 DistortionCoefficient = np.array([0, 0, 0, 0, 0], dtype=float)
+
+print("using dimention:", dimensions)
+print("using FocalLength:", FocalLength)

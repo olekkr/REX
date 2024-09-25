@@ -33,7 +33,7 @@ last_seen = None
 landmark_dict = {}
 
 # ONLY FOR PLOTTING
-plt.rcParams["figure.figsize"] = 4, 8
+plt.rcParams["figure.figsize"] = 4, 4
 fig, ax = plt.subplots()
 ax.set_xlim(-1000, 1000)
 ax.set_ylim(-500, 1500)
