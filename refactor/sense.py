@@ -1,5 +1,5 @@
 import numpy as np 
-import ../constants
+import constants
 import local_planning
 
 
@@ -28,6 +28,7 @@ print("using FocalLength:", FocalLength)
 
 
 def init():
+    # aruco init
     arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
     arucoParams = cv2.aruco.DetectorParameters()
 
