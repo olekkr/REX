@@ -17,7 +17,7 @@ frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 picam2 = Picamera2()
 picam2_config = picam2.create_video_configuration(
-    {"size": imageSize, "format": "RGB888"},
+    {"sensor": {'output_size': imageSize, 'bit_depth': 12}, "format": "RGB888"},
     controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, queue=False,
     )
 picam2.configure(picam2_config)  # Not really necessary
@@ -49,10 +49,7 @@ def update(frame):
     image = picam2.capture_array("main")
     cv2.waitKey(1)
   
-    
-
     corners, ids, _ = detection.detect(image)
-
     imageCopy = image.copy()
 
     
