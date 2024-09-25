@@ -1,7 +1,7 @@
 import numpy as np 
 import constants
 import local_planning
-import picamera2
+from picamera2 import Picamera2
 import cv2
 
 dimensions = (1920, 1080)
