@@ -70,13 +70,13 @@ def update(frame):
             m_x = tvecs[i][0][0]
             m_z = tvecs[i][0][2]
             
-            landmark_obstacle = plt.Circle((m_x, m_z), constants.OBSITCLE_SHAPE_MAX, color="b", alpha=0.5)
+            landmark_obstacle = plt.Circle((m_x, m_z), constants.OBSITCLE_SHAPE_RADIUS, color="b", alpha=0.5)
             landmkar_id = ax.text(m_x, m_z, str(ids[i][0]), color='b', fontsize=constants.OBSITCLE_SHAPE_MIN/10, ha='center', va='center')
             ax.add_artist(landmark_obstacle)
             landmark_areas.append(landmark_obstacle)
             landmark_areas.append(landmkar_id)
 
-            if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
+            if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_RADIUS + constants.ROBOT_RADIUS:
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()
                 break
