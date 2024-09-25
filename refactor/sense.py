@@ -73,7 +73,7 @@ def sense_camera(grid):
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
         corners, markerHeight, CameraMatrix, DistortionCoefficient,
         )
-    if not tv:
+    if tv is None:
         tv = []
 
     for t in tv:
@@ -86,7 +86,7 @@ def sense_camera(grid):
 if __name__ == "__main__":
     grid = init()
     print(grid)
-
+    
     while True:
         time.sleep(1)
         grid = sense(grid)
