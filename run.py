@@ -39,7 +39,7 @@ ax.set_xlim(-1000, 1000)
 ax.set_ylim(-500, 1500)
 ax.set_aspect('equal', adjustable='box')
 
-robot_area = plt.Circle((0.0, -constants.ROBOT_RADIUS), constants.ROBOT_RADIUS, color="r", fill=False)
+robot_area = plt.Circle((0.0, 0,0), constants.ROBOT_RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
 
 landmark_areas = []
@@ -76,7 +76,7 @@ def update(frame):
             landmark_areas.append(landmark_obstacle)
             landmark_areas.append(landmkar_id)
 
-            if detection.DISTANCES(0, m_x, -constants.ROBOT_RADIUS, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
+            if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
                 #movement.TEST_AVOID_OBSTACLE()
                 break
