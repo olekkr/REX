@@ -1,5 +1,5 @@
 import numpy as np 
-import constants
+import "../constants.py"
 import local_planning
 
 
