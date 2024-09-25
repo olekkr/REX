@@ -17,7 +17,7 @@ tspeed = 32
 aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
-preview_downscale = 2
+preview_downscale = int(input("Set downscale factor (default 2): ") or 2)
 imageSize = (1920 // 2**preview_downscale, 1080 // 2**preview_downscale)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
@@ -140,7 +140,9 @@ while 1:
     markerDist = arlo.read_front_ping_sensor()
     get_marker_dim(markerDist, calc_f=False)
     nam = input("Enter to proceed next frame, otherwise write name")
-    if nam != "":
+    if nam == "d":
+        print(markerDist)
+    elif nam != "":
         markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
         markHeight = 145
         marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
