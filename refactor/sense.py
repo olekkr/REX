@@ -11,6 +11,7 @@ FocalLength = 2540
 markerHeight = 145.0  # mm
 FPS = 5
 
+picam2 = None
 
 
 CamCx, CamCy = dimensions[0]/2, dimensions[1]/2
@@ -38,7 +39,7 @@ def init():
     frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
     picam2 = Picamera2()
     picam2_config = picam2.create_video_configuration(
-        {"size": imageSize, "format": "RGB888"},
+        {"size": dimensions, "format": "RGB888"},
         controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
         queue=False,
     )
@@ -78,6 +79,6 @@ def sense_camera(grid):
 import time
 if __name__ == "__main__":
     grid = init()
-    time.sleep(1)
     while True:
+        time.sleep(1)
         sense(grid)
