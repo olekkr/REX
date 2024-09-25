@@ -117,17 +117,13 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
         if calc_f:
             fx = x * (Z / X)
             fy = y * (Z / Y)
-            s += f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}\n"
-            s += f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}\n"
+            s += ",".join([str(i) for i in [x,X,y,Y,Z,fx,fy]])
+            print(y,Y,fy)
         else:
             if markerDist:
-                s+= f"height params: {y=}, {Y=}, {Z=}\n"
-                s+= f"width params : {x=}, {X=}, {Z=}\n"
+                s += ",".join([str(i) for i in [x,X,y,Y,Z," "," "]])
             else:
-                s+= f"height params: {y=}, {Y=}\n"
-                s+= f"width params : {x=}, {X=}\n"
-        print(s)
-
+                s += ",".join([str(i) for i in [x,X,y,Y," "," "," "]])
 
     cv2.imshow("Image", image)
     cv2.waitKey(1)
@@ -136,12 +132,16 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
 
 
 output_log = f"output/log{int(datetime.now().timestamp())}.log"
+with open(output_log, "a+") as f:
+    f.write("x,X,y,Y,Z,fx,fy")
+
 while 1:
     time.sleep(0.1)
-    get_marker_dim(0, calc_f=False)
+    markerDist = arlo.read_front_ping_sensor()
+    get_marker_dim(markerDist, calc_f=False)
     nam = input("Enter to proceed next frame, otherwise write name")
     if nam != "":
-        markDist = int(input("Distance from marker (default 1000): ") or 1000)
+        markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
         markHeight = 145
         marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
         with open(output_log, "a+") as f:
