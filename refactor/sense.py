@@ -84,6 +84,10 @@ def sense_camera(grid):
 
 if __name__ == "__main__":
     grid = init()
+    
+
     while True:
         time.sleep(1)
-        sense(grid)
+        grid = sense(grid)
+        local_planning.show_grid(grid, (0.,0.)):
+        
