@@ -19,7 +19,7 @@ picam2 = Picamera2()
 picam2_config = picam2.create_video_configuration(
     {"size": imageSize, "format": "RGB888"},
     controls={
-         "ScalerCrop": (0, 0, 500, 500),
+         "ScalerCrop": (1000, 1000, 2000, 2000),
          "FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, 
          queue=False,
     )
