@@ -33,24 +33,24 @@ MARKER_HEIGHT = 145.0
 DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
-# # ON PI
-# SCREEN_RESOLUTION = [480, 270]
-# CAMERA_MATRIX = np.array(
-#     [
-#         [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
-#         [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
-#         [0,           0, 1],
-#     ],
-#     dtype=float,
-# )
-
-
-# FOR TESTING
-SCREEN_RESOLUTION = [1280, 720]
-CAMERA_MATRIX = np.array([
-        [FOCALLENGTH, 0.0, 1280.0/2],
-        [0.0, FOCALLENGTH, 720.0/2],
-        [0.0, 0.0, 1.0],
+# ON PI
+SCREEN_RESOLUTION = [480, 270]
+CAMERA_MATRIX = np.array(
+    [
+        [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
+        [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
+        [0,           0, 1],
     ],
     dtype=float,
 )
+
+
+# # FOR TESTING
+# SCREEN_RESOLUTION = [1280, 720]
+# CAMERA_MATRIX = np.array([
+#         [FOCALLENGTH, 0.0, 1280.0/2],
+#         [0.0, FOCALLENGTH, 720.0/2],
+#         [0.0, 0.0, 1.0],
+#     ],
+#     dtype=float,
+# )
