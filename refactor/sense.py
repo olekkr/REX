@@ -64,7 +64,7 @@ def sense_camera(grid):
     im = picam2.capture_array("main")
 
     # capture AruCo Corners 
-    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
+    (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
     
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
