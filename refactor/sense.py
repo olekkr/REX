@@ -13,6 +13,24 @@ FPS = 5
 
 picam2 = None
 
+arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
+arucoParams = cv2.aruco.DetectorParameters()
+
+
+
+# pi cam init
+frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
+picam2 = Picamera2()
+picam2_config = picam2.create_video_configuration(
+    {"size": dimensions, "format": "RGB888"},
+    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
+    queue=False,
+)
+picam2.configure(picam2_config)  # Not really necessary
+picam2.start(show_preview=False)
+time.sleep(2)
+picam2.start()
+
 
 CamCx, CamCy = dimensions[0]/2, dimensions[1]/2
 CameraMatrix = np.array(
@@ -30,25 +48,6 @@ print("using FocalLength:", FocalLength)
 
 
 def init():
-    global picam2
-    # aruco init
-    arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
-    arucoParams = cv2.aruco.DetectorParameters()
-
-
-    # pi cam init
-    frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
-    picam2 = Picamera2()
-    picam2_config = picam2.create_video_configuration(
-        {"size": dimensions, "format": "RGB888"},
-        controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
-        queue=False,
-    )
-    picam2.configure(picam2_config)  # Not really necessary
-    picam2.start(show_preview=False)
-    time.sleep(2)
-    picam2.start()
-
     # grid init
     return local_planning.empty_grid()
 
