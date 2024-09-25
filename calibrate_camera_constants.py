@@ -1,6 +1,6 @@
 import numpy as np
 
-downscale_factor = 3
+downscale_factor = 1
 
 dimensions = (1920 // 2**downscale_factor, 1080 // 2**downscale_factor)
 
