@@ -63,14 +63,20 @@ def sense_camera(grid):
     # capture RGB:
     im = picam2.capture_array("main")
 
+
+
     # capture AruCo Corners 
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
+    
+    print(tv)
     
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
         corners, markerHeight, CameraMatrix, DistortionCoefficient,
         )
-    
+    if not tv:
+        tv = []
+
     for t in tv:
         draw_landmarks(t, grid)
 
