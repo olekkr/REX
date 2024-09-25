@@ -1,4 +1,5 @@
 import numpy as np
+from calibrate_camera_constants import FocalLength, CameraMatrix, dimensions, downscale_factor
 
 MAX_VOLT = 12
 MAX_RPM = 100
@@ -29,24 +30,15 @@ OBSITCLE_SHAPE = OBSITCLE_SHAPE_MAX
 
 
 #FOCALLENGTH = 625.0
-FOCALLENGTH = 2540.0
+FOCALLENGTH = FocalLength
 MARKER_HEIGHT = 145.0
 DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
 
 
 # ON PI
-DOWNSCALE = 1
-SCREEN_RESOLUTION = [480, 270]
-#SCREEN_RESOLUTION = [1920, 1080]
-CAMERA_MATRIX = np.array(
-    [
-        [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
-        [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
-        [0,           0, 1],
-    ],
-    dtype=float,
-)
-
+DOWNSCALE = downscale_factor
+SCREEN_RESOLUTION = dimensions
+CAMERA_MATRIX = CameraMatrix
 
 
 
