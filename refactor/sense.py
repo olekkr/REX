@@ -94,5 +94,5 @@ if __name__ == "__main__":
         local_planning.show_grid(grid, (0.,0.))
         if not shown:
             plt.show(block=True)
-            shown = True
+            # shown = True
         
