@@ -30,6 +30,7 @@ print("using FocalLength:", FocalLength)
 
 
 def init():
+    global picam2
     # aruco init
     arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
     arucoParams = cv2.aruco.DetectorParameters()
