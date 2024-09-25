@@ -40,7 +40,7 @@ DOWNSCALE = downscale_factor
 SCREEN_RESOLUTION = dimensions
 CAMERA_MATRIX = CameraMatrix
 
-
+ENABLE_PREVIEW = True
 
 # # FOR TESTING
 # SCREEN_RESOLUTION = [1280, 720]
