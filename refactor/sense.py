@@ -79,6 +79,7 @@ def sense_camera(grid):
     for t in tv:
         draw_landmarks(t, grid)
 
+    return grid
     
 
 
