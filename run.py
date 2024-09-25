@@ -4,33 +4,13 @@ import matplotlib.pyplot as plt
 import detection
 import movement
 from matplotlib.animation import FuncAnimation
-from picamera2 import Picamera2, Preview
 import robot
 import time
+import camera_setup
 
 arlo = robot.Robot()
 
-imageSize = (constants.SCREEN_RESOLUTION)
-center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = 15
-frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
-
-picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration(
-    {"size": (1640//2,1232//2), "format": "RGB888"},
-    controls={
-         "ScalerCrop": (0, 0, 3280,2464),
-         "FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, 
-         queue=False,
-    )
-
-picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
-
-time.sleep(2)
-picam2.start()
-
-
+picam2 = camera_setup.camera_setup()
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 last_seen = None
@@ -49,13 +29,13 @@ ax.add_artist(robot_area)
 landmark_areas = []
 
 def update(frame):
-
     image = picam2.capture_array("main")
-    #cv2.waitKey(1)
+    
+    if constants.ENABLE_PREVIEW:
+        cv2.waitKey(1)
   
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
-
     
     # YEETER ALLE LANDMARKS 
     for landmark in landmark_areas:
@@ -89,8 +69,8 @@ def update(frame):
         pass
         #movement.TEST_FIND_TARGET(last_seen)
 
-    # if constants.ENABLE_PREVIEW:
-    #     cv2.imshow("Image", imageCopy)
+    if constants.ENABLE_PREVIEW:
+        cv2.imshow("Image", imageCopy)
 
     return landmark_areas + [robot_area]
 
