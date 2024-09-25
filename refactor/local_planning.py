@@ -39,7 +39,7 @@ def robo_pos_avail(pos, grid):
 
 def show_grid(grid, robo_pos):
     print(grid.astype(int))
-    plt.plot(grid.astype(int))
+    plt.imshow(grid.astype(int))
     plt.scatter([robo_pos[0]],[robo_pos[1]])
 
 
