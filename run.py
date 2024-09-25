@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 import detection
 import movement
 from matplotlib.animation import FuncAnimation
-
-""""
 from picamera2 import Picamera2, Preview
 import robot
+import time
 
 arlo = robot.Robot()
 
@@ -27,58 +26,12 @@ picam2.start(show_preview=False)
 
 time.sleep(2)
 picam2.start()
-"""
-
-# KUN TIL MIT CAMERA MACBOOK AIR
-cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    print("camera not found")
-    exit()
 
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 last_seen = None
 landmark_dict = {}
-
-# while 1 and __name__ == "__main__":
-#     if cv2.waitKey(1) == ord('q'):
-#         break
-#     """"
-#     ret, image = picam2.capture_array()
-#     """
-#     ret, image = cap.read()
-#     if not ret:
-#         print("Error: Failed to capture image.")
-#         break
-
-#     corners, ids, _ = detection.detect(image)
-#     imageCopy = image.copy()
-
-#     if ids is not None:
-#         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
-#         tvecs = detection.estimateDistance(corners)
-
-#         for i in range(len(ids)):           
-#             m_id, m_x, m_z = ids[i][0], tvecs[i][0][0], tvecs[i][0][2]
-#             landmark_dict[m_id] = (m_x, m_z)
-
-#             if detection.distance(0, m_x, 0, m_z, constants.OBSITCLE_SHAPE_MAX, constants.ROBOT_RADIUS):
-#                 movement.TEST_AVOID_OBSTACLE()
-#                 break
-            
-#             """"
-#             # Only for plotting
-#             plt.scatter(landmark_dict[m_id][0], landmark_dict[m_id][1], c="b")
-#             plt.pause(0.01)
-#             """
-#         movement.TEST_TOWARDS_TARGET(corners, last_seen)
-#     else:
-#         movement.TEST_FIND_TARGET(last_seen)
-
-#     # # Show preview but is not needed cuz it is laggy
-#     cv2.imshow("Image", imageCopy)
-
 
 # ONLY FOR PLOTTING
 plt.rcParams["figure.figsize"] = 4, 4
@@ -92,19 +45,16 @@ ax.add_artist(robot_area)
 landmark_areas = []
 
 def update(frame):
-    print("update")
-    """"
-    # For picamera
+    print("1")
     image = picam2.capture_array("main")
     cv2.waitKey(1)
-    """
-
-    # For MACBOOK AIR CAMERA
-    _, image = cap.read()
-    cv2.waitKey(1)
+    print("2")
     
+
     corners, ids, _ = detection.detect(image)
+    print("3")
     imageCopy = image.copy()
+    print("4")
     
     # YEETER ALLE LANDMARKS 
     for landmark in landmark_areas:
