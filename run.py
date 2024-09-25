@@ -12,7 +12,7 @@ arlo = robot.Robot()
 
 imageSize = (constants.SCREEN_RESOLUTION)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = 5
+FPS = 15
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 picam2 = Picamera2()
