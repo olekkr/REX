@@ -86,7 +86,6 @@ if __name__ == "__main__":
     grid = init()
     
 
-    local_planning.show_grid(grid)
     while True:
         time.sleep(1)
         grid = sense(grid)
