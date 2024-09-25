@@ -86,7 +86,7 @@ def update(frame):
     else:
         movement.TEST_FIND_TARGET(last_seen)
 
-    cv2.imshow("Image", imageCopy)
+    #cv2.imshow("Image", imageCopy)
 
     return landmark_areas + [robot_area]
 
