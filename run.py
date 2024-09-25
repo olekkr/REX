@@ -36,7 +36,7 @@ landmark_dict = {}
 plt.rcParams["figure.figsize"] = 4, 4
 fig, ax = plt.subplots()
 ax.set_xlim(-1000, 1000)
-ax.set_ylim(-500, 1500)
+ax.set_ylim(-300, 1700)
 ax.set_aspect('equal', adjustable='box')
 
 robot_area = plt.Circle((0.0, 0,0), constants.ROBOT_RADIUS, color="r", fill=False)
@@ -78,7 +78,7 @@ def update(frame):
 
             if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
                 collision = True
-                #movement.TEST_AVOID_OBSTACLE()
+                movement.TEST_AVOID_OBSTACLE()
                 break
         
         if not collision: 
