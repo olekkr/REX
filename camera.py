@@ -140,13 +140,13 @@ while 1:
     markerDist = arlo.read_front_ping_sensor()
     get_marker_dim(markerDist, calc_f=False)
     nam = input("Enter to proceed next frame, otherwise write name")
-    if nam == "d":
-        print(markerDist)
-    elif nam != "":
-        markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
-        markHeight = 145
-        marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
-        with open(output_log, "a+") as f:
-            f.write(marker_res)
-        picam2.capture_file(f"output/img_Z{markDist}_X{markHeight}_{nam}.jpg")
-        print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
+    # if nam == "d":
+    #     print(markerDist)
+    # elif nam != "":
+    markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
+    markHeight = 145
+    marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
+    with open(output_log, "a+") as f:
+        f.write(marker_res)
+    picam2.capture_file(f"output/img_Z{markDist}_X{markHeight}_{nam}.jpg")
+    print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
