@@ -41,7 +41,7 @@ SCREEN_RESOLUTION = [480, 270]
 CAMERA_MATRIX = np.array(
     [
         [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
-        [0, (FOCALLENGTH, SCREEN_RESOLUTION[1]) / 2],
+        [0, FOCALLENGTH, SCREEN_RESOLUTION[1] / 2],
         [0,           0, 1],
     ],
     dtype=float,
