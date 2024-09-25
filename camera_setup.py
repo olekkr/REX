@@ -1,16 +1,16 @@
 from picamera2 import Picamera2, Preview
-import constants
+from picamera2 import constants
 import time
 
 imageSize = (constants.SCREEN_RESOLUTION)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = constants.CAMERA_FPS
+FPS = constants.FPS
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 def camera_setup():
     picam2 = Picamera2()
     picam2_config = picam2.create_video_configuration(
-        {"size": (3280//2,2464//2), "format": "RGB888"},
+        {"size": (1640//2,1232//2), "format": "RGB888"},
         controls={
             "ScalerCrop": (0, 0, 3280,2464),
             "FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, 
