@@ -20,7 +20,7 @@ class Camera(ABC):
     def take_image(self):
         image = self.cam.capture_array("main")
 
-        if constants.ENABLE_PREVIEW:
+        if Constants.PID.ENABLE_PREVIEW:
             cv2.waitKey(1)
             cv2.imshow(
                 self.preview_name,

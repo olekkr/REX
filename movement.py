@@ -6,36 +6,36 @@ from constants import Constants
 
 def STRAIGT(arlo):
     print("FOUND TARGET: MOVING STRAIGHT")
-    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 1, 1)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.MIN_SPEED, 1, 1)
 
 
 def TURN_LEFT(arlo):
     print("DETECTING: TURNING LEFT")
-    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 0, 1)
-    time.sleep(constants.FINDING_SLEEP)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.MIN_SPEED, 0, 1)
+    time.sleep(Constants.Sensor.FINDING_SLEEP)
     arlo.stop()
 
 
 def TURN_RIGHT(arlo):
     print("DETECTING: TURNING RIGHT")
-    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 1, 0)
-    time.sleep(constants.FINDING_SLEEP)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.MIN_SPEED, 1, 0)
+    time.sleep(Constants.Sensor.FINDING_SLEEP)
     arlo.stop()
 
 
 def TURN_BACK(arlo):
     print("OBJECT DETECTED: TURNING BACK")
-    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 0, 0)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.MIN_SPEED, 0, 0)
 
 
 def MOVE_LEFT(arlo):
     print("FOUND TARGET: MOVING LEFT")
-    arlo.go_diff(constants.MIN_SPEED, constants.HALF_SPEED, 0, 1)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.HALF_SPEED, 0, 1)
 
 
 def MOVE_RIGHT(arlo):
     print("FOUND TARGET: MOVING RIGHT")
-    arlo.go_diff(constants.MIN_SPEED, constants.HALF_SPEED, 1, 0)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.HALF_SPEED, 1, 0)
 
 
 def FIND_TARGET(arlo, last_seen):
@@ -52,18 +52,18 @@ def AVOID_OBSTACLE(arlo):
     arlo.stop()
     time.sleep(0.5)
     print("OBJECT DETECTED: TURNING LEFT")
-    arlo.go_diff(constants.MIN_SPEED, constants.MIN_SPEED, 0, 1)
+    arlo.go_diff(Constants.Sensor.MIN_SPEED, Constants.Sensor.MIN_SPEED, 0, 1)
 
 
 def TEST_TOWARDS_TARGET(corners, arlo, last_seen):
     x1, x2 = detection.TOP_LEFT_CORNER(corners)[0], detection.TOP_RIGHT_CORNER(corners)[0]
-    center = constants.SCREEN_RESOLUTION[0] / 2
+    center = Constants.PID.SCREEN_RESOLUTION[0] / 2
     x_center = detection.CENTER(x1, x2)
 
-    if x_center > center - constants.THRESHOLD and x_center < center + constants.THRESHOLD:
+    if x_center > center - Constants.Sensor.THRESHOLD and x_center < center + Constants.Sensor.THRESHOLD:
         STRAIGT(arlo)
     else:
-        if x_center > center - constants.THRESHOLD:
+        if x_center > center - Constants.Sensor.THRESHOLD:
             MOVE_RIGHT(arlo)
             last_seen = "left"
         else:
@@ -121,13 +121,13 @@ def TEST_FIND_TARGET(last_seen):
 
 def TEST_TOWARDS_TARGET(corners, last_seen):
     x1, x2 = detection.TOP_LEFT_CORNER(corners)[0], detection.TOP_RIGHT_CORNER(corners)[0]
-    center = constants.SCREEN_RESOLUTION[0] / 2
+    center = Constants.PID.SCREEN_RESOLUTION[0] / 2
     x_center = detection.CENTER(x1, x2)
 
-    if x_center > center - constants.THRESHOLD and x_center < center + constants.THRESHOLD:
+    if x_center > center - Constants.Sensor.THRESHOLD and x_center < center + Constants.Sensor.THRESHOLD:
         TEST_STRAIGHT()
     else:
-        if x_center > center - constants.THRESHOLD:
+        if x_center > center - Constants.Sensor.THRESHOLD:
             TEST_MOVE_RIGHT()
             last_seen = "left"
         else:

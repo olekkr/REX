@@ -7,7 +7,7 @@ cam = camera_setup()
 
 while 1:
     image = take_image(cam, False)
-    if constants.ENABLE_PREVIEW:
+    if Constants.PID.ENABLE_PREVIEW:
         cv2.imshow("Image", cv2.resize(image, (800, 600), interpolation=cv2.INTER_AREA))
         if cv2.waitKey(1) == ord("q"):
             exit()

@@ -2,9 +2,9 @@ import cv2
 
 from constants import Constants
 
-imageSize = constants.SCREEN_RESOLUTION
+imageSize = Constants.PID.SCREEN_RESOLUTION
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
-FPS = constants.CAMERA_FPS
+FPS = Constants.PID.CAMERA_FPS
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 
@@ -17,7 +17,7 @@ def camera_setup():
     return cam
 
 
-def take_image(cam, enable_preview=constants.ENABLE_PREVIEW):
+def take_image(cam, enable_preview=Constants.PID.ENABLE_PREVIEW):
     _, image = cam.read()
 
     if enable_preview:
