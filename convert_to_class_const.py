@@ -37,7 +37,7 @@ old_to_new = {
     "constants.CAMERA_FPS": "Constants.PID.CAMERA_FPS",
 }
 
-exclude = ["__pycache__/*", "*/__pycache__/*", ".venv/*", __file__]
+exclude = ["__pycache__/*", "*/__pycache__/*", ".venv/*", "convert_to_class_const.py"]
 
 
 def is_excluded(path):
@@ -61,4 +61,5 @@ for root, dirs, files in os.walk("."):
     dirs[:] = [d for d in dirs if not is_excluded(os.path.join(root, d))]
     for file in files:
         if not is_excluded(file) and file != __file__ and os.path.splitext(file)[1] == ".py":
+            print(file)
             replace_constants_in_file(os.path.join(root, file))
