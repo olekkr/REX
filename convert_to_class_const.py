@@ -64,4 +64,4 @@ for root, dirs, files in os.walk("."):
     for f in files:
         file = os.path.join(root, f.split("\\")[-1].split("/")[-1])
         if not is_excluded(file) and file != __file__ and os.path.splitext(file)[1] == ".py":
-            replace_constants_in_file(os.path.join(root, file))
+            replace_constants_in_file(file)
