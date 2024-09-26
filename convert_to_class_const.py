@@ -37,12 +37,14 @@ old_to_new = {
     "constants.CAMERA_FPS": "Constants.PID.CAMERA_FPS",
 }
 
-exclude = ["__pycache__/*", "*/__pycache__/*", ".venv/*", "convert_to_class_const.py"]
+exclude = ["__pycache__", ".venv", "convert_to_class_const.py", ".git"]
 
 
 def is_excluded(path):
     for pattern in exclude:
-        if fnmatch.fnmatch(path, pattern):
+        if pattern in path:
+            return True
+        if os.path.isfile(path) and os.path.splitext(path)[1] != ".py":
             return True
     return False
 
@@ -56,10 +58,10 @@ def replace_constants_in_file(file_path):
         file.write(content)
         file.truncate()
 
-
 for root, dirs, files in os.walk("."):
     dirs[:] = [d for d in dirs if not is_excluded(os.path.join(root, d))]
-    for file in files:
+
+    for f in files:
+        file = os.path.join(root, f)
         if not is_excluded(file) and file != __file__ and os.path.splitext(file)[1] == ".py":
-            print(file)
             replace_constants_in_file(os.path.join(root, file))
