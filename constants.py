@@ -1,37 +1,36 @@
 import numpy as np
 
+# Robot properties
 MAX_VOLT = 12
 MAX_RPM = 100
 ROBOT_DIAMETER = 395  # mm +- 5 mm
-WHEEL_DIAMETER = 155  # mm
 ROBOT_RADIUS = ROBOT_DIAMETER / 2
-WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * 3.14  # cm
 ROBOT_CIRCUMFERENCE = 39.5 * 3.14  # cm
+ROBOT_SHAPE = (50, 50)  # Around 50 cm before the landmarks are visible in the camera
+WHEEL_DIAMETER = 155  # mm
+WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * 3.14  # cm
 QUARTER_TURN_64 = 0.725  # sleep
-ROBOT_SHAPE = (50, 50)  # Arund 50 cm before the landmarks are visible in the camera
 
-# Constants for the sensors
+# Sensor properties
 MAX_SPEED = 100
 HALF_SPEED = MAX_SPEED / 2
 MIN_SPEED = 30
 THRESHOLD = 100
 FINDING_SLEEP = 0.5
-
-OBSTACLE_SHAPE = [145, 145]  # in mm
 FRONT_SENSOR = 0
 BACK_SENSOR = 1
 LEFT_SENSOR = 2
 RIGHT_SENSOR = 3
 
+# Obstacle properties
+OBSTACLE_SHAPE = [145, 145]  # in mm
 OBSTACLE_SHAPE_MIN = 220  # in mm
 OBSTACLE_SHAPE_MAX = 250  # in mm
 OBSTACLE_SHAPE_RADIUS = OBSTACLE_SHAPE_MAX / 2
 
-
-# ON PId
+# PID properties
 DOWNSCALE = 1
 SCREEN_RESOLUTION = (int(3280 // 2**DOWNSCALE), int(2464 // 2**DOWNSCALE))
-
 FOCALLENGTH_ARR = [2540, 1270, 625.0]
 FOCALLENGTH = (
     FOCALLENGTH_ARR[DOWNSCALE]
@@ -40,7 +39,6 @@ FOCALLENGTH = (
 )
 MARKER_HEIGHT = 145.0
 DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
-
 CAMERA_MATRIX = np.array(
     [
         [FOCALLENGTH, 0, SCREEN_RESOLUTION[0] / 2],
@@ -49,17 +47,6 @@ CAMERA_MATRIX = np.array(
     ],
     dtype=float,
 )
-
 PREVIEW_DOWNSCALE = 2
 ENABLE_PREVIEW = True
 CAMERA_FPS = 24
-
-# # FOR TESTING
-# SCREEN_RESOLUTION = [1280, 720]
-# CAMERA_MATRIX = np.array([
-#         [FOCALLENGTH, 0.0, 1280.0/2],
-#         [0.0, FOCALLENGTH, 720.0/2],
-#         [0.0, 0.0, 1.0],
-#     ],
-#     dtype=float,
-# )
