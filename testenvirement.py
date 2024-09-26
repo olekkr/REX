@@ -1,9 +1,10 @@
 import cv2
-import constants
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+import constants
 import detection
 import movement
-from matplotlib.animation import FuncAnimation
 
 """"
 from picamera2 import Picamera2, Preview
@@ -59,14 +60,14 @@ landmark_dict = {}
 #         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
 #         tvecs = detection.estimateDistance(corners)
 
-#         for i in range(len(ids)):           
+#         for i in range(len(ids)):
 #             m_id, m_x, m_z = ids[i][0], tvecs[i][0][0], tvecs[i][0][2]
 #             landmark_dict[m_id] = (m_x, m_z)
 
-#             if detection.distance(0, m_x, 0, m_z, constants.OBSITCLE_SHAPE_MAX, constants.ROBOT_RADIUS):
+#             if detection.distance(0, m_x, 0, m_z, constants.OBSTACLE_SHAPE_MAX, constants.ROBOT_RADIUS):
 #                 movement.TEST_AVOID_OBSTACLE()
 #                 break
-            
+
 #             """"
 #             # Only for plotting
 #             plt.scatter(landmark_dict[m_id][0], landmark_dict[m_id][1], c="b")
@@ -91,6 +92,7 @@ ax.add_artist(robot_area)
 
 landmark_areas = []
 
+
 def update(frame):
     print("update")
     """"
@@ -102,11 +104,11 @@ def update(frame):
     # For MACBOOK AIR CAMERA
     _, image = cap.read()
     cv2.waitKey(1)
-    
+
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
-    
-    # YEETER ALLE LANDMARKS 
+
+    # YEETER ALLE LANDMARKS
     for landmark in landmark_areas:
         landmark.remove()
     landmark_areas.clear()
@@ -115,23 +117,36 @@ def update(frame):
     if ids is not None:
         cv2.aruco.drawDetectedMarkers(imageCopy, corners, ids)
         tvecs = detection.estimateDistance(corners)
-        
-        for i in range(len(ids)):           
+
+        for i in range(len(ids)):
             m_x = tvecs[i][0][0]
             m_z = tvecs[i][0][2]
-            
-            landmark_obstacle = plt.Circle((m_x, m_z), constants.OBSITCLE_SHAPE_MAX, color="b", alpha=0.5)
-            landmkar_id = ax.text(m_x, m_z, str(ids[i][0]), color='b', fontsize=constants.OBSITCLE_SHAPE_MIN/10, ha='center', va='center')
+
+            landmark_obstacle = plt.Circle(
+                (m_x, m_z), constants.OBSTACLE_SHAPE_MAX, color="b", alpha=0.5
+            )
+            landmkar_id = ax.text(
+                m_x,
+                m_z,
+                str(ids[i][0]),
+                color="b",
+                fontsize=constants.OBSTACLE_SHAPE_MIN / 10,
+                ha="center",
+                va="center",
+            )
             ax.add_artist(landmark_obstacle)
             landmark_areas.append(landmark_obstacle)
             landmark_areas.append(landmkar_id)
 
-            if detection.DISTANCES(0, m_x, 0, m_z) <= constants.OBSITCLE_SHAPE_MAX + constants.ROBOT_RADIUS:
+            if (
+                detection.DISTANCES(0, m_x, 0, m_z)
+                <= constants.OBSTACLE_SHAPE_MAX + constants.ROBOT_RADIUS
+            ):
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()
                 break
-        
-        if not collision: 
+
+        if not collision:
             movement.TEST_TOWARDS_TARGET(corners, last_seen)
     else:
         movement.TEST_FIND_TARGET(last_seen)
@@ -139,6 +154,7 @@ def update(frame):
     cv2.imshow("Image", imageCopy)
 
     return landmark_areas + [robot_area]
+
 
 ani = FuncAnimation(fig, update, interval=10, cache_frame_data=False)
 plt.show()

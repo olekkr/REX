@@ -1,12 +1,13 @@
 import cv2
-import camera_setup
+from camera.webcam import camera_setup, take_image
 import constants
 
 
-picam2 = camera_setup.camera_setup()
+cam = camera_setup()
 
 while 1:
-    image = picam2.capture_array("main")
+    image = take_image(cam, False)
     if constants.ENABLE_PREVIEW:
-        cv2.waitKey(1)
         cv2.imshow("Image", cv2.resize(image, (800, 600), interpolation=cv2.INTER_AREA))
+        if cv2.waitKey(1) == ord('q'):
+            exit()

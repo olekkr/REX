@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 from picamera2 import Picamera2
 
 import robot
-from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
+from constants import CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT
 
 arlo = robot.Robot()
 
@@ -135,9 +135,9 @@ while 1 and __name__ == "__main__":
     if len(corners) > 0:
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
-            markerHeight,
-            CameraMatrix,
-            DistortionCoefficient,
+            MARKER_HEIGHT,
+            CAMERA_MATRIX,
+            DISTORTION_COEFFICIENT,
         )
         print(corners)
         marker_map = ([ax for ((ax, ay, az),) in a], [az for ((ax, ay, az),) in a])

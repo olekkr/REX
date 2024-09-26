@@ -1,11 +1,10 @@
 import numpy as np 
 import constants
 import local_planning
-from picamera2 import Picamera2
+from camera.webcam import camera_setup
 import cv2
 import time
 import matplotlib.pyplot as plt
-import camera_setup
 
 dimensions = (1920, 1080)
 
@@ -14,7 +13,7 @@ FocalLength = 2540
 markerHeight = 145.0  # mm
 FPS = 5
 
-picam2 = camera_setup.camera_setup()
+picam2 = camera_setup()
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
@@ -71,14 +70,12 @@ def sense_camera(grid):
     
 
 
-if __name__ == "__main__":
+def main():
     grid = init()
     print(grid)
     plt.ion()
     plt.show()
-    shown = False
     while True:
         time.sleep(1)
         grid = sense(grid)
-        # local_planning.show_grid(grid, (0.,0.))
 
