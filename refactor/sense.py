@@ -1,10 +1,12 @@
-import numpy as np 
-import constants
-import local_planning
-from camera.webcam import camera_setup
-import cv2
 import time
+
+import cv2
+import local_planning
 import matplotlib.pyplot as plt
+import numpy as np
+
+from camera.webcam import camera_setup
+from constants import Constants
 
 dimensions = (1920, 1080)
 
@@ -19,7 +21,7 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 
 
-CamCx, CamCy = dimensions[0]/2, dimensions[1]/2
+CamCx, CamCy = dimensions[0] / 2, dimensions[1] / 2
 CameraMatrix = np.array(
     [
         [FocalLength, 0, CamCx / 2],
@@ -38,27 +40,25 @@ def init():
     # grid init
     return local_planning.empty_grid()
 
-def sense(grid): # map, 
+
+def sense(grid):  # map,
     return sense_camera(grid)
 
 
-
-
-
-def sense_camera(grid): 
+def sense_camera(grid):
     # capture RGB:
     im = picam2.capture_array("main")
 
-
-
-    # capture AruCo Corners 
+    # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
-    
-    
+
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
-        corners, markerHeight, CameraMatrix, DistortionCoefficient,
-        )
+        corners,
+        markerHeight,
+        CameraMatrix,
+        DistortionCoefficient,
+    )
     if tv is None:
         tv = []
 
@@ -67,7 +67,6 @@ def sense_camera(grid):
         local_planning.draw_landmarks(t, grid)
 
     return grid
-    
 
 
 def main():
@@ -78,4 +77,3 @@ def main():
     while True:
         time.sleep(1)
         grid = sense(grid)
-

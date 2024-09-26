@@ -2,9 +2,9 @@ import cv2
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-import constants
 import detection
 import movement
+from constants import Constants
 
 """"
 from picamera2 import Picamera2, Preview

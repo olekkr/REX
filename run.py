@@ -4,13 +4,12 @@ import cv2
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-import constants
 import detection
 import movement
 
 # from matplotlib.patches import Circle
 from camera.webcam import camera_setup, take_image
-
+from constants import Constants
 
 picam2 = camera_setup()
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)

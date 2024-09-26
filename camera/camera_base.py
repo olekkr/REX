@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import cv2
 
-import constants
+from constants import Constants
 
 
 class Camera(ABC):

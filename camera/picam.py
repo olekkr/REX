@@ -3,12 +3,12 @@ import time
 import cv2
 from picamera2 import Picamera2, Preview
 
-import constants
+
 
 
 class Camera:
     def setup_camera(self):
-        FPS = constants.CAMERA_FPS
+        FPS = properties.CAMERA_FPS
         frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
         picam2 = Picamera2()
         picam2_config = picam2.create_video_configuration(
@@ -36,7 +36,7 @@ class Camera:
     def take_image(self):
         image = self.cam.capture_array("main")
 
-        if constants.ENABLE_PREVIEW:
+        if properties.ENABLE_PREVIEW:
             cv2.waitKey(1)
             cv2.imshow(
                 self.preview_name,
@@ -67,6 +67,6 @@ def camera_setup():
 def take_image(cam):
     image = cam.capture_array("main")
 
-    if constants.ENABLE_PREVIEW:
+    if properties.ENABLE_PREVIEW:
         cv2.waitKey(1)
         cv2.imshow("Image", cv2.resize(image, (800, 600), interpolation=cv2.INTER_AREA))
