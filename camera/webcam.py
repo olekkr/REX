@@ -30,3 +30,6 @@ class Camera(CameraBase):
                 exit()
 
         return image
+
+    def capture_file(self, name: str):
+        return cv2.imwrite(name, self.take_image(False))

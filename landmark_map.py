@@ -4,10 +4,12 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
-from picamera2 import Picamera2
+from camera.picam import Camera
 
 import robot
-from constants import CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT
+from constants import Constants
+
+CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT = Constants.PID.CAMERA_MATRIX, Constants.PID.DISTORTION_COEFFICIENT, Constants.PID.MARKER_HEIGHT
 
 arlo = robot.Robot()
 
@@ -24,17 +26,7 @@ FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
 
-picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration(
-    {"size": imageSize, "format": "RGB888"},
-    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
-    queue=False,
-)
-picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
-time.sleep(2)
-picam2.start()
-# cap = cv2.VideoCapture()
+picam2 = Camera()
 
 arucoParams = cv2.aruco.DetectorParameters()
 

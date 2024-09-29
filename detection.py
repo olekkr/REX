@@ -1,7 +1,12 @@
 import cv2
 import numpy
-from constants import MARKER_HEIGHT, CAMERA_MATRIX, DISTORTION_COEFFICIENT
+from constants import Constants
 
+CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT = (
+    Constants.PID.CAMERA_MATRIX,
+    Constants.PID.DISTORTION_COEFFICIENT,
+    Constants.PID.MARKER_HEIGHT,
+)
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()

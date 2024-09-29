@@ -1,6 +1,6 @@
-import cv2
 import time
 
+import cv2
 from picamera2 import Picamera2
 
 from camera.camera_base import CameraBase
@@ -9,19 +9,23 @@ from constants import Constants
 
 class Camera(CameraBase):
     def setup_camera(self):
-        FPS = Constants.PID.CAMERA_FPS
-        frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
         picam2 = Picamera2()
         picam2_config = picam2.create_video_configuration(
-            {"size": (1640 // 2, 1232 // 2), "format": "RGB888"},
-            controls={
-                "ScalerCrop": (0, 0, 3280, 2464),
-                "FrameDurationLimits": (frame_duration_limit, frame_duration_limit),
-            },
-            queue=False,
+            **self.video_configuration
         )
         picam2.configure(picam2_config)
-        picam2.start(show_preview=False)
+        if self.still_configuration:
+            picam2_still_config = picam2.create_still_configuration(
+                **self.still_configuration
+            )
+            picam2.configure(picam2_still_config)
+        if self.preview_configuration:
+            picam2_preview_config = picam2.create_preview_configuration(
+                **self.preview_configuration
+            )
+            picam2.configure(picam2_preview_config)
+
+        picam2.start(show_preview=self.picam_show_preview)
 
         time.sleep(2)
         picam2.start()
@@ -34,3 +38,6 @@ class Camera(CameraBase):
             self.preview(image)
 
         return image
+
+    def capture_file(self, name: str):
+        return self.cam.capture_file(name)

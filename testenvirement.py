@@ -6,8 +6,7 @@ import detection
 import movement
 from constants import Constants
 
-""""
-from picamera2 import Picamera2, Preview
+from camera.webcam import Camera
 import robot
 
 arlo = robot.Robot()
@@ -18,23 +17,10 @@ center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
-picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration(
-    {"size": imageSize, "format": "RGB888"},
-    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, queue=False,
-    )
-picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
-
-time.sleep(2)
-picam2.start()
-"""
-
-# KUN TIL MIT CAMERA MACBOOK AIR
-cap = cv2.VideoCapture(0)
-if not cap.isOpened():
-    print("camera not found")
-    exit()
+picam2 = Camera(video_configuration={
+    "main":{"size": imageSize, "format": "RGB888"},
+    "controls":{"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, "queue":False,
+})
 
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
@@ -95,14 +81,9 @@ landmark_areas = []
 
 def update(frame):
     print("update")
-    """"
-    # For picamera
-    image = picam2.capture_array("main")
-    cv2.waitKey(1)
-    """
 
-    # For MACBOOK AIR CAMERA
-    _, image = cap.read()
+    # For picamera
+    image = picam2.take_image()
     cv2.waitKey(1)
 
     corners, ids, _ = detection.detect(image)

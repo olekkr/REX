@@ -31,10 +31,8 @@ landmark_areas = []
 
 
 def update(frame):
-    image = take_image(picam2, False)
+    image = picam2.take_image()
 
-    if Constants.PID.ENABLE_PREVIEW:
-        cv2.waitKey(1)
 
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()
@@ -83,9 +81,6 @@ def update(frame):
     else:
         pass
         # movement.TEST_FIND_TARGET(last_seen)
-
-    if Constants.PID.ENABLE_PREVIEW:
-        cv2.imshow("Image", imageCopy)
 
     return landmark_areas + [robot_area]
 

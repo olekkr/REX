@@ -1,10 +1,18 @@
 import time
 
 import cv2
-from picamera2 import Picamera2
+import numpy as np
 
-from constants import CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT
 import robot
+from camera.picam import Camera
+from constants import Constants
+
+CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT = (
+    Constants.PID.CAMERA_MATRIX,
+    Constants.PID.DISTORTION_COEFFICIENT,
+    Constants.PID.MARKER_HEIGHT,
+)
+
 
 arlo = robot.Robot()
 speed = 40
@@ -19,18 +27,7 @@ center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
-picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration(
-    {"size": imageSize, "format": "RGB888"},
-    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
-    queue=False,
-)
-
-picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
-time.sleep(2)
-picam2.start()
-# cap = cv2.VideoCapture()
+picam2 = Camera()
 
 arucoParams = cv2.aruco.DetectorParameters()
 
@@ -115,7 +112,7 @@ while 1 and __name__ == "__main__":
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
             MARKER_HEIGHT,
-            CAMERA_MATRIX(preview_downscale),
+            CAMERA_MATRIX,
             DISTORTION_COEFFICIENT,
         )
         print("a", np.linalg.norm(a))
