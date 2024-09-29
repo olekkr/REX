@@ -64,7 +64,7 @@ landmark_dict = {}
 #             m_id, m_x, m_z = ids[i][0], tvecs[i][0][0], tvecs[i][0][2]
 #             landmark_dict[m_id] = (m_x, m_z)
 
-#             if detection.distance(0, m_x, 0, m_z, constants.OBSTACLE_SHAPE_MAX, constants.ROBOT_RADIUS):
+#             if detection.distance(0, m_x, 0, m_z, Constants.Obstacle.SHAPE_MAX, Constants.Robot.RADIUS):
 #                 movement.TEST_AVOID_OBSTACLE()
 #                 break
 
@@ -87,7 +87,7 @@ fig, ax = plt.subplots()
 ax.set_xlim(-1000, 1000)
 ax.set_ylim(0, 2000)
 
-robot_area = plt.Circle((0.0, 0.0), constants.ROBOT_RADIUS, color="r", fill=False)
+robot_area = plt.Circle((0.0, 0.0), Constants.Robot.RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
 
 landmark_areas = []
@@ -123,14 +123,14 @@ def update(frame):
             m_z = tvecs[i][0][2]
 
             landmark_obstacle = plt.Circle(
-                (m_x, m_z), constants.OBSTACLE_SHAPE_MAX, color="b", alpha=0.5
+                (m_x, m_z), Constants.Obstacle.SHAPE_MAX, color="b", alpha=0.5
             )
             landmkar_id = ax.text(
                 m_x,
                 m_z,
                 str(ids[i][0]),
                 color="b",
-                fontsize=constants.OBSTACLE_SHAPE_MIN / 10,
+                fontsize=Constants.Obstacle.SHAPE_MIN / 10,
                 ha="center",
                 va="center",
             )
@@ -140,7 +140,7 @@ def update(frame):
 
             if (
                 detection.DISTANCES(0, m_x, 0, m_z)
-                <= constants.OBSTACLE_SHAPE_MAX + constants.ROBOT_RADIUS
+                <= Constants.Obstacle.SHAPE_MAX + Constants.Robot.RADIUS
             ):
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()

@@ -1,30 +1,37 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 import cv2
 
 from constants import Constants
 
 
-class Camera(ABC):
+class CameraBase(ABC):
     @abstractmethod
-    def setup_camera(self):
-        pass
+    def setup_camera(self) -> Any:
+        """"""
 
     def __init__(self):
         self.preview_name = "Image"
         self.resize_dimensions = (800, 600)
         self.interpolation = cv2.INTER_AREA
 
-        self.setup_camera()
+        self.cam = self.setup_camera()
 
-    def take_image(self):
-        image = self.cam.capture_array("main")
+    def preview(self, image):
+        cv2.waitKey(1)
+        cv2.imshow(
+            self.preview_name,
+            cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation),
+        )
 
-        if Constants.PID.ENABLE_PREVIEW:
-            cv2.waitKey(1)
-            cv2.imshow(
-                self.preview_name,
-                cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation),
-            )
-    
-    def read()
+    @abstractmethod
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW):
+        pass
+
+    def read(self, *args, **kwargs):
+        img = self.take_image(False)
+        return bool(img), img
+
+    def capture_array(self, *args, **kwargs):
+        return self.take_image(False)

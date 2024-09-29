@@ -8,10 +8,10 @@ import detection
 import movement
 
 # from matplotlib.patches import Circle
-from camera.webcam import camera_setup, take_image
+from camera.webcam import Camera
 from constants import Constants
 
-picam2 = camera_setup()
+picam2 = Camera()
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 last_seen = None
@@ -24,7 +24,7 @@ ax.set_xlim(-1000, 1000)
 ax.set_ylim(-300, 1700)
 ax.set_aspect("equal", adjustable="box")
 
-robot_area = plt.Circle((0.0, 0, 0), constants.ROBOT_RADIUS, color="r", fill=False)
+robot_area = plt.Circle((0.0, 0, 0), Constants.Robot.RADIUS, color="r", fill=False)
 ax.add_artist(robot_area)
 
 landmark_areas = []
@@ -54,14 +54,14 @@ def update(frame):
             m_z = tvecs[i][0][2]
 
             landmark_obstacle = plt.Circle(
-                (m_x, m_z), constants.OBSTACLE_SHAPE_RADIUS, color="b", alpha=0.5
+                (m_x, m_z), Constants.Obstacle.SHAPE_RADIUS, color="b", alpha=0.5
             )
             landmkar_id = ax.text(
                 m_x,
                 m_z,
                 str(ids[i][0]),
                 color="b",
-                fontsize=constants.OBSTACLE_SHAPE_MIN / 10,
+                fontsize=Constants.Obstacle.SHAPE_MIN / 10,
                 ha="center",
                 va="center",
             )
@@ -71,7 +71,7 @@ def update(frame):
 
             if (
                 detection.DISTANCES(0, m_x, 0, m_z)
-                <= constants.OBSTACLE_SHAPE_RADIUS + constants.ROBOT_RADIUS
+                <= Constants.Obstacle.SHAPE_RADIUS + Constants.Robot.RADIUS
             ):
                 collision = True
                 movement.TEST_AVOID_OBSTACLE()

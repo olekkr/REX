@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from camera.webcam import camera_setup
-from constants import Constants
 
 dimensions = (1920, 1080)
 
