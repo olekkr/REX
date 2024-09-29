@@ -41,6 +41,11 @@ old_to_new = {
     "constants.CAMERA_FPS": "Constants.PID.CAMERA_FPS",
 }
 
+old_to_new_keys = list(old_to_new.keys())
+
+for old_to_new_key in old_to_new_keys:
+    old_to_new[" " + old_to_new_key.removeprefix("constants.")] = " " + old_to_new[old_to_new_key]
+
 exclude = ["__pycache__", ".venv", "convert_to_class_const.py", ".git"]
 
 
@@ -61,6 +66,7 @@ def replace_constants_in_file(file_path):
         file.seek(0)
         file.write(content)
         file.truncate()
+
 
 for root, dirs, files in os.walk("."):
     dirs[:] = [d for d in dirs if not is_excluded(os.path.join(root, d))]
