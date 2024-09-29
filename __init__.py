@@ -1,3 +1,4 @@
-from constants import Constants
+import os
+import sys
 
-constants = Constants
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))

@@ -17,11 +17,11 @@ class Camera(CameraBase):
 
         if not cam.isOpened():  # Error
             raise OSError("Could not open camera")
-        cam.read()
+
         return cam
 
 
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW):
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
         _, image = self.cam.read()
 
         if enable_preview:

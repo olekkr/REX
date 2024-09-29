@@ -1,11 +1,16 @@
+import os
+import sys
 import time
 
 import cv2
-import local_planning
 import matplotlib.pyplot as plt
 import numpy as np
 
-from camera.webcam import camera_setup
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+
+from camera.webcam import Camera
+from refactor import local_planning
 
 dimensions = (1920, 1080)
 
@@ -14,7 +19,7 @@ FocalLength = 2540
 markerHeight = 145.0  # mm
 FPS = 5
 
-picam2 = camera_setup()
+picam2 = Camera()
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
@@ -46,7 +51,7 @@ def sense(grid):  # map,
 
 def sense_camera(grid):
     # capture RGB:
-    im = picam2.capture_array("main")
+    im = picam2.take_image()
 
     # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
@@ -61,18 +66,26 @@ def sense_camera(grid):
     if tv is None:
         tv = []
 
-    print(tv)
     for t in tv:
         local_planning.draw_landmarks(t, grid)
 
     return grid
 
 
-def main():
+if __name__ == "__main__":
     grid = init()
-    print(grid)
-    plt.ion()
-    plt.show()
+    robo_pos = (0, 0)
+
+    plt.ion()  # Makes changes to
+    axes = plt.gca()
+    local_planning.show_grid(grid, robo_pos, axes)
+
     while True:
+        if not plt.get_fignums():
+            print("plot closed, exiting...")
+            exit()
+        plt.pause(0.1)
         time.sleep(1)
         grid = sense(grid)
+
+        local_planning.show_grid(grid, robo_pos, axes)

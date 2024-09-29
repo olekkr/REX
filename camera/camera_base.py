@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import cv2
+import numpy as np
 
 from constants import Constants
 
@@ -26,12 +27,12 @@ class CameraBase(ABC):
         )
 
     @abstractmethod
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW):
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
         pass
 
     def read(self, *args, **kwargs):
-        img = self.take_image(False)
+        img = self.take_image(kwargs.get("enable_preview") is True)
         return bool(img), img
 
-    def capture_array(self, *args, **kwargs):
-        return self.take_image(False)
+    def capture_array(self, *args, **kwargs) -> cv2.typing.MatLike:
+        return self.take_image(kwargs.get("enable_preview") is True)

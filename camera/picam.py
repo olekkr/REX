@@ -1,3 +1,4 @@
+import cv2
 import time
 
 from picamera2 import Picamera2
@@ -26,8 +27,10 @@ class Camera(CameraBase):
         picam2.start()
         return picam2
 
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW):
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
         image = self.cam.capture_array("main")
 
         if enable_preview:
             self.preview(image)
+
+        return image
