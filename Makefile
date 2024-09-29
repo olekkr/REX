@@ -27,7 +27,3 @@ test:
 	git switch test
 	git fetch
 	git pull
-
-
-sense:
-	python sense.py

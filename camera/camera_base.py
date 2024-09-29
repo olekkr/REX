@@ -10,7 +10,7 @@ from constants import Constants
 class CameraBase(ABC):
     @abstractmethod
     def setup_camera(self) -> Any:
-        """"""
+        pass
 
     def __init__(
         self,
