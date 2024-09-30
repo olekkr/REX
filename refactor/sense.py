@@ -7,12 +7,7 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-
-shatin_mode = False
-if not shatin_mode:
-    from matplotlib.animation import FFMpegWriter
-else:
-    FFMpegWriter = object
+from matplotlib.animation import FFMpegWriter
 
 from camera.webcam import Camera
 from constants import Constants
@@ -156,8 +151,7 @@ if __name__ == "__main__":
     start_time2 = time.time()
     metadata = dict(title="RRT Test")
 
-    if not shatin_mode:
-        writer = FFMpegWriter(fps=1000, metadata=metadata)
+    writer = FFMpegWriter(fps=1000, metadata=metadata)
     fig = plt.figure()
     show_animation = True
     rrt = RRT(
@@ -174,25 +168,8 @@ if __name__ == "__main__":
         # fig = plt.figure()
         if time.time() - start_time < 10:
             continue
-        if not shatin_mode:
-            with writer.saving(fig, "rrt_test.mp4", 100):
-                path = rrt.planning(animation=show_animation, writer=writer)
-
-                if path is None:
-                    print("Cannot find path")
-                else:
-                    print("found path!!")
-
-                    # Draw final path
-                    if show_animation:
-                        rrt.draw_graph()
-                        plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-                        plt.grid(True)
-                        plt.pause(0.01)  # Need for Mac
-                        plt.show()
-                        writer.grab_frame()
-        else:
-            path = rrt.planning(animation=False, writer=None)
+        with writer.saving(fig, "rrt_test.mp4", 100):
+            path = rrt.planning(animation=show_animation, writer=writer)
 
             if path is None:
                 print("Cannot find path")
@@ -206,3 +183,4 @@ if __name__ == "__main__":
                     plt.grid(True)
                     plt.pause(0.01)  # Need for Mac
                     plt.show()
+                    writer.grab_frame()
