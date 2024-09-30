@@ -54,11 +54,11 @@ class Constants:
         CAMERA_FPS = 24
 
     class PyPlot:
-        valid_interactive_backends = [  # I think Cairo is blocking and agg is not
-            "GTK3Cairo",
+        valid_interactive_backends = [
+            "GTK3Cairo",  # blocking
             "QtAgg",
             "QtCairo",
             "Qt5Agg",
             "Qt5Cairo",
         ]
-        interactive_backend = "QtCairo"
+        interactive_backend = "QtAgg"
