@@ -1,14 +1,13 @@
 import os
 import sys
 
-from matplotlib.animation import FFMpegWriter
-
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.animation import FFMpegWriter
 
 from camera.webcam import Camera
 from constants import Constants
@@ -136,7 +135,9 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
                 for o in origins:
                     if time.time() - start_time2 > 0.1:
                         print(
-                            np.linalg.norm(centroid - o), radius, np.linalg.norm(centroid - o) <= radius
+                            np.linalg.norm(centroid - o),
+                            radius,
+                            np.linalg.norm(centroid - o) <= radius,
                         )
                         start_time2 = time.time()
                     if np.linalg.norm(centroid - o) <= radius:

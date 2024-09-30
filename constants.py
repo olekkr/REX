@@ -1,4 +1,15 @@
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
 import numpy as np
+
+try:
+    from local_constants import LocalConstants
+except ImportError:
+    LocalConstants = None
+
 
 class Constants:
     class Robot:
@@ -61,3 +72,13 @@ class Constants:
             "Qt5Cairo",
         ]
         interactive_backend = "Qt5Agg"
+
+if LocalConstants is not None:
+    for const_class in [Constants.Robot, Constants.Sensor, Constants.Obstacle, Constants.PID, Constants.PyPlot]:
+        local_const_class = getattr(LocalConstants, const_class.__name__, None)
+        if local_const_class is not None:
+            for attr, value in const_class.__dict__.items():
+                if not attr.startswith("__"):
+                    local_value = getattr(local_const_class, attr, None)
+                    if local_value is not None:
+                        setattr(const_class, attr, local_value)

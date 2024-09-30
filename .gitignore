@@ -1,3 +1,4 @@
+local_constants.py
 *.mp4
 *.swp
 output/*
