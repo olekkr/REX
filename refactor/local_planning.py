@@ -1,9 +1,14 @@
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from math import sqrt
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 
-from constants import *
+from constants import Constants
 
 # AN occupancy grid implementation
 
@@ -17,7 +22,7 @@ def empty_grid():
 
 # from camera position to robo position
 def from_cam_pos(x):
-    return x[0], x[2] - ROBOT_DIAMETER / 2
+    return x[0], x[2] - Constants.Robot.DIAMETER / 2
 
 
 def from_grid_pos(x):
@@ -40,18 +45,17 @@ def draw_landmarks(landmarks, grid):
     for xyz in landmarks:
         x, y = from_cam_pos(xyz)
         print(x, y)
-        draw_radius(x, y, ROBOT_DIAMETER + LANDMARK_DIAMETER, grid)
+        draw_radius(x, y, Constants.Robot.DIAMETER + LANDMARK_DIAMETER, grid)
 
 
 def robo_pos_avail(pos, grid):
     pass
 
 
-def show_grid(grid, robo_pos):
-    plt.imshow(grid.astype(int))
-    plt.scatter([robo_pos[0]], [robo_pos[1]])
-    plt.draw()
-    plt.pause(0.1)
+def show_grid(grid, robo_pos, axes: Axes):
+    axes.cla()
+    axes.imshow(grid.astype(int))
+    axes.scatter([robo_pos[0]], [robo_pos[1]])
 
 
 landmarks = None

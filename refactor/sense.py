@@ -1,11 +1,15 @@
-import numpy as np 
-import constants
-import local_planning
-from picamera2 import Picamera2
-import cv2
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
+
+import cv2
 import matplotlib.pyplot as plt
-import camera_setup
+import numpy as np
+
+from camera.webcam import Camera
+from refactor import local_planning
 
 dimensions = (1920, 1080)
 
@@ -14,13 +18,13 @@ FocalLength = 2540
 markerHeight = 145.0  # mm
 FPS = 5
 
-picam2 = camera_setup.camera_setup()
+picam2 = Camera()
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 
 
-CamCx, CamCy = dimensions[0]/2, dimensions[1]/2
+CamCx, CamCy = dimensions[0] / 2, dimensions[1] / 2
 CameraMatrix = np.array(
     [
         [FocalLength, 0, CamCx / 2],
@@ -39,46 +43,48 @@ def init():
     # grid init
     return local_planning.empty_grid()
 
-def sense(grid): # map, 
+
+def sense(grid):  # map,
     return sense_camera(grid)
 
 
-
-
-
-def sense_camera(grid): 
+def sense_camera(grid):
     # capture RGB:
-    im = picam2.capture_array("main")
+    im = picam2.take_image()
 
-
-
-    # capture AruCo Corners 
+    # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
-    
-    
+
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
-        corners, markerHeight, CameraMatrix, DistortionCoefficient,
-        )
+        corners,
+        markerHeight,
+        CameraMatrix,
+        DistortionCoefficient,
+    )
     if tv is None:
         tv = []
 
-    print(tv)
     for t in tv:
         local_planning.draw_landmarks(t, grid)
 
     return grid
-    
 
 
 if __name__ == "__main__":
     grid = init()
-    print(grid)
-    plt.ion()
-    plt.show()
-    shown = False
-    while True:
-        time.sleep(1)
-        grid = sense(grid)
-        # local_planning.show_grid(grid, (0.,0.))
+    robo_pos = (0, 0)
 
+    plt.ion()  # Makes changes to
+    axes = plt.gca()
+    local_planning.show_grid(grid, robo_pos, axes)
+    start = time.time()
+    while True:
+        if not plt.get_fignums():
+            print("plot closed, exiting...")
+            exit()
+        grid = sense(grid)
+        if time.time() - start > 1:
+            plt.pause(0.00001)
+            local_planning.show_grid(grid, robo_pos, axes)
+            start = time.time()

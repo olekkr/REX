@@ -1,7 +1,18 @@
 import time
+
 import cv2
-from picamera2 import Picamera2
-from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
+import numpy as np
+
+import robot
+from camera.picam import Camera
+from constants import Constants
+
+CAMERA_MATRIX, DISTORTION_COEFFICIENT, MARKER_HEIGHT = (
+    Constants.PID.CAMERA_MATRIX,
+    Constants.PID.DISTORTION_COEFFICIENT,
+    Constants.PID.MARKER_HEIGHT,
+)
+
 
 arlo = robot.Robot()
 speed = 40
@@ -16,31 +27,23 @@ center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
-picam2 = Picamera2()
-picam2_config = picam2.create_video_configuration(
-    {"size": imageSize, "format": "RGB888"},
-    controls={"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
-    queue=False,
-)
-
-picam2.configure(picam2_config)  # Not really necessary
-picam2.start(show_preview=False)
-time.sleep(2)
-picam2.start()
-# cap = cv2.VideoCapture()
+picam2 = Camera()
 
 arucoParams = cv2.aruco.DetectorParameters()
+
 
 def detect(image_inp):
     # print(image_inp.shape)
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=image_inp, dictionary=arucoDict)
     return corners, ids, rejected
 
+
 def drive_straight(i: int = 1):
     print("Found target")
     arlo.go_diff(speed, speed, 1, 1)
     time.sleep(1)
     return i + 1
+
 
 def turn_left(i):
     print("moving left")
@@ -61,6 +64,7 @@ def turn_right():
     print("moving right")
     arlo.go_diff(tspeed_slow, tspeed_slow, 1, 0)
     time.sleep(0.5)
+
 
 def cam_on():
     # if not cap.isOpened():
@@ -107,11 +111,11 @@ while 1 and __name__ == "__main__":
     if len(corners) > 0:
         a, b, c = cv2.aruco.estimatePoseSingleMarkers(
             corners,
-            markerHeight,
-            CameraMatrix(preview_downscale),
-            DistortionCoefficient,
+            MARKER_HEIGHT,
+            CAMERA_MATRIX,
+            DISTORTION_COEFFICIENT,
         )
-        print("a",np.linalg.norm(a))
+        print("a", np.linalg.norm(a))
     try:
         for corner in corners:
             cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(image, corner))
@@ -123,20 +127,20 @@ while 1 and __name__ == "__main__":
     if cv2.getWindowProperty("Image", 0) == -1:
         arlo.stop()
         exit()
-    # if len(corners) == 0 and j < stop_and_see:
-    #     j += 1
-    #     continue
-    # elif len(corners) == 0 and j >= stop_and_see:
-    #     j = 0
+        # if len(corners) == 0 and j < stop_and_see:
+        #     j += 1
+        #     continue
+        # elif len(corners) == 0 and j >= stop_and_see:
+        #     j = 0
 
-    # # middle = (qr_leftdown + qr_rightdown) / 2
-    # if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
-    #     imgcX, imgcY = center_image
-    #     thresholdX = int(imgcX * 0.5)
-    #     thresholdY = int(imgcY * 0.5)
-    #     close_x = range(cX - thresholdX, cX + thresholdX)
-    #     close_y = range(cY - thresholdY, cY + thresholdY)
-    #     # print(close_x, close_y, cX, cY, imgcX, imgcY)
+        # # middle = (qr_leftdown + qr_rightdown) / 2
+        # if cX and cY and topRight and bottomRight and bottomLeft and topLeft:
+        #     imgcX, imgcY = center_image
+        #     thresholdX = int(imgcX * 0.5)
+        #     thresholdY = int(imgcY * 0.5)
+        #     close_x = range(cX - thresholdX, cX + thresholdX)
+        #     close_y = range(cY - thresholdY, cY + thresholdY)
+        #     # print(close_x, close_y, cX, cY, imgcX, imgcY)
 
         if imgcX in close_x and imgcY in close_y:
             drive_straight(i)
