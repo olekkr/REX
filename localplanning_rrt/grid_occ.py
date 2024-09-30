@@ -63,6 +63,7 @@ class GridOccupancyMap(object):
                     ]
                 )
                 for o, r in zip(origins, radius):
+                    # print(o, r, centroid, np.linalg.norm(centroid - o))
                     if np.linalg.norm(centroid - o) <= r:
                         self.grid[i, j] = 1
                         break
