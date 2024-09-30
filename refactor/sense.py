@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from camera.picam import Camera
-from refactor import local_planning
 from constants import Constants
+from refactor import local_planning
 
 dimensions = (1920, 1080)
 
@@ -88,6 +88,6 @@ if __name__ == "__main__":
             exit()
         grid = sense(grid)
         if time.time() - start > 1:
-            plt.pause(1)
+            plt.pause(0.001)
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
