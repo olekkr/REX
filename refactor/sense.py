@@ -19,7 +19,7 @@ dimensions = Constants.PID.SCREEN_RESOLUTION
 
 FocalLength = Constants.PID.FOCALLENGTH
 
-markerHeight = 145.0  # mm
+markerHeight = Constants.PID.MARKER_HEIGHT  # mm
 FPS = 5
 
 picam2 = Camera()
@@ -28,16 +28,8 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
 
 
-CamCx, CamCy = dimensions[0] / 2, dimensions[1] / 2
-CameraMatrix = np.array(
-    [
-        [FocalLength, 0, CamCx / 2],
-        [0, FocalLength, CamCy / 2],
-        [0, 0, 1],
-    ],
-    dtype=float,
-)
-DistortionCoefficient = np.array([0, 0, 0, 0, 0])
+CameraMatrix = Constants.PID.CAMERA_MATRIX
+DistortionCoefficient = Constants.PID.DISTORTION_COEFFICIENT
 
 print("using dimention:", dimensions)
 print("using FocalLength:", FocalLength)
@@ -121,8 +113,9 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
         if tv is None:
             tv = []
 
-        origins = [(x / 1000, y / 1000) for t in tv for x, y, z in t]
-        radius = Constants.Obstacle.SHAPE_RADIUS / 1000
+        origins = np.array([(x / 1000, z / 1000) for t in tv for x, y, z in t])
+        # radius = (Constants.Obstacle.SHAPE_RADIUS) / 100
+        radius = 0.25
         # fill the grids by checking if the grid centroid is in any of the circle
         for i in range(self.n_grids[0]):
             for j in range(self.n_grids[1]):
@@ -134,11 +127,12 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
                 )
                 for o in origins:
                     if time.time() - start_time2 > 0.1:
-                        print(
-                            np.linalg.norm(centroid - o),
-                            radius,
-                            np.linalg.norm(centroid - o) <= radius,
-                        )
+                        # print(
+                        #     centroid,
+                        #     np.linalg.norm(centroid - o),
+                        #     radius,
+                        #     np.linalg.norm(centroid - o) <= radius,
+                        # )
                         start_time2 = time.time()
                     if np.linalg.norm(centroid - o) <= radius:
                         self.grid[i, j] = 1
@@ -147,7 +141,7 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 
 if __name__ == "__main__":
     grid = init()
-    path_res = 0.05
+    path_res = 0.1
 
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2))
 
@@ -171,7 +165,7 @@ if __name__ == "__main__":
         map.populate_real()
 
         # fig = plt.figure()
-        if True or time.time() - start_time < 5:
+        if time.time() - start_time < 5:
             continue
         with writer.saving(fig, "rrt_test.mp4", 100):
             path = rrt.planning(animation=show_animation, writer=writer)
