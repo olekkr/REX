@@ -1,10 +1,10 @@
+<<<<<<<<< Temporary merge branch 1
 import time
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from picamera2 import Picamera2
-from datetime import datetime
 
 import robot
 from calibrate_camera_constants import CameraMatrix, DistortionCoefficient, markerHeight
@@ -17,7 +17,7 @@ tspeed = 32
 aruco = False
 image = "aruco.png"
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
-preview_downscale = int(input("Set downscale factor (default 2): ") or 2)
+preview_downscale = 2
 imageSize = (1920 // 2**preview_downscale, 1080 // 2**preview_downscale)
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
@@ -59,7 +59,7 @@ focalLength = 648
 
 def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = False):
     image = cam_on()
-    s = ""
+
     (corners, ids, rejected) = detect(image)
     if len(corners) > 0:
         # flatten the ArUco IDs list
@@ -117,36 +117,59 @@ def get_marker_dim(markerDist: int, markerHeight: int = 145, calc_f: bool = Fals
         if calc_f:
             fx = x * (Z / X)
             fy = y * (Z / Y)
-            s += ",".join([str(i) for i in [x,X,y,Y,Z,fx,fy]])
-            print(y,Y,Z,fy)
+            print(f"height params: {y=}, {Y=}, {Z=}, y * (Z / Y) = {fy=}")
+            print(f"width params : {x=}, {X=}, {Z=}, x * (Z / X) = {fx=}")
         else:
             if markerDist:
-                s += ",".join([str(i) for i in [x,X,y,Y,Z," "," "]])
+                print(f"height params: {y=}, {Y=}, {Z=}")
+                print(f"width params : {x=}, {X=}, {Z=}")
             else:
-                s += ",".join([str(i) for i in [x,X,y,Y," "," "," "]])
+                print(f"height params: {y=}, {Y=}")
+                print(f"width params : {x=}, {X=}")
+        print()
 
-    # cv2.imshow("Image", image)
-    # cv2.waitKey(1)
-
-    return s
+    cv2.imshow("Image", image)
+    cv2.waitKey(1)
 
 
-output_log = f"output/log{int(datetime.now().timestamp())}.log"
-with open(output_log, "a+") as f:
-    f.write("x,X,y,Y,Z,fx,fy")
 
 while 1:
     time.sleep(0.1)
-    markDist = arlo.read_front_ping_sensor()
-    # get_marker_dim(markerDist, calc_f=False)
-    # nam = input("Enter to proceed next frame, otherwise write name")
-    # if nam == "d":
-    #     print(markerDist)
-    # elif nam != "":
-    # markDist = int(input(f"Distance from marker (default {markerDist}): ") or markerDist)
-    markHeight = 145
-    marker_res = get_marker_dim(markDist, markHeight, calc_f=True)
-    # with open(output_log, "a+") as f:
-    #     f.write(marker_res)
-    # picam2.capture_file(f"output/img_Z{markDist}_X{markHeight}_{nam}.jpg")
-    # print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
+    get_marker_dim(0, calc_f=False)
+    nam = input("Enter to proceed next frame, otherwise write name")
+    if nam != "":
+        markDist = int(input("Distance from marker (default 1000): ") or 1000)
+        markHeight = 145
+        get_marker_dim(markDist, markHeight, calc_f=True)
+        picam2.capture_file(f"img_Z{markDist}_X{markHeight}_{nam}.jpg")
+        print(f"Created img_Z{markDist}_X{markHeight}_{nam}.jpg")
+=========
+from picamera2 import Picamera2
+from picamera2 import Preview
+import time
+
+
+
+picam2 = Picamera2()
+main = {'size': (640, 360)}
+raw = {'size': (1920, 1080)}
+preview_controls = {'FrameRate': 15}
+preview_config = picam2.create_preview_configuration(main, raw=raw, controls=preview_controls)
+capture_controls = {'FrameRate': (2, 20)}
+capture_config = picam2.create_still_configuration(controls=capture_controls)
+picam2.configure(preview_config)
+#camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (240, 135)}, display="lores")
+
+#camera_config = picam2.create_still_configuration()
+#picam2.configure(camera_config)
+picam2.start_preview(Preview.QTGL)
+picam2.start()
+
+for i in range(100):
+    time.sleep(2)
+    inp = input("name (q for quit): ").replace(" ", "_")
+    if inp.lower() == "q":
+        exit()
+    picam2.capture_file(f"img{i}_{inp}.jpg")
+
+>>>>>>>>> Temporary merge branch 2
