@@ -8,7 +8,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from camera.webcam import Camera
+from camera.picam import Camera
 from refactor import local_planning
 
 dimensions = (1920, 1080)

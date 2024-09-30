@@ -48,7 +48,7 @@ class CameraBase(ABC):
         self.cam = self.setup_camera()
 
     def preview(self, image):
-        if image is not None and image.any():
+        if image is not None:
             cv2.waitKey(1)
             cv2.imshow(
                 self.preview_name,

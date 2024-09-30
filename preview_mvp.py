@@ -1,5 +1,4 @@
-
-from camera.webcam import Camera
+from camera.picam import Camera
 
 cam = Camera()
 

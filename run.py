@@ -8,7 +8,7 @@ import detection
 import movement
 
 # from matplotlib.patches import Circle
-from camera.webcam import Camera
+from camera.picam import Camera
 from constants import Constants
 
 picam2 = Camera()
@@ -32,7 +32,6 @@ landmark_areas = []
 
 def update(frame):
     image = picam2.take_image()
-
 
     corners, ids, _ = detection.detect(image)
     imageCopy = image.copy()

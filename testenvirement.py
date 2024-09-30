@@ -4,10 +4,9 @@ from matplotlib.animation import FuncAnimation
 
 import detection
 import movement
-from constants import Constants
-
-from camera.webcam import Camera
 import robot
+from camera.picam import Camera
+from constants import Constants
 
 arlo = robot.Robot()
 
@@ -17,10 +16,13 @@ center_image = (imageSize[0] // 2, imageSize[1] // 2)
 FPS = 5
 frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
 
-picam2 = Camera(video_configuration={
-    "main":{"size": imageSize, "format": "RGB888"},
-    "controls":{"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)}, "queue":False,
-})
+picam2 = Camera(
+    video_configuration={
+        "main": {"size": imageSize, "format": "RGB888"},
+        "controls": {"FrameDurationLimits": (frame_duration_limit, frame_duration_limit)},
+        "queue": False,
+    }
+)
 
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
