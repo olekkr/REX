@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Constants:
     class Robot:
         MAX_VOLT = 12
@@ -51,3 +52,6 @@ class Constants:
         PREVIEW_DOWNSCALE = 2
         ENABLE_PREVIEW = True
         CAMERA_FPS = 24
+
+    class PyPlot:
+        valid_interactive_backends = ["GTK3Cairo", "QtAgg", "QtCairo", "Qt5Agg", "Qt5Cairo"]

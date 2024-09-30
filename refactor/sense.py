@@ -11,6 +11,7 @@ import numpy as np
 
 from camera.picam import Camera
 from refactor import local_planning
+from constants import Constants
 
 dimensions = (1920, 1080)
 
@@ -75,18 +76,8 @@ def sense_camera(grid):
 if __name__ == "__main__":
     grid = init()
     robo_pos = (0, 0)
-    for backend in ("GTK3Agg", "GTK3Cairo", "GTK4Agg", "GTK4Cairo", "MacOSX", "nbAgg", "notebook", "QtAgg", "QtCairo", "TkAgg", "TkCairo", "WebAgg", "WX", "WXAgg", "WXCairo", "Qt5Agg", "Qt5Cairo"):
-        try:
-            matplotlib.use(backend)
-            plt.ion()  # Makes changes to
-            axes = plt.gca()
-            local_planning.show_grid(grid, robo_pos, axes)
-            print(backend)
-        except Exception as e:
-            # print("failed:",backend)
-            # print(e)
-            continue
-    exit()
+
+    matplotlib.use(Constants.PyPlot.valid_interactive_backends[0])
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
