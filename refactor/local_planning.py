@@ -13,9 +13,7 @@ from constants import Constants
 # AN occupancy grid implementation
 
 LANDMARK_DIAMETER = 450
-GRID_FIDELITY = (
-    Constants.Robot.DIAMETER + LANDMARK_DIAMETER
-) // 2  # size of each grid square in mm
+GRID_FIDELITY = 100  # size of each grid square in mm
 
 
 def empty_grid():
