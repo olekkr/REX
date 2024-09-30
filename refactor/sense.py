@@ -5,11 +5,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
 import cv2
-import matplotlib
 
 from constants import Constants
 
-matplotlib.use(Constants.PyPlot.interactive_backend)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -56,16 +54,17 @@ def sense(grid):  # map,
 
 def sense_camera(grid):
     # capture RGB:
-    im = picam2.take_image()
+    im = picam2.take_image(enable_preview=False)
 
     # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
 
-    try:
-        for corner in corners:
-            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(picam2.resize_image(im), corner))
-    except:
-        pass
+    if Constants.PID.ENABLE_PREVIEW:
+        try:
+            for corner in corners:
+                cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(picam2.resize_image(im), corner))
+        except:
+            pass
 
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
@@ -89,7 +88,6 @@ if __name__ == "__main__":
 
     plt.ion()  # Makes changes to
     axes = plt.gca()
-    plt.show()
     local_planning.show_grid(grid, robo_pos, axes)
     start = time.time()
     while True:
