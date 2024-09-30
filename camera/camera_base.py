@@ -16,7 +16,7 @@ class CameraBase(ABC):
     def __init__(
         self,
         preview_name: str = "Image",
-        resize_dimensions: tuple[int, int] = (800, 600),
+        resize_dimensions: tuple[int, int] = Constants.PID.PREVIEW_DIMENSIONS,
         interpolation: int = cv2.INTER_AREA,
         FPS: int = Constants.PID.CAMERA_FPS,
         video_configuration: Optional[dict[str, Any]] = None,
@@ -31,9 +31,14 @@ class CameraBase(ABC):
         self.frame_duration_limit = int(1 / FPS * 1000000)  # Microseconds
         if video_configuration is None:
             self.video_configuration = {
-                "main": {"size": (1640, 1232), "format": "RGB888"},
+                "main": {"size": Constants.PID.SCREEN_RESOLUTION, "format": "RGB888"},
                 "controls": {
-                    "ScalerCrop": (0, 0, 1640, 1232),
+                    "ScalerCrop": (
+                        0,
+                        0,
+                        Constants.PID.SCREEN_RESOLUTION[0] * 2,
+                        Constants.PID.SCREEN_RESOLUTION[1] * 2,
+                    ),
                     "FrameDurationLimits": (self.frame_duration_limit, self.frame_duration_limit),
                 },
                 "queue": False,

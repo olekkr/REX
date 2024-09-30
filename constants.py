@@ -31,8 +31,8 @@ class Constants:
         SHAPE_RADIUS = SHAPE_MAX / 2
 
     class PID:
-        DOWNSCALE = 1
-        SCREEN_RESOLUTION = (int(3280 // 2**DOWNSCALE), int(2464 // 2**DOWNSCALE))
+        DOWNSCALE = 0
+        SCREEN_RESOLUTION = (1640, 1232)
         FOCALLENGTH_ARR = [2540, 1270, 625.0]
         FOCALLENGTH = 640.0
         MARKER_HEIGHT = 145.0
@@ -45,7 +45,11 @@ class Constants:
             ],
             dtype=float,
         )
-        PREVIEW_DOWNSCALE = 2
+        PREVIEW_DOWNSCALE = 1
+        PREVIEW_DIMENSIONS = (
+            SCREEN_RESOLUTION[0] // (2**PREVIEW_DOWNSCALE),
+            SCREEN_RESOLUTION[1] // (2**PREVIEW_DOWNSCALE),
+        )
         ENABLE_PREVIEW = 1
         CAMERA_FPS = 24
 
