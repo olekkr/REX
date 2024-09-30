@@ -165,9 +165,10 @@ if __name__ == "__main__":
         map.populate_real()
 
         # fig = plt.figure()
-        if time.time() - start_time < 5:
+        if time.time() - start_time < 10:
             continue
-        with writer.saving(fig, "rrt_test.mp4", 100):
+        # with writer.saving(fig, "rrt_test.mp4", 100):
+        for _ in "1":
             path = rrt.planning(animation=show_animation, writer=writer)
 
             if path is None:
