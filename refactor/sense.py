@@ -5,14 +5,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
 import cv2
-
-from constants import Constants
-
-
 import matplotlib.pyplot as plt
 import numpy as np
 
 from camera.picam import Camera
+from constants import Constants
 from refactor import local_planning
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
@@ -62,7 +59,9 @@ def sense_camera(grid):
     if Constants.PID.ENABLE_PREVIEW:
         try:
             for corner in corners:
-                cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(picam2.resize_image(im), corner))
+                cv2.imshow(
+                    "Image", cv2.aruco.drawDetectedCornersCharuco(picam2.resize_image(im), corner)
+                )
         except:
             pass
 
@@ -95,7 +94,7 @@ if __name__ == "__main__":
             print("plot closed, exiting...")
             exit()
         grid = sense(grid)
-        if time.time() - start > 5:
+        if time.time() - start > 2:
             plt.pause(0.0001)
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
