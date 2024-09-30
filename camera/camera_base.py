@@ -57,8 +57,13 @@ class CameraBase(ABC):
             cv2.waitKey(1)
             cv2.imshow(
                 self.preview_name,
-                cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation),
+                self.resize_image(image),
             )
+    def resize_image(self, image):
+        if image is not None:
+            return cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation)
+        else:
+            return image
 
     @abstractmethod
     def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> custom_types.MatLikeT:
