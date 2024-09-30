@@ -17,7 +17,7 @@ LANDMARK_DIAMETER = 450
 
 
 def empty_grid():
-    return np.zeros((100, 100)).astype(int)
+    return np.zeros((5, 5)).astype(int)
 
 
 # from camera position to robo position

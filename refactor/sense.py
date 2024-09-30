@@ -76,7 +76,6 @@ def sense_camera(grid):
     )
     if tv is None:
         tv = []
-    print(tv)
 
     for t in tv:
         grid = local_planning.draw_landmarks(t, grid)
