@@ -31,8 +31,8 @@ arucoParams = cv2.aruco.DetectorParameters()
 CamCx, CamCy = dimensions[0] / 2, dimensions[1] / 2
 CameraMatrix = np.array(
     [
-        [FocalLength, 0, CamCx / 2],
-        [0, FocalLength, CamCy / 2],
+        [FocalLength, 0, CamCx],
+        [0, FocalLength, CamCy],
         [0, 0, 1],
     ],
     dtype=float,
@@ -170,7 +170,6 @@ if __name__ == "__main__":
     while True:
         map.populate_real()
 
-        # fig = plt.figure()
         if True or time.time() - start_time < 5:
             continue
         with writer.saving(fig, "rrt_test.mp4", 100):
@@ -181,11 +180,9 @@ if __name__ == "__main__":
             else:
                 print("found path!!")
 
-                # Draw final path
-                if show_animation:
-                    rrt.draw_graph()
-                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-                    plt.grid(True)
-                    plt.pause(0.01)  # Need for Mac
-                    plt.show()
-                    writer.grab_frame()
+                rrt.draw_graph()
+                plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
+                plt.grid(True)
+                plt.pause(0.01)  # Need for Mac
+                plt.show()
+                writer.grab_frame()
