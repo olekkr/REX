@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
 import cv2
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -74,7 +75,7 @@ def sense_camera(grid):
 if __name__ == "__main__":
     grid = init()
     robo_pos = (0, 0)
-
+    matplotlib.use("Qt5agg")
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
