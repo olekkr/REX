@@ -61,4 +61,4 @@ class Constants:
             "Qt5Agg",
             "Qt5Cairo",
         ]
-        interactive_backend = "QtAgg"
+        interactive_backend = "Qt5Cairo"
