@@ -1,6 +1,7 @@
 import time
 
 import cv2
+import custom_types
 from picamera2 import Picamera2
 
 from camera.camera_base import CameraBase
@@ -31,7 +32,7 @@ class Camera(CameraBase):
         picam2.start()
         return picam2
 
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> custom_types.MatLikeT:
         image = self.cam.capture_array("main")
 
         if enable_preview:

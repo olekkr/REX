@@ -2,6 +2,7 @@ import cv2
 
 from constants import Constants
 from camera.camera_base import CameraBase
+import custom_types
 
 imageSize = Constants.PID.SCREEN_RESOLUTION
 center_image = (imageSize[0] // 2, imageSize[1] // 2)
@@ -21,7 +22,7 @@ class Camera(CameraBase):
         return cam
 
 
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> custom_types.MatLikeT:
         _, image = self.cam.read()
 
         if enable_preview:

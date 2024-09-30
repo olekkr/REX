@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 
 from constants import Constants
-
+import custom_types
 
 class CameraBase(ABC):
     @abstractmethod
@@ -54,14 +54,14 @@ class CameraBase(ABC):
         )
 
     @abstractmethod
-    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> cv2.typing.MatLike:
+    def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> custom_types.MatLikeT:
         pass
 
     def read(self, *args, **kwargs):
         img = self.take_image(kwargs.get("enable_preview") is True)
         return bool(img), img
 
-    def capture_array(self, *args, **kwargs) -> cv2.typing.MatLike:
+    def capture_array(self, *args, **kwargs) -> custom_types.MatLikeT:
         return self.take_image(kwargs.get("enable_preview") is True)
 
     @abstractmethod
