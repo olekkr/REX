@@ -83,6 +83,7 @@ if __name__ == "__main__":
             local_planning.show_grid(grid, robo_pos, axes)
             print(backend)
         except:
+            print("failed:",backend)
             continue
     exit()
     plt.ion()  # Makes changes to
