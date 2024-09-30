@@ -1,14 +1,11 @@
 import time
-
-from camera.picam import Camera
-
-
-import time
 from datetime import datetime
 
 import cv2
 
 import robot
+from camera.picam import Camera
+
 picam2 = Camera()
 
 
