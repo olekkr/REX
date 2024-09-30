@@ -6,11 +6,15 @@ import time
 
 import cv2
 import matplotlib
+
+from constants import Constants
+
+matplotlib.use(Constants.PyPlot.interactive_backend)
+
 import matplotlib.pyplot as plt
 import numpy as np
 
 from camera.picam import Camera
-from constants import Constants
 from refactor import local_planning
 
 dimensions = (1920, 1080)
@@ -83,7 +87,6 @@ if __name__ == "__main__":
     grid = init()
     robo_pos = (0, 0)
 
-    matplotlib.use(Constants.PyPlot.interactive_backend)
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
