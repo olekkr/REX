@@ -50,7 +50,7 @@ class Constants:
             dtype=float,
         )
         PREVIEW_DOWNSCALE = 2
-        ENABLE_PREVIEW = True
+        ENABLE_PREVIEW = 0
         CAMERA_FPS = 24
 
     class PyPlot:
