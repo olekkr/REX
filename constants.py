@@ -34,11 +34,7 @@ class Constants:
         DOWNSCALE = 1
         SCREEN_RESOLUTION = (int(3280 // 2**DOWNSCALE), int(2464 // 2**DOWNSCALE))
         FOCALLENGTH_ARR = [2540, 1270, 625.0]
-        FOCALLENGTH = (
-            FOCALLENGTH_ARR[DOWNSCALE]
-            if len(FOCALLENGTH_ARR) > DOWNSCALE
-            else FOCALLENGTH_ARR[0] / 2**DOWNSCALE
-        )
+        FOCALLENGTH = 640.0
         MARKER_HEIGHT = 145.0
         DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
         CAMERA_MATRIX = np.array(
