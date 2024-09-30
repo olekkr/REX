@@ -18,9 +18,9 @@ import numpy as np
 from camera.picam import Camera
 from refactor import local_planning
 
-dimensions = (1920, 1080)
+dimensions = Constants.PID.SCREEN_RESOLUTION
 
-FocalLength = 2540
+FocalLength = Constants.PID.FOCALLENGTH
 
 markerHeight = 145.0  # mm
 FPS = 5

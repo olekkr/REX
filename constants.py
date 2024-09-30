@@ -33,8 +33,8 @@ class Constants:
     class PID:
         DOWNSCALE = 0
         SCREEN_RESOLUTION = (1640, 1232)
-        FOCALLENGTH_ARR = [2540, 1270, 625.0]
-        FOCALLENGTH = 640.0
+        # FOCALLENGTH_ARR = [1300, 640]
+        FOCALLENGTH = 1300.0
         MARKER_HEIGHT = 145.0
         DISTORTION_COEFFICIENT = np.array([0, 0, 0, 0, 0], dtype=float)
         CAMERA_MATRIX = np.array(
