@@ -33,7 +33,7 @@ class CameraBase(ABC):
             self.video_configuration = {
                 "main": {"size": (3280, 2464), "format": "RGB888"},
                 "controls": {
-                    # "ScalerCrop": (0, 0, 3280, 2464),
+                    "ScalerCrop": (0, 0, 3280, 2464),
                     "FrameDurationLimits": (self.frame_duration_limit, self.frame_duration_limit),
                 },
                 "queue": False,
