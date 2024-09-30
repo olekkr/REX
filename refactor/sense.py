@@ -78,6 +78,9 @@ if __name__ == "__main__":
     for backend in ("GTK3Agg", "GTK3Cairo", "GTK4Agg", "GTK4Cairo", "MacOSX", "nbAgg", "notebook", "QtAgg", "QtCairo", "TkAgg", "TkCairo", "WebAgg", "WX", "WXAgg", "WXCairo", "Qt5Agg", "Qt5Cairo"):
         try:
             matplotlib.use("WX")
+            plt.ion()  # Makes changes to
+            axes = plt.gca()
+            local_planning.show_grid(grid, robo_pos, axes)
             print(backend)
         except:
             continue
