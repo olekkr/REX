@@ -85,7 +85,6 @@ if __name__ == "__main__":
 
     plt.ion()  # Makes changes to
     axes = plt.gca()
-    axes.invert_yaxis()
     local_planning.show_grid(grid, robo_pos, axes)
     start = time.time()
     old_grid, old_robo_pos = grid, robo_pos
