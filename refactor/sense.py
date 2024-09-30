@@ -47,23 +47,26 @@ def init():
     return local_planning.empty_grid()
 
 
-def  sense(grid):  # map,
+def sense(grid):  # map,
     return sense_camera(grid)
 
 
 def sense_camera(grid):
     # capture RGB:
-    im = picam2.take_image()
+    im = picam2.take_image(enable_preview=False)
 
     # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
 
     if Constants.PID.ENABLE_PREVIEW:
-        try:
-            for corner in corners:
-                picam2.preview(cv2.aruco.drawDetectedCornersCharuco(im, corner))
-        except:
-            pass
+        if corners:
+            try:
+                for corner in corners:
+                    picam2.preview(cv2.aruco.drawDetectedCornersCharuco(im, corner))
+            except:
+                pass
+        else:
+            picam2.preview(im)
 
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
@@ -89,6 +92,7 @@ if __name__ == "__main__":
 
     robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
     start_time = time.time()
+    plt.ion()
     while True:
         map.grid = sense(map.grid)
 
@@ -120,6 +124,4 @@ if __name__ == "__main__":
             rrt.draw_graph()
             plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
             plt.grid(True)
-            plt.ion()
             plt.pause(0.01)  # Need for Mac
-            plt.show()
