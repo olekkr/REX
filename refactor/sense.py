@@ -1,6 +1,7 @@
 import os
 import sys
 
+os.environ["QT_LOGGING_RULES"] = "*.debug=false"
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
