@@ -72,7 +72,7 @@ def sense_camera(grid):
     )
     if tv is None:
         tv = []
-    print(len(tv))
+    print(tv)
     return grid
     grid = local_planning.draw_landmarks(tv, grid)
 
