@@ -94,6 +94,6 @@ if __name__ == "__main__":
             exit()
         grid = sense(grid)
         if time.time() - start > 0.1:
-            plt.pause(1/24)
+            plt.pause(1/120)
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()

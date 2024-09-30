@@ -52,7 +52,7 @@ def robo_pos_avail(pos, grid):
 
 
 def show_grid(grid, robo_pos, axes: Axes):
-    axes.cla()
+
     axes.imshow(grid.astype(int))
     axes.scatter([robo_pos[0]], [robo_pos[1]])
 
