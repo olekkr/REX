@@ -12,8 +12,10 @@ from constants import Constants
 
 # AN occupancy grid implementation
 
-GRID_FIDELITY = 1000  # size of each grid square in mm
 LANDMARK_DIAMETER = 450
+GRID_FIDELITY = (
+    Constants.Robot.DIAMETER + LANDMARK_DIAMETER
+) // 2  # size of each grid square in mm
 
 
 def empty_grid():
@@ -43,7 +45,7 @@ def draw_radius(px, py, r, grid):
 def draw_landmarks(landmarks, grid):
     for xyz in landmarks:
         x, y = from_cam_pos(xyz)
-        grid = draw_radius(x, y, (Constants.Robot.DIAMETER + LANDMARK_DIAMETER) // 2, grid)
+        grid = draw_radius(x, y, Constants.Robot.DIAMETER + LANDMARK_DIAMETER, grid)
     return grid
 
 
@@ -52,7 +54,6 @@ def robo_pos_avail(pos, grid):
 
 
 def show_grid(grid, robo_pos, axes: Axes):
-
     axes.imshow(grid.astype(int))
     axes.scatter([robo_pos[0]], [robo_pos[1]])
 
