@@ -95,7 +95,7 @@ if __name__ == "__main__":
             print("plot closed, exiting...")
             exit()
         grid = sense(grid)
-        if time.time() - start > 1:
+        if time.time() - start > 5:
             plt.pause(0.0001)
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
