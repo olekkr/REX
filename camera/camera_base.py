@@ -4,8 +4,9 @@ from typing import Any, Optional
 import cv2
 import numpy as np
 
-from constants import Constants
 import custom_types
+from constants import Constants
+
 
 class CameraBase(ABC):
     @abstractmethod
@@ -47,11 +48,12 @@ class CameraBase(ABC):
         self.cam = self.setup_camera()
 
     def preview(self, image):
-        cv2.waitKey(1)
-        cv2.imshow(
-            self.preview_name,
-            cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation),
-        )
+        if image is not None:
+            cv2.waitKey(1)
+            cv2.imshow(
+                self.preview_name,
+                cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation),
+            )
 
     @abstractmethod
     def take_image(self, enable_preview=Constants.PID.ENABLE_PREVIEW) -> custom_types.MatLikeT:
