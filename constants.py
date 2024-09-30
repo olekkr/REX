@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Constants:
     class Robot:
         MAX_VOLT = 12
