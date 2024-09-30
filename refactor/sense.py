@@ -75,7 +75,7 @@ def sense_camera(grid):
 if __name__ == "__main__":
     grid = init()
     robo_pos = (0, 0)
-    matplotlib.use("Qt5agg")
+    matplotlib.use("WX")
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
