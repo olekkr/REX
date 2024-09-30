@@ -45,8 +45,8 @@ def draw_landmarks(landmarks, grid):
     for xyz in landmarks:
         x, y = from_cam_pos(xyz)
         print(x, y)
-        draw_radius(x, y, Constants.Robot.DIAMETER + LANDMARK_DIAMETER, grid)
-
+        grid = draw_radius(x, y, Constants.Robot.DIAMETER + LANDMARK_DIAMETER, grid)
+    return grid
 
 def robo_pos_avail(pos, grid):
     pass

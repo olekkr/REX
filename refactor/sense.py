@@ -67,8 +67,7 @@ def sense_camera(grid):
     if tv is None:
         tv = []
 
-    for t in tv:
-        local_planning.draw_landmarks(t, grid)
+    grid = local_planning.draw_landmarks(tv, grid)
 
     return grid
 
@@ -89,6 +88,5 @@ if __name__ == "__main__":
         grid = sense(grid)
         if time.time() - start > 1:
             plt.pause(0.001)
-            robo_pos = robo_pos[0], robo_pos[1] + 5
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
