@@ -77,7 +77,7 @@ if __name__ == "__main__":
     grid = init()
     robo_pos = (0, 0)
 
-    matplotlib.use(Constants.PyPlot.valid_interactive_backends[3])
+    matplotlib.use(Constants.PyPlot.interactive_backend)
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
