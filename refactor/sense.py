@@ -83,7 +83,7 @@ if __name__ == "__main__":
             local_planning.show_grid(grid, robo_pos, axes)
             print(backend)
         except Exception as e:
-            print("failed:",backend)
+            # print("failed:",backend)
             # print(e)
             continue
     exit()
