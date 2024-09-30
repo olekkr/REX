@@ -118,7 +118,8 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 
         origins = np.array([(x / 1000, z / 1000) for t in tv for x, y, z in t])
         # radius = (Constants.Obstacle.SHAPE_RADIUS) / 100
-        radius = 0.25
+        radius = Constants.Obstacle.SHAPE_RADIUS / 100
+        
         # fill the grids by checking if the grid centroid is in any of the circle
         for i in range(self.n_grids[0]):
             for j in range(self.n_grids[1]):
@@ -189,7 +190,7 @@ if __name__ == "__main__":
                         plt.show()
                         writer.grab_frame()
         else:
-                path = rrt.planning(animation=show_animation, writer=writer)
+                path = rrt.planning(animation=False, writer=None)
 
                 if path is None:
                     print("Cannot find path")
