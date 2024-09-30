@@ -88,6 +88,7 @@ if __name__ == "__main__":
     axes.invert_yaxis()
     local_planning.show_grid(grid, robo_pos, axes)
     start = time.time()
+    old_grid, old_robo_pos = grid, robo_pos
     while True:
         if not plt.get_fignums():
             print("plot closed, exiting...")
@@ -95,5 +96,7 @@ if __name__ == "__main__":
         grid = sense(grid)
         if time.time() - start > 0.1:
             plt.pause(1/120)
-            local_planning.show_grid(grid, robo_pos, axes)
+            if not (old_grid.all() == grid.all() and old_robo_pos == robo_pos):
+                old_grid, old_robo_pos = grid, robo_pos
+                local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
