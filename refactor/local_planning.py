@@ -41,11 +41,11 @@ def draw_radius(px, py, r, grid):
 
 
 def draw_landmarks(landmarks, grid):
-
     for xyz in landmarks:
         x, y = from_cam_pos(xyz)
         grid = draw_radius(x, y, Constants.Robot.DIAMETER + LANDMARK_DIAMETER, grid)
     return grid
+
 
 def robo_pos_avail(pos, grid):
     pass
@@ -59,7 +59,7 @@ def show_grid(grid, robo_pos, axes: Axes):
 
 landmarks = None
 
-grid = np.zeros((100, 100)).astype(int)
+grid = np.zeros((5, 5)).astype(int)
 
 
 # test case:
