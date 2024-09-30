@@ -57,6 +57,12 @@ def sense_camera(grid):
     # capture AruCo Corners
     (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
 
+    try:
+        for corner in corners:
+            cv2.imshow("Image", cv2.aruco.drawDetectedCornersCharuco(im, corner))
+    except:
+        pass
+
     # get Markers in camera coordinate system
     _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
         corners,
@@ -66,7 +72,8 @@ def sense_camera(grid):
     )
     if tv is None:
         tv = []
-
+    # print(len(tv))
+    return grid
     grid = local_planning.draw_landmarks(tv, grid)
 
     return grid
