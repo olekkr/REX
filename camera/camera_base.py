@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 
 import cv2
 import numpy as np
@@ -18,10 +18,10 @@ class CameraBase(ABC):
         resize_dimensions: tuple[int, int] = (800, 600),
         interpolation: int = cv2.INTER_AREA,
         FPS: int = Constants.PID.CAMERA_FPS,
-        video_configuration: dict[str, Any] | None = None,
-        still_configuration: dict[str, Any] | None = None,
-        preview_configuration: dict[str, Any] | None = None,
-        picam_show_preview: bool = False
+        video_configuration: Optional[dict[str, Any]] = None,
+        still_configuration: Optional[dict[str, Any]] = None,
+        preview_configuration: Optional[dict[str, Any]] = None,
+        picam_show_preview: bool = False,
     ):
         self.preview_name = preview_name
         self.resize_dimensions = resize_dimensions
