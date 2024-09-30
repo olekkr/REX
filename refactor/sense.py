@@ -78,13 +78,13 @@ if __name__ == "__main__":
     plt.ion()  # Makes changes to
     axes = plt.gca()
     local_planning.show_grid(grid, robo_pos, axes)
-
+    start = time.time()
     while True:
         if not plt.get_fignums():
             print("plot closed, exiting...")
             exit()
-        plt.pause(0.1)
-        time.sleep(1)
         grid = sense(grid)
-
-        local_planning.show_grid(grid, robo_pos, axes)
+        if time.time() - start > 1:
+            plt.pause(0.00001)
+            local_planning.show_grid(grid, robo_pos, axes)
+            start = time.time()

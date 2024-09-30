@@ -49,5 +49,5 @@ class Constants:
             dtype=float,
         )
         PREVIEW_DOWNSCALE = 2
-        ENABLE_PREVIEW = False
+        ENABLE_PREVIEW = True
         CAMERA_FPS = 24
