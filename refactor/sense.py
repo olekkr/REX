@@ -59,9 +59,7 @@ def sense_camera(grid):
     if Constants.PID.ENABLE_PREVIEW:
         try:
             for corner in corners:
-                cv2.imshow(
-                    "Image", cv2.aruco.drawDetectedCornersCharuco(picam2.resize_image(im), corner)
-                )
+                picam2.preview(cv2.aruco.drawDetectedCornersCharuco(im, corner))
         except:
             pass
 

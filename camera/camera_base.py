@@ -54,11 +54,15 @@ class CameraBase(ABC):
 
     def preview(self, image):
         if image is not None:
+            resized_image = self.resize_image(image)
             cv2.waitKey(1)
             cv2.imshow(
                 self.preview_name,
-                self.resize_image(image),
+                resized_image,
             )
+            return resized_image
+        return image
+
     def resize_image(self, image):
         if image is not None:
             return cv2.resize(image, self.resize_dimensions, interpolation=self.interpolation)
