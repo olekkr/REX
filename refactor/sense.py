@@ -82,8 +82,9 @@ if __name__ == "__main__":
             axes = plt.gca()
             local_planning.show_grid(grid, robo_pos, axes)
             print(backend)
-        except:
+        except Exception as e:
             print("failed:",backend)
+            print(e)
             continue
     exit()
     plt.ion()  # Makes changes to
