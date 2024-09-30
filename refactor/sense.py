@@ -1,6 +1,8 @@
 import os
 import sys
 
+from matplotlib.animation import FFMpegWriter
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import time
 
@@ -51,6 +53,18 @@ def sense(grid):  # map,
     return sense_camera(grid)
 
 
+def preview_marker(corners, im):
+    if Constants.PID.ENABLE_PREVIEW:
+        if corners:
+            try:
+                for corner in corners:
+                    picam2.preview(cv2.aruco.drawDetectedCornersCharuco(im, corner))
+            except:
+                pass
+        else:
+            picam2.preview(im)
+
+
 def sense_camera(grid):
     # capture RGB:
     im = picam2.take_image(enable_preview=False)
@@ -89,11 +103,14 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
         """
         generate a grid map with some circle shaped obstacles
         """
+        global start_time2
         # capture RGB:
         im = picam2.take_image(enable_preview=False)
 
         # capture AruCo Corners
         (corners, ids, rejected) = cv2.aruco.detectMarkers(image=im, dictionary=arucoDict)
+
+        preview_marker(corners, im)
 
         _rt, tv, _objs = cv2.aruco.estimatePoseSingleMarkers(
             corners,
@@ -102,17 +119,11 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
             DistortionCoefficient,
         )
 
-        origins = []
-        for corner in tv or []:
-            (topLeft, topRight, bottomRight, bottomLeft) = corner
+        if tv is None:
+            tv = []
 
-            topRight = (int(topRight[0]), int(topRight[1]))
-            bottomRight = (int(bottomRight[0]), int(bottomRight[1]))
-            bottomLeft = (int(bottomLeft[0]), int(bottomLeft[1]))
-            topLeft = (int(topLeft[0]), int(topLeft[1]))
-            origins.append((topLeft[0] - topRight[0], topLeft[1] - bottomLeft[1]))
-
-        radius = Constants.Obstacle.SHAPE_RADIUS
+        origins = [(x / 1000, y / 1000) for t in tv for x, y, z in t]
+        radius = Constants.Obstacle.SHAPE_RADIUS / 1000
         # fill the grids by checking if the grid centroid is in any of the circle
         for i in range(self.n_grids[0]):
             for j in range(self.n_grids[1]):
@@ -123,6 +134,11 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
                     ]
                 )
                 for o in origins:
+                    if time.time() - start_time2 > 0.1:
+                        print(
+                            np.linalg.norm(centroid - o), radius, np.linalg.norm(centroid - o) <= radius
+                        )
+                        start_time2 = time.time()
                     if np.linalg.norm(centroid - o) <= radius:
                         self.grid[i, j] = 1
                         break
@@ -136,36 +152,39 @@ if __name__ == "__main__":
 
     robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
     start_time = time.time()
+    start_time2 = time.time()
+    metadata = dict(title="RRT Test")
 
+    writer = FFMpegWriter(fps=1000, metadata=metadata)
+    fig = plt.figure()
+    show_animation = True
+    rrt = RRT(
+        start=np.array([0, 0]),
+        goal=[0, 1.9],
+        robot_model=robot,
+        map=map,
+        expand_dis=0.2,
+        path_resolution=path_res,
+    )
     while True:
         map.populate_real()
-        rrt = RRT(
-            start=np.array([0, 0]),
-            goal=[0, 1.9],
-            robot_model=robot,
-            map=map,
-            expand_dis=0.2,
-            path_resolution=path_res,
-        )
 
-        if time.time() - start_time < 1:
+        # fig = plt.figure()
+        if True or time.time() - start_time < 5:
             continue
-        else:
-            start_time = time.time()
+        with writer.saving(fig, "rrt_test.mp4", 100):
+            path = rrt.planning(animation=show_animation, writer=writer)
 
-        metadata = dict(title="RRT Test")
-        fig = plt.figure()
+            if path is None:
+                print("Cannot find path")
+            else:
+                print("found path!!")
 
-        path = rrt.planning(animation=False, writer=None)
-
-        if path is None:
-            # print("Cannot find path")
-            pass
-        else:
-            print("found path!!")
-
-            # rrt.draw_graph()
-            # plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-            # plt.imshow(map.grid.astype(int))
-            # plt.grid(True)
-            # plt.pause(0.01)  # Need for Mac
+                # Draw final path
+                if show_animation:
+                    rrt.draw_graph()
+                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
+                    plt.grid(True)
+                    plt.pause(0.01)  # Need for Mac
+                    plt.show()
+                    writer.grab_frame()
