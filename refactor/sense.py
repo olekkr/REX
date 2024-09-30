@@ -94,7 +94,9 @@ if __name__ == "__main__":
             print("plot closed, exiting...")
             exit()
         grid = sense(grid)
-        if (not ((old_grid == grid).all() and old_robo_pos == robo_pos)) or time.time() - start > 2:
+        if (
+            not ((old_grid == grid).all() and old_robo_pos == robo_pos)
+        ) or time.time() - start > 10:
             plt.pause(1 / 120)
             old_grid, old_robo_pos = grid, robo_pos
             local_planning.show_grid(grid, robo_pos, axes)
