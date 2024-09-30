@@ -72,7 +72,7 @@ def sense_camera(grid):
     )
     if tv is None:
         tv = []
-    # print(len(tv))
+    print(len(tv))
     return grid
     grid = local_planning.draw_landmarks(tv, grid)
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
             print("plot closed, exiting...")
             exit()
         grid = sense(grid)
-        if time.time() - start > 1:
-            plt.pause(0.001)
+        if time.time() - start > 5:
+            plt.pause(0.0001)
             local_planning.show_grid(grid, robo_pos, axes)
             start = time.time()
