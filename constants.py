@@ -45,7 +45,7 @@ class Constants:
             ],
             dtype=float,
         )
-        PREVIEW_DOWNSCALE = 3
+        PREVIEW_DOWNSCALE = 2
         PREVIEW_DIMENSIONS = (
             SCREEN_RESOLUTION[0] // (2**PREVIEW_DOWNSCALE),
             SCREEN_RESOLUTION[1] // (2**PREVIEW_DOWNSCALE),
