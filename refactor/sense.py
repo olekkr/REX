@@ -77,14 +77,14 @@ if __name__ == "__main__":
     robo_pos = (0, 0)
     for backend in ("GTK3Agg", "GTK3Cairo", "GTK4Agg", "GTK4Cairo", "MacOSX", "nbAgg", "notebook", "QtAgg", "QtCairo", "TkAgg", "TkCairo", "WebAgg", "WX", "WXAgg", "WXCairo", "Qt5Agg", "Qt5Cairo"):
         try:
-            matplotlib.use("WX")
+            matplotlib.use(backend)
             plt.ion()  # Makes changes to
             axes = plt.gca()
             local_planning.show_grid(grid, robo_pos, axes)
             print(backend)
         except Exception as e:
             print("failed:",backend)
-            print(e)
+            # print(e)
             continue
     exit()
     plt.ion()  # Makes changes to
