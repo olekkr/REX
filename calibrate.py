@@ -20,7 +20,7 @@ def straight_move(dist=1):
     print(arlo.stop())
 
 
-def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(1, 0)):
+def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(0, 1)):
     print("90 deg rotation test")
     if frac == 0:
         return
