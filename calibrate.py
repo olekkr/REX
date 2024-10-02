@@ -70,6 +70,7 @@ if __name__ == "__main__":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
             rotate_move(frac=frac)
+            input("continue: ")
 
 # """
 # straight_move()
