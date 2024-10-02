@@ -13,7 +13,7 @@ from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
-from camera.webcam import Camera
+from camera.cam import Camera
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
 
