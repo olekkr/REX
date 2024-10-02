@@ -7,24 +7,19 @@ import time
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.animation import FFMpegWriter
 
-shatin_mode = False
-if not shatin_mode:
-    from matplotlib.animation import FFMpegWriter
-else:
-    FFMpegWriter = object
-
-from camera.webcam import Camera
 from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
+from camera.cam import Camera
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
 
 FocalLength = Constants.PID.FOCALLENGTH
 
-markerHeight = Constants.PID.MARKER_HEIGHT  # mm
+markerHeight = Constants.PID.MARKER_HEIGHT  # m
 FPS = 5
 
 picam2 = Camera()
@@ -132,8 +127,7 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
             tv = []
 
         origins = np.array([(x / 1000, z / 1000) for t in tv for x, y, z in t])
-        # radius = (Constants.Obstacle.SHAPE_RADIUS) / 100
-        radius = Constants.Obstacle.SHAPE_RADIUS / 100
+        radius = (Constants.Obstacle.SHAPE_RADIUS + Constants.Robot.RADIUS) / 1000
 
         # fill the grids by checking if the grid centroid is in any of the circle
         for i in range(self.n_grids[0]):
@@ -160,17 +154,16 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 
 if __name__ == "__main__":
     grid = init()
-    path_res = 0.1
+    path_res = 0.05
+    
+    map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
-    map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2))
-
-    robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
+    robot = robot_models.RobotModel(ctrl_range=[-path_res, path_res])  #
     start_time = time.time()
     start_time2 = time.time()
     metadata = dict(title="RRT Test")
 
-    if not shatin_mode:
-        writer = FFMpegWriter(fps=1000, metadata=metadata)
+    writer = FFMpegWriter(fps=1000, metadata=metadata)
     fig = plt.figure()
     show_animation = True
     rrt = RRT(
@@ -190,25 +183,8 @@ if __name__ == "__main__":
         # fig = plt.figure()
         if time.time() - start_time < 10:
             continue
-        if not shatin_mode:
-            with writer.saving(fig, "rrt_test.mp4", 100):
-                path = rrt.planning(animation=show_animation, writer=writer)
-
-                if path is None:
-                    print("Cannot find path")
-                else:
-                    print("found path!!")
-
-                    # Draw final path
-                    if show_animation:
-                        rrt.draw_graph()
-                        plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-                        plt.grid(True)
-                        plt.pause(0.01)  # Need for Mac
-                        plt.show()
-                        writer.grab_frame()
-        else:
-            path = rrt.planning(animation=False, writer=None)
+        with writer.saving(fig, "rrt_test.mp4", 100):
+            path = rrt.planning(animation=show_animation, writer=writer)
 
             if path is None:
                 print("Cannot find path")
@@ -222,3 +198,4 @@ if __name__ == "__main__":
                     plt.grid(True)
                     plt.pause(0.01)  # Need for Mac
                     plt.show()
+                    writer.grab_frame()
