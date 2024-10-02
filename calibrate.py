@@ -10,18 +10,16 @@ argvs = sys.argv
 time_input = float(argvs[1]) if len(argvs) == 2 else None
 
 arlo = robot.Robot()
-print(calculations.calc_travel_time(100, 64))
+# print(calculations.calc_travel_time(100, 64))
 
 
 def straight_move(dist=1):
-    print("running 1m straight")
     print(arlo.go_diff(64, 64, 1, 1))
     sleep(2.4 * abs(dist))
     print(arlo.stop())
 
 
 def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(0, 1)):
-    print("90 deg rotation test")
     if frac == 0:
         return
     if frac < 0:
@@ -33,7 +31,6 @@ def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(0, 1)):
 
 
 def linear_descent(start_v: int, dist=1, dir=1):
-    print("running 1m straight")
     for i in range(start_v, 30, -1):
         print(arlo.go_diff(64, 64, dir, dir))
         sleep(i * 1 / 64 * (time_input or 2.4) * dist)
