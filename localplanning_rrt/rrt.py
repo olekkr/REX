@@ -168,9 +168,9 @@ class RRT:
             if not collission_free:
                 shortened_path.append(path[i-1])
                 current_node = next_node
-                next_node = path[i]
+                next_node = path[i+1]
             else:
-                next_node = path[i]
+                next_node = path[i+1]
 
         shortened_path.append(next_node)
 
