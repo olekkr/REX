@@ -19,7 +19,7 @@ def straight_move(dist=1):
     print(arlo.stop())
 
 
-def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(0, 1)):
+def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(1, 0)):
     if frac == 0:
         return
     if frac < 0:
