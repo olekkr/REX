@@ -189,8 +189,8 @@ if __name__ == "__main__":
                     writer.grab_frame()
                 else:
                     path_from_start = path[::-1]
-                    path_w_angles = np.array([0, 0, 0])
-                    angles_and_dist = np.array([])
+                    path_w_angles = [np.array([0, 0, 0])]
+                    angles_and_dist = []
                     for x, y in path_from_start:
                         px, py, ang = path_w_angles[-1]
                         angle = np.array([x, y, math.atan2((y - py), (x - px))])
