@@ -29,14 +29,14 @@ def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
         return
     if frac < 0:
         mdir = mdir[1], mdir[0]
-    if frac > 4 or frac <= -4:
-        frac %= 4
-    if frac > 2:
-        frac -= 2
-        frac = -frac
-    elif frac < -2:
-        frac += 2
-        frac = -frac
+    # if frac > 4 or frac <= -4:
+    #     frac %= 4
+    # if frac > 2:
+    #     frac -= 2
+    #     frac = -frac
+    # elif frac < -2:
+    #     frac += 2
+    #     frac = -frac
     print(f"rotating {frac*90}")
     print(arlo.go_diff(power, power, *mdir))
     sleep(sleep_s * abs(frac))
