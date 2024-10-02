@@ -63,7 +63,7 @@ if __name__ == "__main__":
         time_sleep = float(input("time sleep: "))
         amnt = int(input("amnt: "))
         for _ in range(amnt):
-            straight_move(0.2, power=power, sleep_s=time_sleep)
+            straight_move(1, power=power, sleep_s=time_sleep)
             sleep(1)
 
 # """
