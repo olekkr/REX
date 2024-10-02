@@ -162,7 +162,7 @@ if __name__ == "__main__":
         robot_model=robot,
         map=map,
         expand_dis=0.2,
-        path_resolution=ctrl,
+        path_resolution=robot_area,
     )
     while True:
         map.populate_real()
