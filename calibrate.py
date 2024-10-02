@@ -13,14 +13,14 @@ arlo = robot.Robot()
 # print(calculations.calc_travel_time(100, 64))
 
 
-def straight_move(dist=1, power=64, sleep_s=2.4):
+# power=64 = sleep_s = 3.2 = 1 m = dist = 1
+def straight_move(dist=1, power=64, sleep_s=3.2):
     print(f"moving {dist}m")
     print(arlo.go_diff(power, power, 1, 1))
     sleep(sleep_s * abs(dist))
     print(arlo.stop())
 
-# 0.725*2 = 1.45
-# 1.45 * 4 = 5.8
+
 # power=32 = sleep_s = 7.3 = 360 deg = frac = 4
 # power=64 = sleep_s = 3.2 = 360 deg = frac = 4
 def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
