@@ -205,12 +205,6 @@ if __name__ == "__main__":
                             )
                         )
 
-                    rrt.draw_graph()
-                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-                    plt.grid(True)
-                    plt.pause(0.01)  # Need for Mac
-                    plt.show(block=False)
-                    writer.grab_frame()
                     for angle, dist in angles_and_dist:
                         deg_angle = np.rad2deg(angle)
                         # input(f"enter to rotate {deg_angle}")
@@ -221,4 +215,11 @@ if __name__ == "__main__":
                         # time.sleep(2)
                         print(f"rotate {deg_angle}")
                         print(f"move {dist}")
-                    exit()
+                    
+                    rrt.draw_graph()
+                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
+                    plt.grid(True)
+                    plt.pause(0.01)  # Need for Mac
+                    plt.show()
+                    writer.grab_frame()
+
