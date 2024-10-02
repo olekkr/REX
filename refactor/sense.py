@@ -242,11 +242,11 @@ if __name__ == "__main__":
                     plt.show(block=False)
 
                     for angle, dist in angles_and_dist:
-                        move_turtle(angle, dist)
                         print(f"rotate {angle}")
                         rotate_move(frac=angle / 90)
                         input(f"enter to move {dist}")
                         straight_move(dist)
+                        move_turtle(angle, dist)
                         time.sleep(1)
 
                     exit()
