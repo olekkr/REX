@@ -37,14 +37,11 @@ def linear_descent(start_v: int, dist=1, dir=1):
         print(arlo.stop())
 
 
-# if __name__ == "__main__":
-#     # for i in range(4):
-#     #     # linear_descent(64, 1, 1)
-#     #     # linear_descent(64, 1, 0)
-#     #     # straight_move()
-#     #     # sleep(0.2)
-#     #     rotate_move(sleep_s=0.725)
-#     #     sleep(2)
+if __name__ == "__main__":
+    for i in range(8):
+        frac = i / 4
+        input(f"rotating frac={frac}")
+        rotate_move(frac=frac)
 # """
 # straight_move()
 # sleep(0.2)
