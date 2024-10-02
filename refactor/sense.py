@@ -9,8 +9,10 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter
+
 from camera.cam import Camera
 from constants import Constants
+
 if Constants.Robot.INCLUDE is False:
     straight_move = lambda dist: None
     rotate_move = lambda frac: None
@@ -150,24 +152,25 @@ def angle_between(current_pos, goal_pos, current_ang=90.0):
     return_ang = np.rad2deg((ang2 - ang1) % (2 * np.pi))
     return (return_ang - current_ang) % 360
 
+
 def center_points_to_robot(point, current_angle):
     robot_orientation_rad = np.deg2rad(current_angle)
 
-    shift_x = Constants.Robot.RADIUS * np.cos(robot_orientation_rad)
-    shift_y = Constants.Robot.RADIUS * np.sin(robot_orientation_rad)
+    shift_x = (Constants.Robot.RADIUS / 1000) * np.cos(robot_orientation_rad)
+    shift_y = (Constants.Robot.RADIUS / 1000) * np.sin(robot_orientation_rad)
 
     return point[0] - shift_x, point[1] - shift_y
-    
+
 
 def gen_instructions_from_points(points):
-
-    path_w_angles = [(0.0, 0.0, 90.0)]
+    path_w_angles = [(*center_points_to_robot((0, 0), 90), 90.0)]
     angles_and_dist = []
-    for x, y in path_from_start[1:]:
+    for x, y in path_from_start:
         current_x, current_y, current_angle = path_w_angles[-1]
-        centered_x, centered_y = center_points_to_robot((x,y), current_angle)
-        vec = np.array([centered_x, centered_y]) - np.array([current_x, current_y])
+        current_x, current_y = center_points_to_robot((current_x, current_y), current_angle)
+        vec = np.array([x, y]) - np.array([current_x, current_y])
         target_angle = np.rad2deg(np.arctan2(vec[1], vec[0])) % 360
+        centered_x, centered_y = center_points_to_robot((x, y), target_angle)
         turn_angle = current_angle - target_angle
         path_w_angles.append((centered_x, centered_y, target_angle))
         angles_and_dist.append(
@@ -179,6 +182,7 @@ def gen_instructions_from_points(points):
             )
         )
     return angles_and_dist
+
 
 if __name__ == "__main__":
     grid = init()
@@ -234,7 +238,6 @@ if __name__ == "__main__":
                     plt.pause(0.01)  # Need for Mac
                     writer.grab_frame()
                     plt.show(block=False)
-
 
                     for angle, dist in angles_and_dist:
                         input(f"enter to rotate {angle}")
