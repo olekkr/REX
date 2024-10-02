@@ -16,7 +16,7 @@ print(calculations.calc_travel_time(100, 64))
 def straight_move(dist=1):
     print("running 1m straight")
     print(arlo.go_diff(64, 64, 1, 1))
-    sleep(2.4 * dist)
+    sleep(2.4 * abs(dist))
     print(arlo.stop())
 
 
