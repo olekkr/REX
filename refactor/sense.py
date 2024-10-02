@@ -205,5 +205,7 @@ if __name__ == "__main__":
 
                     for angle, dist in angles_and_dist:
                         deg_angle = np.rad2deg(angle)
-                        rotate_move(frac=deg_angle / 90)
-                        straight_move(dist)
+                        print("rotating ", deg_angle)
+                        print("moving ", dist)
+                        # rotate_move(frac=deg_angle / 90)
+                        # straight_move(dist)
