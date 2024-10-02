@@ -197,6 +197,7 @@ if __name__ == "__main__":
                         px, py, ang = path_w_angles[-1]
                         # angle = math.atan2((y - py), (x - px)) - ang
                         angle = angle_between((px,py),(x,y)) - ang
+                        print(angle + ang, ang, angle)
                         path_w_angles.append((x, y, angle))
                         angles_and_dist.append(
                             (
