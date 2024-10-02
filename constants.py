@@ -4,7 +4,6 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import numpy as np
-from camera.picam import Camera
 
 try:
     from local_constants import LocalConstants
@@ -42,7 +41,7 @@ class Constants:
         SHAPE_RADIUS = SHAPE_MAX / 2
 
     class PID:
-        CAMERA_MODEL = Camera
+        CAMERA_MODEL = "picam"
         DOWNSCALE = 0
         SCREEN_RESOLUTION = (1640, 1232)
         # FOCALLENGTH_ARR = [1300, 640]
