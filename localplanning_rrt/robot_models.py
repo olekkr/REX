@@ -31,9 +31,9 @@ class RobotModel:
         return path[1:]
 
     def inverse_dyn(self, x, x_goal, T):
-        u = []
+        path = []
         for i in range(T):
-            dx = x_goal - x
+            dx = (x_goal - x)
             if np.linalg.norm(dx) > 1e-3:
                 v = self.ctrl_range[1]
                 w = 0
@@ -41,10 +41,10 @@ class RobotModel:
                 v = self.ctrl_range[1]
                 w = 2 * self.ctrl_range[1] / Constants.Robot.RADIUS
 
-            u.append((v, w))
-            x = self.forward_dyn(x, [(v, w)], 1)[-1]
+            path += self.forward_dyn(x, [(v, w)], 1)
+            x = path[-1]
 
-        return self.forward_dyn(x, u, 1)
+        return path
 
 class PointMassModel(RobotModel):
     #Note Arlo is differential driven and may be simpler to avoid Dubins car model by rotating in-place to direct and executing piecewise straight path  
