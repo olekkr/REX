@@ -27,7 +27,7 @@ def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(0, 1)):
     if frac < 0:
         mdir = mdir[1], mdir[0]
     print(arlo.go_diff(power, power, *mdir))
-    sleep(sleep_s*frac)
+    sleep(sleep_s * abs(frac))
 
     print(arlo.stop())
 
@@ -54,4 +54,3 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 # print("done")
 # """
-
