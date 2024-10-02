@@ -163,7 +163,7 @@ def center_points_to_robot(point, current_angle):
 
 
 def gen_instructions_from_points(points):
-    path_w_angles = [(*center_points_to_robot((0, 0), 90), 90.0)]
+    path_w_angles = [(0, 0, 90.0)]
     angles_and_dist = []
     for x, y in points[1:]:
         current_x, current_y, current_angle = path_w_angles[-1]
@@ -230,7 +230,9 @@ if __name__ == "__main__":
                     plt.show()
                     writer.grab_frame()
                 else:
+                    from turtle_test import move_turtle, set_turtle
                     path_from_start = path[::-1]
+                    set_turtle(path_from_start)
                     angles_and_dist = gen_instructions_from_points(path_from_start)
                     rrt.draw_graph()
                     plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
@@ -240,7 +242,8 @@ if __name__ == "__main__":
                     plt.show(block=False)
 
                     for angle, dist in angles_and_dist:
-                        input(f"enter to rotate {angle}")
+                        move_turtle(angle, dist)
+                        print(f"rotate {angle}")
                         rotate_move(frac=angle / 90)
                         input(f"enter to move {dist}")
                         straight_move(dist)
