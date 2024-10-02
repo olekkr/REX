@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 
@@ -14,6 +15,7 @@ from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
 from camera.cam import Camera
+from calibrate import rotate_move, straight_move
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
 
@@ -165,7 +167,7 @@ if __name__ == "__main__":
         map.populate_real()
 
         # fig = plt.figure()
-        if time.time() - start_time < 10:
+        if time.time() - start_time < 1:
             continue
         with writer.saving(fig, "rrt_test.mp4", 100):
             path = rrt.planning(animation=show_animation, writer=writer)
@@ -184,8 +186,23 @@ if __name__ == "__main__":
                     plt.show()
                     writer.grab_frame()
                 else:
-                    rrt.draw_graph()
-                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
-                    plt.grid(True)
-                    plt.pause(0.01)  # Need for Mac
-                    plt.show()
+                    path_from_start = path[::-1]
+                    path_w_angles = [np.array([0,0,0])]
+                    angles_and_dist = []
+                    for x, y in path_from_start:
+                        px, py, ang = path_w_angles[-1]
+                        angle = np.array([x, y, math.atan2((y-py), (x-px))])
+                        path_w_angles.append(
+                           np.array([ x, y, angle])
+                        )
+                        angles_and_dist.append(np.array([angle, np.linalg.norm(np.array([px,py]))-np.linalg.norm(np.array([x,y]))]))
+
+
+                    for angle, dist in angles_and_dist:
+                        deg_angle = np.rad2deg(angle)
+                        rotate_move(frac=deg_angle/90)
+                        straight_move(dist)
+
+                    
+
+

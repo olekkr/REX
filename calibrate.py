@@ -22,9 +22,13 @@ def straight_move(dist=1):
 
 def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(1, 0)):
     print("90 deg rotation test")
+    if frac == 0:
+        return
+    if frac < 0:
+        mdir = mdir[1], mdir[0]
     print(arlo.go_diff(power, power, *mdir))
-    sleep(sleep_s)
-    # sleep(3.5*frac)
+    sleep(sleep_s*frac)
+
     print(arlo.stop())
 
 
@@ -36,17 +40,18 @@ def linear_descent(start_v: int, dist=1, dir=1):
         print(arlo.stop())
 
 
-if __name__ == "__main__":
-    for i in range(4):
-        # linear_descent(64, 1, 1)
-        # linear_descent(64, 1, 0)
-        # straight_move()
-        # sleep(0.2)
-        rotate_move(sleep_s=0.725)
-        sleep(2)
-"""
-straight_move()
-sleep(0.2)
+# if __name__ == "__main__":
+#     # for i in range(4):
+#     #     # linear_descent(64, 1, 1)
+#     #     # linear_descent(64, 1, 0)
+#     #     # straight_move()
+#     #     # sleep(0.2)
+#     #     rotate_move(sleep_s=0.725)
+#     #     sleep(2)
+# """
+# straight_move()
+# sleep(0.2)
 
-print("done")
-"""
+# print("done")
+# """
+
