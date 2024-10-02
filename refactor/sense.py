@@ -209,3 +209,9 @@ if __name__ == "__main__":
                         print("moving ", dist)
                         # rotate_move(frac=deg_angle / 90)
                         # straight_move(dist)
+                    rrt.draw_graph()
+                    plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
+                    plt.grid(True)
+                    plt.pause(0.01)  # Need for Mac
+                    plt.show()
+                    writer.grab_frame()
