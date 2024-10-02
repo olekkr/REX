@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter
 
-from camera.webcam import Camera
+from camera.picam import Camera
 from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
