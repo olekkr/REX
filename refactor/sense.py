@@ -237,9 +237,9 @@ if __name__ == "__main__":
 
 
                     for angle, dist in angles_and_dist:
-                        # input(f"enter to rotate {angle}")
+                        input(f"enter to rotate {angle}")
                         rotate_move(frac=angle / 90)
-                        # input(f"enter to move {dist}")
+                        input(f"enter to move {dist}")
                         straight_move(dist)
                         time.sleep(1)
 
