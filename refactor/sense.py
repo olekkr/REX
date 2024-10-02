@@ -113,7 +113,7 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
         if tv is None:
             tv = []
 
-        origins = np.array([(x / 1000, z / 1000) for t in tv for x, y, z in t])
+        origins = np.array([(x / 1000, (z - Constants.Robot.RADIUS ) / 1000) for t in tv for x, y, z in t])
         radius = (Constants.Obstacle.SHAPE_RADIUS + Constants.Robot.RADIUS) / 1000
 
         # fill the grids by checking if the grid centroid is in any of the circle
@@ -145,14 +145,14 @@ if __name__ == "__main__":
     
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
-    robot = robot_models.RobotModel(ctrl_range=[-path_res, path_res])  #
+    robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
     start_time = time.time()
     start_time2 = time.time()
     metadata = dict(title="RRT Test")
 
     writer = FFMpegWriter(fps=1000, metadata=metadata)
     fig = plt.figure()
-    show_animation = True
+    show_animation = False
     rrt = RRT(
         start=np.array([0, 0]),
         goal=[0, 1.9],
