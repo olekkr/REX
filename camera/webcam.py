@@ -26,9 +26,7 @@ class Camera(CameraBase):
         _, image = self.cam.read()
 
         if enable_preview:
-            cv2.imshow("Image", cv2.resize(image, (800, 600), interpolation=cv2.INTER_AREA))
-            if cv2.waitKey(1) == ord("q"):
-                exit()
+            self.preview(image)
 
         return image
 
