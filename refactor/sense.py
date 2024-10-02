@@ -205,10 +205,12 @@ if __name__ == "__main__":
 
                     for angle, dist in angles_and_dist:
                         deg_angle = np.rad2deg(angle)
-                        print("rotating ", deg_angle)
-                        print("moving ", dist)
-                        # rotate_move(frac=deg_angle / 90)
-                        # straight_move(dist)
+                        input(f"enter to rotate {deg_angle}")
+                        rotate_move(frac=deg_angle / 90, power=32, sleep_s=0.725*2)
+                        # time.sleep(2)
+                        input(f"enter to move {dist}")
+                        straight_move(dist)
+                        # time.sleep(2)
                     rrt.draw_graph()
                     plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
                     plt.grid(True)
