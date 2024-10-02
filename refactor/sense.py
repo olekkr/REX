@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter
 
+from calibrate import rotate_move, straight_move
+from camera.cam import Camera
 from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
-from camera.cam import Camera
-from calibrate import rotate_move, straight_move
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
 
@@ -115,7 +115,9 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
         if tv is None:
             tv = []
 
-        origins = np.array([(x / 1000, (z - Constants.Robot.RADIUS ) / 1000) for t in tv for x, y, z in t])
+        origins = np.array(
+            [(x / 1000, (z - Constants.Robot.RADIUS) / 1000) for t in tv for x, y, z in t]
+        )
         radius = (Constants.Obstacle.SHAPE_RADIUS + Constants.Robot.RADIUS) / 1000
 
         # fill the grids by checking if the grid centroid is in any of the circle
@@ -144,7 +146,7 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 if __name__ == "__main__":
     grid = init()
     path_res = 0.05
-    
+
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
     robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
@@ -187,22 +189,21 @@ if __name__ == "__main__":
                     writer.grab_frame()
                 else:
                     path_from_start = path[::-1]
-                    path_w_angles = [np.array([0,0,0])]
-                    angles_and_dist = []
+                    path_w_angles = np.array([0, 0, 0])
+                    angles_and_dist = np.array([])
                     for x, y in path_from_start:
                         px, py, ang = path_w_angles[-1]
-                        angle = np.array([x, y, math.atan2((y-py), (x-px))])
-                        path_w_angles.append(
-                           np.array([ x, y, angle])
+                        angle = np.array([x, y, math.atan2((y - py), (x - px))])
+                        path_w_angles += np.array([x, y, angle])
+                        angles_and_dist += np.array(
+                            [
+                                angle,
+                                np.linalg.norm(np.array([px, py]))
+                                - np.linalg.norm(np.array([x, y])),
+                            ]
                         )
-                        angles_and_dist.append(np.array([angle, np.linalg.norm(np.array([px,py]))-np.linalg.norm(np.array([x,y]))]))
-
 
                     for angle, dist in angles_and_dist:
                         deg_angle = np.rad2deg(angle)
-                        rotate_move(frac=deg_angle/90)
+                        rotate_move(frac=deg_angle / 90)
                         straight_move(dist)
-
-                    
-
-
