@@ -21,14 +21,9 @@ class RobotModel:
         path = [x]
         for i in range(T):
             v, w = u[i]
-            theta = np.arctan2(x[1], x[0])
 
-            if w == 0:  # Straight motion
-                x_dot = v * np.cos(theta)
-                y_dot = v * np.sin(theta)
-            else:  # Rotation
-                x_dot = -v * np.sin(theta)
-                y_dot = v * np.cos(theta)
+            x_dot = v * np.cos(w)
+            y_dot = v * np.sin(w)
 
             x_new = path[-1] + np.array([x_dot, y_dot])
             path.append(x_new)
@@ -39,12 +34,11 @@ class RobotModel:
         u = []
         for i in range(T):
             dx = x_goal - x
-            theta = np.arctan2(dx[1], dx[0])
             if np.linalg.norm(dx) > 1e-3:
                 v = self.ctrl_range[1]
                 w = 0
             else:
-                v = 0
+                v = self.ctrl_range[1]
                 w = 2 * self.ctrl_range[1] / Constants.Robot.RADIUS
 
             u.append((v, w))
