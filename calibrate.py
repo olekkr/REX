@@ -38,8 +38,8 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 
 if __name__ == "__main__":
-    for i in range(8):
-        frac = i / 4
+    fracs = [4, 2, 1, 0.5, 0.25, 0.125]
+    for frac in fracs:
         input(f"rotating frac={frac}")
         rotate_move(frac=frac)
 # """
