@@ -9,10 +9,13 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter
-
-from calibrate import rotate_move, straight_move
 from camera.cam import Camera
 from constants import Constants
+if Constants.Robot.INCLUDE is False:
+    straight_move = lambda dist: None
+    rotate_move = lambda frac: None
+else:
+    from calibrate import rotate_move, straight_move
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
@@ -147,21 +150,31 @@ def angle_between(current_pos, goal_pos, current_ang=90.0):
     return_ang = np.rad2deg((ang2 - ang1) % (2 * np.pi))
     return (return_ang - current_ang) % 360
 
+def center_points_to_robot(point, current_angle):
+    robot_orientation_rad = np.deg2rad(current_angle)
+
+    shift_x = Constants.Robot.RADIUS * np.cos(robot_orientation_rad)
+    shift_y = Constants.Robot.RADIUS * np.sin(robot_orientation_rad)
+
+    return point[0] - shift_x, point[1] - shift_y
+    
+
 def gen_instructions_from_points(points):
 
     path_w_angles = [(0.0, 0.0, 90.0)]
     angles_and_dist = []
     for x, y in path_from_start[1:]:
         current_x, current_y, current_angle = path_w_angles[-1]
-        vec = np.array([x, y]) - np.array([current_x, current_y])
+        centered_x, centered_y = center_points_to_robot((x,y), current_angle)
+        vec = np.array([centered_x, centered_y]) - np.array([current_x, current_y])
         target_angle = np.rad2deg(np.arctan2(vec[1], vec[0])) % 360
         turn_angle = current_angle - target_angle
-        path_w_angles.append((x, y, target_angle))
+        path_w_angles.append((centered_x, centered_y, target_angle))
         angles_and_dist.append(
             (
                 turn_angle,
                 np.linalg.norm(
-                    np.array([current_x, current_y]) - np.array([x, y])
+                    np.array([current_x, current_y]) - np.array([centered_x, centered_y])
                 ),
             )
         )
@@ -219,15 +232,15 @@ if __name__ == "__main__":
                     plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
                     plt.grid(True)
                     plt.pause(0.01)  # Need for Mac
-                    plt.show(block=False)
                     writer.grab_frame()
+                    plt.show(block=False)
+
 
                     for angle, dist in angles_and_dist:
                         # input(f"enter to rotate {angle}")
                         rotate_move(frac=angle / 90)
-                        time.sleep(1)
                         # input(f"enter to move {dist}")
                         straight_move(dist)
-                        time.sleep(4)
+                        time.sleep(1)
 
                     exit()

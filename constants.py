@@ -13,6 +13,7 @@ except ImportError:
 
 class Constants:
     class Robot:
+        INCLUDE = True
         MAX_VOLT = 12
         MAX_RPM = 100
         DIAMETER = 395  # mm +- 5 mm
