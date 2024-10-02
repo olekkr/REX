@@ -13,10 +13,10 @@ arlo = robot.Robot()
 # print(calculations.calc_travel_time(100, 64))
 
 
-def straight_move(dist=1):
+def straight_move(dist=1, power=64, sleep_s=2.4):
     print(f"moving {dist}m")
-    print(arlo.go_diff(64, 64, 1, 1))
-    sleep(2.4 * abs(dist))
+    print(arlo.go_diff(power, power, 1, 1))
+    sleep(sleep_s * abs(dist))
     print(arlo.stop())
 
 # 0.725*2 = 1.45
@@ -52,11 +52,20 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 
 if __name__ == "__main__":
-    fracs = [4, 2, 1, 0.5, 0.25, 0.125]
+    mode = input("1. Rotate\n2. Move\n")
     power = int(input("power: "))
-    for frac in fracs:
-        angle = float(input(f"time: "))
-        rotate_move(frac=1, power=power, sleep_s=angle)
+    if mode == "1":
+        fracs = [4, 2, 1, 0.5, 0.25, 0.125]
+        for frac in fracs:
+            angle = float(input(f"time: "))
+            rotate_move(frac=1, power=power, sleep_s=angle)
+    else:
+        time_sleep = float(input("time sleep: "))
+        amnt = int(input("amnt: "))
+        for _ in range(amnt):
+            straight_move(0.2, power=power, sleep_s=time_sleep)
+            sleep(1)
+
 # """
 # straight_move()
 # sleep(0.2)
