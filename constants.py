@@ -64,7 +64,7 @@ class Constants:
             SCREEN_RESOLUTION[0] // (2**PREVIEW_DOWNSCALE),
             SCREEN_RESOLUTION[1] // (2**PREVIEW_DOWNSCALE),
         )
-        ENABLE_PREVIEW = 1
+        ENABLE_PREVIEW = 0
         CAMERA_FPS = 24
 
     class PyPlot:
