@@ -19,7 +19,7 @@ dimensions = Constants.PID.SCREEN_RESOLUTION
 
 FocalLength = Constants.PID.FOCALLENGTH
 
-markerHeight = Constants.PID.MARKER_HEIGHT  # mm
+markerHeight = Constants.PID.MARKER_HEIGHT  # m
 FPS = 5
 
 picam2 = Camera()
