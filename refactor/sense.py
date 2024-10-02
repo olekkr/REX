@@ -165,7 +165,7 @@ def center_points_to_robot(point, current_angle):
 def gen_instructions_from_points(points):
     path_w_angles = [(*center_points_to_robot((0, 0), 90), 90.0)]
     angles_and_dist = []
-    for x, y in path_from_start:
+    for x, y in points[1:]:
         current_x, current_y, current_angle = path_w_angles[-1]
         current_x, current_y = center_points_to_robot((current_x, current_y), current_angle)
         vec = np.array([x, y]) - np.array([current_x, current_y])
