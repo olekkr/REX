@@ -140,6 +140,10 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
                         self.grid[i, j] = 1
                         break
 
+def angle_between(p1, p2):
+    ang1 = np.arctan2(*p1[::-1])
+    ang2 = np.arctan2(*p2[::-1])
+    return np.rad2deg((ang1 - ang2) % (2 * np.pi))
 
 if __name__ == "__main__":
     grid = init()
@@ -191,13 +195,13 @@ if __name__ == "__main__":
                     angles_and_dist = []
                     for x, y in path_from_start:
                         px, py, ang = path_w_angles[-1]
-                        angle = math.atan2((y - py), (x - px))
+                        # angle = math.atan2((y - py), (x - px)) - ang
+                        angle = angle_between((px,py),(x,y)) - ang
                         path_w_angles.append((x, y, angle))
                         angles_and_dist.append(
                             (
                                 angle,
-                                np.linalg.norm(np.array([px, py]))
-                                - np.linalg.norm(np.array([x, y])),
+                                np.linalg.norm(np.array([px, py]) - np.array([x, y])),
                             )
                         )
 
@@ -205,13 +209,16 @@ if __name__ == "__main__":
                     plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
                     plt.grid(True)
                     plt.pause(0.01)  # Need for Mac
-                    plt.show()
+                    plt.show(block=False)
                     writer.grab_frame()
                     for angle, dist in angles_and_dist:
                         deg_angle = np.rad2deg(angle)
-                        input(f"enter to rotate {deg_angle}")
-                        rotate_move(frac=deg_angle / 90)
+                        # input(f"enter to rotate {deg_angle}")
+                        # rotate_move(frac=deg_angle / 90)
                         # time.sleep(2)
-                        input(f"enter to move {dist}")
-                        straight_move(dist)
+                        # input(f"enter to move {dist}")
+                        # straight_move(dist)
                         # time.sleep(2)
+                        print(f"rotate {deg_angle}")
+                        print(f"move {dist}")
+                    exit()
