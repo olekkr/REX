@@ -13,7 +13,7 @@ from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
 from refactor import local_planning
-from camera.cam import Camera
+from camera.webcam import Camera
 
 dimensions = Constants.PID.SCREEN_RESOLUTION
 
@@ -144,7 +144,8 @@ if __name__ == "__main__":
     path_res = 0.05
     robot_area = (Constants.Robot.DIAMETER / 1000) ** 2
     ctrl = robot_area / path_res
-
+    print("ctrl", ctrl)
+    
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
     robot = robot_models.PointMassModel(ctrl_range=[-ctrl, ctrl])  #
