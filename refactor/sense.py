@@ -167,7 +167,7 @@ def gen_instructions_from_points(points):
     angles_and_dist = []
     for x, y in points[1:]:
         current_x, current_y, current_angle = path_w_angles[-1]
-        current_x, current_y = center_points_to_robot((current_x, current_y), current_angle)
+        # current_x, current_y = center_points_to_robot((current_x, current_y), current_angle)
         vec = np.array([x, y]) - np.array([current_x, current_y])
         target_angle = np.rad2deg(np.arctan2(vec[1], vec[0])) % 360
 
