@@ -223,11 +223,11 @@ if __name__ == "__main__":
                     writer.grab_frame()
 
                     for angle, dist in angles_and_dist:
-                        input(f"enter to rotate {angle}")
+                        # input(f"enter to rotate {angle}")
                         rotate_move(frac=angle / 90)
-                        time.sleep(2)
-                        input(f"enter to move {dist}")
+                        time.sleep(4)
+                        # input(f"enter to move {dist}")
                         straight_move(dist)
-                        time.sleep(2)
+                        time.sleep(4)
 
                     exit()
