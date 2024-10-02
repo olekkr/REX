@@ -21,7 +21,10 @@ def straight_move(dist=1):
 
 # 0.725*2 = 1.45
 # 1.45 * 4 = 5.8
-def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(1, 0)):
+# power=32 = sleep_s = 7.3 = 360 deg = frac = 4
+# power=64 = sleep_s = 3.2 = 360 deg = frac = 4
+def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
+    sleep_s = sleep_360 / 4
     if frac == 0:
         return
     if frac < 0:
