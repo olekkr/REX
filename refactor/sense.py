@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FFMpegWriter
 
-from camera.picam import Camera
 from constants import Constants
 from localplanning_rrt import grid_occ, robot_models
 from localplanning_rrt.rrt import RRT
@@ -22,7 +21,7 @@ FocalLength = Constants.PID.FOCALLENGTH
 markerHeight = Constants.PID.MARKER_HEIGHT  # mm
 FPS = 5
 
-picam2 = Camera()
+picam2 = Constants.PID.CAMERA_MODEL()
 
 arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 arucoParams = cv2.aruco.DetectorParameters()
