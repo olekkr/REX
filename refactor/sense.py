@@ -140,10 +140,32 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
                         self.grid[i, j] = 1
                         break
 
-def angle_between(p1, p2):
-    ang1 = np.arctan2(*p1[::-1])
-    ang2 = np.arctan2(*p2[::-1])
-    return np.rad2deg((ang1 - ang2) % (2 * np.pi))
+
+def angle_between(current_pos, goal_pos, current_ang=90.0):
+    ang1 = np.arctan2(*current_pos[::-1])
+    ang2 = np.arctan2(*goal_pos[::-1])
+    return_ang = np.rad2deg((ang2 - ang1) % (2 * np.pi))
+    return (return_ang - current_ang) % 360
+
+def gen_instructions_from_points(points):
+
+    path_w_angles = [(0.0, 0.0, 90.0)]
+    angles_and_dist = []
+    for x, y in path_from_start[1:]:
+        current_x, current_y, current_angle = path_w_angles[-1]
+        vec = np.array([x, y]) - np.array([current_x, current_y])
+        target_angle = np.rad2deg(np.arctan2(vec[1], vec[0])) % 360
+        turn_angle = current_angle - target_angle
+        path_w_angles.append((x, y, target_angle))
+        angles_and_dist.append(
+            (
+                turn_angle,
+                np.linalg.norm(
+                    np.array([current_x, current_y]) - np.array([x, y])
+                ),
+            )
+        )
+    return angles_and_dist
 
 if __name__ == "__main__":
     grid = init()
@@ -173,6 +195,7 @@ if __name__ == "__main__":
         # fig = plt.figure()
         if time.time() - start_time < 1:
             continue
+
         with writer.saving(fig, "rrt_test.mp4", 100):
             path = rrt.planning(animation=show_animation, writer=writer)
 
@@ -191,36 +214,20 @@ if __name__ == "__main__":
                     writer.grab_frame()
                 else:
                     path_from_start = path[::-1]
-                    path_w_angles = [(0.0, 0.0, 0.0)]
-                    angles_and_dist = []
-                    for x, y in path_from_start:
-                        px, py, ang = path_w_angles[-1]
-                        # angle = math.atan2((y - py), (x - px)) - ang
-                        angle = angle_between((px,py),(x,y)) - ang
-                        print(angle + ang, ang, angle)
-                        path_w_angles.append((x, y, angle))
-                        angles_and_dist.append(
-                            (
-                                angle,
-                                np.linalg.norm(np.array([px, py]) - np.array([x, y])),
-                            )
-                        )
-                        print(f"{px,py} -> {x,y}")
-
-                    for angle, dist in angles_and_dist:
-                        # input(f"enter to rotate {deg_angle}")
-                        # rotate_move(frac=deg_angle / 90)
-                        # time.sleep(2)
-                        # input(f"enter to move {dist}")
-                        # straight_move(dist)
-                        # time.sleep(2)
-                        print(f"rotate {angle}")
-                        print(f"move {dist}")
-                    
+                    angles_and_dist = gen_instructions_from_points(path_from_start)
                     rrt.draw_graph()
                     plt.plot([x for (x, y) in path], [y for (x, y) in path], "-r")
                     plt.grid(True)
                     plt.pause(0.01)  # Need for Mac
-                    plt.show()
+                    plt.show(block=False)
                     writer.grab_frame()
 
+                    for angle, dist in angles_and_dist:
+                        input(f"enter to rotate {angle}")
+                        rotate_move(frac=angle / 90)
+                        time.sleep(2)
+                        input(f"enter to move {dist}")
+                        straight_move(dist)
+                        time.sleep(2)
+
+                    exit()
