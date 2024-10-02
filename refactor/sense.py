@@ -157,7 +157,7 @@ if __name__ == "__main__":
         goal=[0, 1.8],
         robot_model=robot,
         map=map,
-        expand_dis=0.5,
+        expand_dis=0.1,
         path_resolution=path_res,
     )
     while True:

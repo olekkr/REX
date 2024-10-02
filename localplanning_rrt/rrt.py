@@ -137,40 +137,46 @@ class RRT:
         
         return points
 
-    def smooth_path(self, paths):
-        if len(paths) < 2:
-            return paths
-        
-        p1 = paths[0]
-        p2 = paths[1]
-        print("p1", p1)
-        print("p2", p2)
+    def shorten_path(self, path):
+        current_node = path[0]
+        shortened_path = [current_node]
+        next_node = path[1]
 
-        final_path = []
-        final_path.append(p1)
+        for i in range(1, len(path) - 1):
 
-        for path in paths[1:]:
-            middle_paths = self.find_n_points(p1, p2, 10)
-            if self.check_collision_free(self.Node(middle_paths)):
-                print(self.Node(middle_paths).path)
-                p2 = path
-                continue
+            # Find intermediate points between current_node and next_node
+            middles = self.find_n_points(current_node, next_node, 50)
+
+
+            collission_free = True
+            for p in middles:
+
+                #FML
+                radius = 0.1
+                up_left_corner = np.array([p[0] - radius, p[1] + radius])
+                up_right_corner = np.array([p[0] + radius, p[1] + radius])
+                down_left_corner = np.array([p[0] - radius, p[1] - radius])
+                down_right_corner = np.array([p[0] + radius, p[1] - radius])
+                if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
+                    collission_free = False
+                    break
+                if self.map.in_collision(np.array(p)):
+                    #print(f"Collision detected between {current_node} and {next_node}")
+                    collission_free = False
+                    break
+
+            if not collission_free:
+                shortened_path.append(path[i-1])
+                current_node = next_node
+                next_node = path[i]
             else:
-                final_path.append(p2)
-                p1 = p2
-                p2 = path
-                continue
-            
-        final_path.append(p2)
-        return final_path
-            
+                next_node = path[i]
 
-            # np.linalg.norm(np.array(path) - np.array(parent))
-            # print(np.linalg.norm(np.array(path) - np.array(parent)))
-            
+        shortened_path.append(next_node)
 
+        return shortened_path
 
-
+        
 
     def generate_final_course(self, goal_ind):
         path = [self.end.pos]
@@ -179,10 +185,8 @@ class RRT:
             path.append(node.pos)
             node = node.parent
         path.append(node.pos)
-        
-        smoothed = self.smooth_path(path)
-        
-        return path
+        shorten_path = self.shorten_path(path)
+        return shorten_path
     
             
 
@@ -227,18 +231,19 @@ class RRT:
     def check_collision_free(self, node):
         if node is None:
             return False
-        # radius = 0.1
         for p in node.path:
-        #     up_left_corner = np.array([p[0] - radius, p[1] + radius])
-        #     up_right_corner = np.array([p[0] + radius, p[1] + radius])
-        #     down_left_corner = np.array([p[0] - radius, p[1] - radius])
-        #     down_right_corner = np.array([p[0] + radius, p[1] - radius])
-        #     #print(up_left_corner, up_right_corner, down_left_corner, down_right_corner)
+            #print("checking", p)
             if self.map.in_collision(np.array(p)):
                 return False
             
-            # if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
-            #     return False
+            # ADDED: Check corners of the robot
+            radius = 0.1
+            up_left_corner = np.array([p[0] - radius, p[1] + radius])
+            up_right_corner = np.array([p[0] + radius, p[1] + radius])
+            down_left_corner = np.array([p[0] - radius, p[1] - radius])
+            down_right_corner = np.array([p[0] + radius, p[1] - radius])
+            if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
+                return False
         return True
 
 
