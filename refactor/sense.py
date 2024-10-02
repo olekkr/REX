@@ -144,11 +144,11 @@ if __name__ == "__main__":
     path_res = 0.05
     robot_area = (Constants.Robot.DIAMETER / 1000) ** 2
     ctrl = robot_area / path_res
-    print("ctrl", ctrl)
+    # print("ctrl", ctrl)
     
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
-    robot = robot_models.PointMassModel(ctrl_range=[-ctrl, ctrl])  #
+    robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
     start_time = time.time()
     start_time2 = time.time()
     metadata = dict(title="RRT Test")
@@ -162,7 +162,7 @@ if __name__ == "__main__":
         robot_model=robot,
         map=map,
         expand_dis=0.2,
-        path_resolution=path_res,
+        path_resolution=ctrl,
     )
     while True:
         map.populate_real()
