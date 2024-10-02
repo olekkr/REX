@@ -206,14 +206,13 @@ if __name__ == "__main__":
                         )
 
                     for angle, dist in angles_and_dist:
-                        deg_angle = np.rad2deg(angle)
                         # input(f"enter to rotate {deg_angle}")
                         # rotate_move(frac=deg_angle / 90)
                         # time.sleep(2)
                         # input(f"enter to move {dist}")
                         # straight_move(dist)
                         # time.sleep(2)
-                        print(f"rotate {deg_angle}")
+                        print(f"rotate {angle}")
                         print(f"move {dist}")
                     
                     rrt.draw_graph()
