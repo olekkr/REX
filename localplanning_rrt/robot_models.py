@@ -45,7 +45,7 @@ class RobotModel:
                 w = 0
             else:
                 v = 0
-                w = 2 * self.ctrl_range[1] / T
+                w = 2 * self.ctrl_range[1] / Constants.Robot.RADIUS
 
             u.append((v, w))
             x = self.forward_dyn(x, [(v, w)], 1)[-1]
@@ -60,8 +60,7 @@ class PointMassModel(RobotModel):
         for i in range(T):
             x_new = path[-1] + u[i] #u is velocity command here
             path.append(x_new)    
-        print(x,u,T)
-        print(path)
+
         return path[1:]
 
     def inverse_dyn(self, x, x_goal, T):
