@@ -1,7 +1,14 @@
 """
 some simple first-order robot dynamics models
 """
+import math
 import numpy as np
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+from constants import Constants
 
 class RobotModel:
 
@@ -9,14 +16,41 @@ class RobotModel:
         #record the range of action that can be used to integrate the state
         self.ctrl_range = ctrl_range
         return
-    
+
     def forward_dyn(self, x, u, T):
-        #need to return intergated path of X with u along the horizon of T
-        return NotImplementedError
+        path = [x]
+        for i in range(T):
+            v, w = u[i]
+            theta = np.arctan2(x[1], x[0])
+
+            if w == 0:  # Straight motion
+                x_dot = v * np.cos(theta)
+                y_dot = v * np.sin(theta)
+            else:  # Rotation
+                x_dot = -v * np.sin(theta)
+                y_dot = v * np.cos(theta)
+
+            x_new = path[-1] + np.array([x_dot, y_dot])
+            path.append(x_new)
+
+        return path[1:]
 
     def inverse_dyn(self, x, x_goal, T):
-        #return dynamically feasible path to move to the x_goal as close as possible
-        return NotImplementedError
+        u = []
+        for i in range(T):
+            dx = x_goal - x
+            theta = np.arctan2(dx[1], dx[0])
+            if np.linalg.norm(dx) > 1e-3:
+                v = self.ctrl_range[1]
+                w = 0
+            else:
+                v = 0
+                w = 2 * self.ctrl_range[1] / Constants.Robot.RADIUS
+
+            u.append((v, w))
+            x = self.forward_dyn(x, [(v, w)], 1)[-1]
+
+        return self.forward_dyn(x, u, 1)
 
 class PointMassModel(RobotModel):
     #Note Arlo is differential driven and may be simpler to avoid Dubins car model by rotating in-place to direct and executing piecewise straight path  
@@ -26,7 +60,7 @@ class PointMassModel(RobotModel):
         for i in range(T):
             x_new = path[-1] + u[i] #u is velocity command here
             path.append(x_new)    
-        
+
         return path[1:]
 
     def inverse_dyn(self, x, x_goal, T):
