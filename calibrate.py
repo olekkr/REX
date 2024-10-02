@@ -29,14 +29,14 @@ def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
         return
     if frac < 0:
         mdir = mdir[1], mdir[0]
-    # if frac > 4 or frac <= -4:
-    #     frac %= 4
-    # if frac > 2:
-    #     frac -= 2
-    #     frac = -frac
-    # elif frac < -2:
-    #     frac += 2
-    #     frac = -frac
+    if frac > 4 or frac <= -4:
+        frac %= 4
+    if frac > 2:
+        frac -= 2
+        frac = -frac
+    elif frac < -2:
+        frac += 2
+        frac = -frac
     print(f"rotating {frac*90}")
     print(arlo.go_diff(power, power, *mdir))
     sleep(sleep_s * abs(frac))
@@ -52,20 +52,24 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 
 if __name__ == "__main__":
-    mode = input("1. Rotate\n2. Move\n")
+    mode = input("1. Rotate\n2. Move\n3. rotate_move def\n")
     power = int(input("power: "))
     if mode == "1":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
             angle = float(input(f"time: "))
             rotate_move(frac=1, power=power, sleep_s=angle)
-    else:
+    elif mode == "2":
         for _ in range(10):
             time_sleep = float(input("time sleep: "))
             amnt = int(input("amnt: "))
             for _ in range(amnt):
                 straight_move(1, power=power, sleep_s=time_sleep)
                 sleep(1)
+    else:
+        fracs = [4, 2, 1, 0.5, 0.25, 0.125]
+        for frac in fracs:
+            rotate_move(frac=frac)
 
 # """
 # straight_move()
