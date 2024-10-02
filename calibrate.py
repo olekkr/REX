@@ -19,7 +19,8 @@ def straight_move(dist=1):
     sleep(2.4 * abs(dist))
     print(arlo.stop())
 
-
+# 0.725*2 = 1.45
+# 1.45 * 4 = 5.8
 def rotate_move(frac=0.25, power=64, sleep_s=0.725, mdir=(1, 0)):
     if frac == 0:
         return
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     power = int(input("power: "))
     for frac in fracs:
         angle = float(input(f"time: "))
-        rotate_move(power=power, sleep_s=angle)
+        rotate_move(frac=1, power=power, sleep_s=angle)
 # """
 # straight_move()
 # sleep(0.2)
