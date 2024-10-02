@@ -114,8 +114,7 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
             tv = []
 
         origins = np.array([(x / 1000, z / 1000) for t in tv for x, y, z in t])
-        # radius = (Constants.Obstacle.SHAPE_RADIUS) / 100
-        radius = Constants.Obstacle.SHAPE_RADIUS / 100
+        radius = Constants.Obstacle.SHAPE_RADIUS / 1000
 
         # fill the grids by checking if the grid centroid is in any of the circle
         for i in range(self.n_grids[0]):
