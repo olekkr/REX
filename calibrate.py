@@ -49,9 +49,10 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 if __name__ == "__main__":
     fracs = [4, 2, 1, 0.5, 0.25, 0.125]
+    power = int(input("power: "))
     for frac in fracs:
-        angle = float(input(f"enter dist"))
-        straight_move(dist=angle)
+        angle = float(input(f"time: "))
+        rotate_move(power=power, sleep_s=angle)
 # """
 # straight_move()
 # sleep(0.2)
