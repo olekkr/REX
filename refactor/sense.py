@@ -170,14 +170,14 @@ def gen_instructions_from_points(points):
         current_x, current_y = center_points_to_robot((current_x, current_y), current_angle)
         vec = np.array([x, y]) - np.array([current_x, current_y])
         target_angle = np.rad2deg(np.arctan2(vec[1], vec[0])) % 360
-        centered_x, centered_y = center_points_to_robot((x, y), target_angle)
+
         turn_angle = current_angle - target_angle
-        path_w_angles.append((centered_x, centered_y, target_angle))
+        path_w_angles.append((x, y, target_angle))
         angles_and_dist.append(
             (
                 turn_angle,
                 np.linalg.norm(
-                    np.array([current_x, current_y]) - np.array([centered_x, centered_y])
+                    np.array([current_x, current_y]) - np.array([x, y])
                 ),
             )
         )
