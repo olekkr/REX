@@ -60,11 +60,12 @@ if __name__ == "__main__":
             angle = float(input(f"time: "))
             rotate_move(frac=1, power=power, sleep_s=angle)
     else:
-        time_sleep = float(input("time sleep: "))
-        amnt = int(input("amnt: "))
-        for _ in range(amnt):
-            straight_move(1, power=power, sleep_s=time_sleep)
-            sleep(1)
+        for _ in range(10):
+            time_sleep = float(input("time sleep: "))
+            amnt = int(input("amnt: "))
+            for _ in range(amnt):
+                straight_move(1, power=power, sleep_s=time_sleep)
+                sleep(1)
 
 # """
 # straight_move()
