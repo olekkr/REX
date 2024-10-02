@@ -141,11 +141,13 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 
 if __name__ == "__main__":
     grid = init()
-    path_res = 0.1
+    path_res = 0.05
+    robot_area = (Constants.Robot.DIAMETER / 1000) ** 2
+    ctrl = robot_area / path_res
 
-    map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2))
+    map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
-    robot = robot_models.PointMassModel(ctrl_range=[-path_res, path_res])  #
+    robot = robot_models.PointMassModel(ctrl_range=[-ctrl, ctrl])  #
     start_time = time.time()
     start_time2 = time.time()
     metadata = dict(title="RRT Test")
@@ -165,7 +167,7 @@ if __name__ == "__main__":
         map.populate_real()
 
         # fig = plt.figure()
-        if time.time() - start_time < 10:
+        if time.time() - start_time < 2:
             continue
         with writer.saving(fig, "rrt_test.mp4", 100):
             path = rrt.planning(animation=show_animation, writer=writer)
