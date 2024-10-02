@@ -204,6 +204,7 @@ if __name__ == "__main__":
                                 np.linalg.norm(np.array([px, py]) - np.array([x, y])),
                             )
                         )
+                        print(f"{px,py} -> {x,y}")
 
                     for angle, dist in angles_and_dist:
                         # input(f"enter to rotate {deg_angle}")
