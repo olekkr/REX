@@ -142,9 +142,6 @@ class CustomGridOccupancyMap(grid_occ.GridOccupancyMap):
 if __name__ == "__main__":
     grid = init()
     path_res = 0.05
-    robot_area = (Constants.Robot.DIAMETER / 1000) ** 2
-    ctrl = robot_area / path_res
-    # print("ctrl", ctrl)
     
     map = CustomGridOccupancyMap(low=(-1, 0), high=(1, 2), res=path_res)
 
