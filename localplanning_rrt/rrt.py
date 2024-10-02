@@ -75,7 +75,6 @@ class RRT:
             rnd_node = self.get_random_node()
             nearest_ind = self.get_nearest_node_index(self.node_list, rnd_node)
             nearest_node = self.node_list[nearest_ind]
-
             new_node = self.steer(nearest_node, rnd_node, self.expand_dis)
 
             if self.check_collision_free(new_node):
@@ -123,8 +122,55 @@ class RRT:
             new_node.pos = to_node.pos.copy()
 
         new_node.parent = from_node
-
         return new_node
+
+    def find_n_points(self, a1, a2, n):
+        # Convert to numpy arrays for element-wise operations
+        a1 = np.array(a1)
+        a2 = np.array(a2)
+        
+        # Generate n evenly spaced points between 0 and 1 (excluding endpoints)
+        t_values = np.linspace(0, 1, n+2)[1:-1]  # exclude 0 and 1
+        
+        # Interpolate between a1 and a2 using the t_values
+        points = [(1 - t) * a1 + t * a2 for t in t_values]
+        
+        return points
+
+    def smooth_path(self, paths):
+        if len(paths) < 2:
+            return paths
+        
+        p1 = paths[0]
+        p2 = paths[1]
+        print("p1", p1)
+        print("p2", p2)
+
+        final_path = []
+        final_path.append(p1)
+
+        for path in paths[1:]:
+            middle_paths = self.find_n_points(p1, p2, 10)
+            if self.check_collision_free(self.Node(middle_paths)):
+                print(self.Node(middle_paths).path)
+                p2 = path
+                continue
+            else:
+                final_path.append(p2)
+                p1 = p2
+                p2 = path
+                continue
+            
+        final_path.append(p2)
+        return final_path
+            
+
+            # np.linalg.norm(np.array(path) - np.array(parent))
+            # print(np.linalg.norm(np.array(path) - np.array(parent)))
+            
+
+
+
 
     def generate_final_course(self, goal_ind):
         path = [self.end.pos]
@@ -133,8 +179,12 @@ class RRT:
             path.append(node.pos)
             node = node.parent
         path.append(node.pos)
-
+        
+        smoothed = self.smooth_path(path)
+        
         return path
+    
+            
 
     def get_random_node(self):
         if np.random.randint(0, 100) > self.goal_sample_rate:
@@ -177,9 +227,18 @@ class RRT:
     def check_collision_free(self, node):
         if node is None:
             return False
+        # radius = 0.1
         for p in node.path:
+        #     up_left_corner = np.array([p[0] - radius, p[1] + radius])
+        #     up_right_corner = np.array([p[0] + radius, p[1] + radius])
+        #     down_left_corner = np.array([p[0] - radius, p[1] - radius])
+        #     down_right_corner = np.array([p[0] + radius, p[1] - radius])
+        #     #print(up_left_corner, up_right_corner, down_left_corner, down_right_corner)
             if self.map.in_collision(np.array(p)):
                 return False
+            
+            # if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
+            #     return False
         return True
 
 
