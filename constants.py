@@ -13,7 +13,10 @@ except ImportError:
 
 class Constants:
     class Robot:
-        INCLUDE = True
+        if "PICAM" in os.environ:
+            INCLUDE = True
+        else: 
+            INCLUDE = False
         MAX_VOLT = 12
         MAX_RPM = 100
         DIAMETER = 395  # mm +- 5 mm
