@@ -231,9 +231,10 @@ class Camera(object):
         else:  # Use OpenCV interface
 
             # We next try the gstreamer interface
-            self.cam = cv2.VideoCapture(gstreamer_pipeline(
-                capture_width=self.imageSize[0], capture_height=self.imageSize[1]),
-                apiPreference=cv2.CAP_GSTREAMER)
+            self.cam = cv2.VideoCapture(0) # i changed this because VideoCapture with gstreamer fails but has isOpened
+            # self.cam = cv2.VideoCapture(gstreamer_pipeline(
+            #     capture_width=self.imageSize[0], capture_height=self.imageSize[1]),
+            #     apiPreference=cv2.CAP_GSTREAMER)
             if not self.cam.isOpened(): # Did not work
 
                 # We try first the generic auto-detect interface
@@ -536,9 +537,9 @@ if (__name__=='__main__'):
         #gray = cv2.convertScaleAbs(loggray)
         
         # Detect objects
-        #objectType, distance, angle, colourProb = cam.get_object(colour)
-        #if objectType != 'none':
-        #    print("Object type = ", objectType, ", distance = ", distance, ", angle = ", angle, ", colourProb = ", colourProb)
+        objectType, distance, angle, colourProb = cam.get_object(colour)
+        if objectType != 'none':
+           print("Object type = ", objectType, ", distance = ", distance, ", angle = ", angle, ", colourProb = ", colourProb)
 
         # Draw detected pattern
         #cam.draw_object(colour)
