@@ -131,8 +131,8 @@ def gauss_dist(particle, dM: float, angle: float, deviation: float = 0.2):
     lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
     di = np.sqrt((lx - particle.getX())**2 + (ly - particle.getY())**2)
 
-    return (1 / (np.sqrt(2 * np.pi) * (deviation**2))) * np.exp(
-        -(((dM-di)**2)/(2*deviation**2))
+    return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(
+        -(((dM-di)**2)/(2*deviation))
     )
 
 def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
@@ -145,13 +145,15 @@ def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
     e_hat_theta_i = np.array([-np.sin(theta),np.cos(theta)])
     e_l_i = np.array([lx-xi, ly-yi]) / di
     phi_i = np.sign(np.dot(e_l_i, e_hat_theta_i)) * np.acos(np.dot(e_l_i, e_theta_i))
-
-    return (1 / (np.sqrt(2 * np.pi) * (deviation**2))) * np.exp(
-        -(((angle-phi_i)**2)/(2*deviation**2))
+    # print(f"{e_l_i=},{e_hat_theta_i=},{np.dot(e_l_i, e_hat_theta_i)=},{np.sign(np.dot(e_l_i, e_hat_theta_i))},{e_theta_i},{np.dot(e_l_i, e_theta_i)},{np.acos(np.dot(e_l_i, e_theta_i))}")
+    # print(phi_i)
+    return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(
+        -(((angle-phi_i)**2)/(2*deviation))
     )
 
-def get_weight(particle, dM: float, angle: float, dist_deviation: float = 0.2, angle_deviation: float = 0.2):
-    return gauss_dist(particle, dM, angle, dist_deviation) * gauss_angle(particle, dM, angle, angle_deviation)
+def get_weight(particle, dM: float, angle: float, dist_deviation: float = 1, angle_deviation: float = 1):
+    angle_gauss = gauss_angle(particle, dM, angle, angle_deviation)
+    return gauss_dist(particle, dM, angle, dist_deviation) * angle_gauss
 
 # Main program #
 try:
