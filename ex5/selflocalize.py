@@ -193,7 +193,7 @@ try:
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-
+        particle.add_uncertainty(particles, 0.1, 0.1)
 
 
         # Fetch next frame
