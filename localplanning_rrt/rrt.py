@@ -128,55 +128,58 @@ class RRT:
         # Convert to numpy arrays for element-wise operations
         a1 = np.array(a1)
         a2 = np.array(a2)
-        
+
         # Generate n evenly spaced points between 0 and 1 (excluding endpoints)
         t_values = np.linspace(0, 1, n+2)[1:-1]  # exclude 0 and 1
-        
+
         # Interpolate between a1 and a2 using the t_values
         points = [(1 - t) * a1 + t * a2 for t in t_values]
-        
+
         return points
+    
+    def increase_point_density(self, node, n=0.0):
+        left = np.array([node[0] - n, node[1]])
+        right = np.array([node[0] + n, node[1]])
+        up = np.array([node[0], node[1] + n])
+        down = np.array([node[0], node[1] - n])
+        left_up = np.array([node[0] - n, node[1] + n])
+        left_down = np.array([node[0] - n, node[1] - n])
+        right_up = np.array([node[0] + n, node[1] + n])
+        right_down = np.array([node[0] + n, node[1] - n])
+        if self.map.in_collision(left) or self.map.in_collision(right) or self.map.in_collision(up) or self.map.in_collision(down):
+            return True
+        elif self.map.in_collision(left_up) or self.map.in_collision(left_down) or self.map.in_collision(right_up) or self.map.in_collision(right_down):
+            return True
+        else:
+            return False
 
     def shorten_path(self, path):
         current_node = path[0]
-        shortened_path = [current_node]
         next_node = path[1]
+        shortened_path = [current_node]
 
         for i in range(1, len(path) - 1):
 
-            # Find intermediate points between current_node and next_node
-            middles = self.find_n_points(current_node, next_node, 50)
-
+            # increase n for better accuracy
+            n = 20
+            distance = (np.linalg.norm(np.array(next_node) - np.array(current_node)) + 0.5 ) * n
+            middles = self.find_n_points(current_node, next_node, int(distance))
 
             collission_free = True
             for p in middles:
-
-                #FML
-                radius = 0.1
-                up_left_corner = np.array([p[0] - radius, p[1] + radius])
-                up_right_corner = np.array([p[0] + radius, p[1] + radius])
-                down_left_corner = np.array([p[0] - radius, p[1] - radius])
-                down_right_corner = np.array([p[0] + radius, p[1] - radius])
-                if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
+                # 0.025 is just how many pixels I want to expand the robot by
+                if self.increase_point_density(p):
                     collission_free = False
                     break
-                if self.map.in_collision(np.array(p)):
-                    #print(f"Collision detected between {current_node} and {next_node}")
-                    collission_free = False
-                    break
-
             if not collission_free:
                 shortened_path.append(path[i-1])
                 current_node = next_node
                 next_node = path[i+1]
             else:
                 next_node = path[i+1]
-
         shortened_path.append(next_node)
-
         return shortened_path
 
-        
 
     def generate_final_course(self, goal_ind):
         path = [self.end.pos]
@@ -187,8 +190,6 @@ class RRT:
         path.append(node.pos)
         shorten_path = self.shorten_path(path)
         return shorten_path
-    
-            
 
     def get_random_node(self):
         if np.random.randint(0, 100) > self.goal_sample_rate:
@@ -235,14 +236,9 @@ class RRT:
             #print("checking", p)
             if self.map.in_collision(np.array(p)):
                 return False
-            
-            # ADDED: Check corners of the robot
-            radius = 0.1
-            up_left_corner = np.array([p[0] - radius, p[1] + radius])
-            up_right_corner = np.array([p[0] + radius, p[1] + radius])
-            down_left_corner = np.array([p[0] - radius, p[1] - radius])
-            down_right_corner = np.array([p[0] + radius, p[1] - radius])
-            if self.map.in_collision(up_left_corner) or self.map.in_collision(up_right_corner) or self.map.in_collision(down_left_corner) or self.map.in_collision(down_right_corner):
+
+            # ADDED: To increase point size
+            if self.increase_point_density(p):
                 return False
         return True
 
