@@ -49,7 +49,7 @@ CBLACK = (0, 0, 0)
 landmarkIDs = [1, 4]
 landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
-    2: (30.0, 0.0)  # Coordinates for landmark 2
+    4: (300.0, 0.0)  # Coordinates for landmark 2
 }
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
@@ -126,7 +126,7 @@ def calc_lengths_from_hypotenuse_and_angle(hypotenuse, angle):
     """
     return (hypotenuse*np.cos(angle), hypotenuse*np.sin(angle))
 
-def gauss_dist(particle, dM: float, angle: float, deviation: float = 0.2):
+def gauss_dist(particle, dM: float, angle: float, deviation: float = 1):
 
     lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
     di = np.sqrt((lx - particle.getX())**2 + (ly - particle.getY())**2)
@@ -135,7 +135,7 @@ def gauss_dist(particle, dM: float, angle: float, deviation: float = 0.2):
         -(((dM-di)**2)/(2*deviation))
     )
 
-def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
+def gauss_angle(particle, dM: float, angle: float, deviation: float = 1):
 
     lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
     theta = particle.getTheta()
@@ -154,6 +154,25 @@ def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
 def get_weight(particle, dM: float, angle: float, dist_deviation: float = 1, angle_deviation: float = 1):
     angle_gauss = gauss_angle(particle, dM, angle, angle_deviation)
     return gauss_dist(particle, dM, angle, dist_deviation) * angle_gauss
+
+def resample(particles, num_particles):
+
+    particle.add_uncertainty(particles, 0.01, 0.01)
+    sorted_particles = sorted(particles, key=lambda x: x.getWeight())
+    weights = np.array([p.getWeight() for p in sorted_particles])
+    if weights.sum() != 0:
+        normalized_weights = weights / sum(weights)
+        
+        resampled_particles = [sorted_particles[resampled_idx] for resampled_idx in np.random.choice(np.arange(num_particles), num_particles, p=normalized_weights)]
+    else:
+        resampled_particles = sorted_particles
+
+    for sorted_particle, resampled_particle in zip(sorted_particles, resampled_particles):
+        sorted_particle.setX(resampled_particle.getX())
+        sorted_particle.setY(resampled_particle.getY())
+        sorted_particle.setTheta(resampled_particle.getTheta())
+        sorted_particle.setWeight(resampled_particle.getWeight())
+    
 
 # Main program #
 try:
@@ -234,7 +253,7 @@ try:
             # List detected objects
             id_to_dist_n_angles = {}
             for i in range(len(objectIDs)):
-                print("Object ID = ", objectIDs[i], ", Distance = ", dists[i], ", angle = ", angles[i])
+                # print("Object ID = ", objectIDs[i], ", Distance = ", dists[i], ", angle = ", angles[i])
                 id_to_dist_n_angles.setdefault(objectIDs[i], (np.inf, np.inf))
                 exist_dist, exist_angle = id_to_dist_n_angles[objectIDs[i]]
                 if dists[i] < exist_dist:
@@ -246,11 +265,11 @@ try:
             for p in particles:
                 w = 1
                 for obj_id, (dM, angle) in id_to_dist_n_angles.items():
-                    w *= get_weight(p, dM, angle)
+                    w *= get_weight(p, dM, angle, dist_deviation=0.8, angle_deviation=0.9)
                 p.setWeight(w)
-
             # Resampling
             # XXX: You do this
+            
 
             # Draw detected objects
             cam.draw_aruco_objects(colour)
@@ -259,6 +278,7 @@ try:
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
+        resample(particles, num_particles)
     
         est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
 
