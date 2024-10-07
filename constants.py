@@ -13,6 +13,7 @@ except ImportError:
 
 class Constants:
     class Robot:
+        INCLUDE = True
         MAX_VOLT = 12
         MAX_RPM = 100
         DIAMETER = 395  # mm +- 5 mm
@@ -41,7 +42,10 @@ class Constants:
         SHAPE_RADIUS = SHAPE_MAX / 2
 
     class PID:
-        CAMERA_MODEL = "picam"
+        if "PICAM" in os.environ:
+            CAMERA_MODEL = "picam"
+        else: 
+            CAMERA_MODEL = "webcam"
         DOWNSCALE = 0
         SCREEN_RESOLUTION = (1640, 1232)
         # FOCALLENGTH_ARR = [1300, 640]
@@ -61,7 +65,7 @@ class Constants:
             SCREEN_RESOLUTION[0] // (2**PREVIEW_DOWNSCALE),
             SCREEN_RESOLUTION[1] // (2**PREVIEW_DOWNSCALE),
         )
-        ENABLE_PREVIEW = 1
+        ENABLE_PREVIEW = 0
         CAMERA_FPS = 24
 
     class PyPlot:
