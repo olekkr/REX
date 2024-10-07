@@ -1,11 +1,12 @@
-import cv2
-import particle
-import camera
-import numpy as np
+import sys
 import time
 from timeit import default_timer as timer
-import sys
 
+import cv2
+import numpy as np
+import particle
+
+import camera
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
@@ -20,8 +21,7 @@ def isRunningOnArlo():
 
 
 if isRunningOnArlo():
-    # XXX: You need to change this path to point to where your robot.py file is located
-    sys.path.append("../../../../Arlo/python")
+    sys.path.append("../robot.py")
 
 
 try:
@@ -118,6 +118,40 @@ def initialize_particles(num_particles):
 
     return particles
 
+def calc_lengths_from_hypotenuse_and_angle(hypotenuse, angle):
+    """
+    Calculate the lengths of the two sides of a right triangle given the hypotenuse and one angle.
+    
+    This returns x distance and y distance.
+    """
+    return (hypotenuse*np.cos(angle), hypotenuse*np.sin(angle))
+
+def gauss_dist(particle, dM: float, angle: float, deviation: float = 0.2):
+
+    lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
+    di = np.sqrt((lx - particle.getX())**2 + (ly - particle.getY())**2)
+
+    return (1 / (np.sqrt(2 * np.pi) * (deviation**2))) * np.exp(
+        -(((dM-di)**2)/(2*deviation**2))
+    )
+
+def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
+
+    lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
+    theta = particle.getTheta()
+    xi, yi = particle.getX(), particle.getY()
+    di = np.sqrt((lx - xi)**2 + (ly - yi)**2)
+    e_theta_i = np.array([np.cos(theta),np.sin(theta)])
+    e_hat_theta_i = np.array([-np.sin(theta),np.cos(theta)])
+    e_l_i = np.array([lx-xi, ly-yi]) / di
+    phi_i = np.sign(np.dot(e_l_i, e_hat_theta_i)) * np.acos(np.dot(e_l_i, e_theta_i))
+
+    return (1 / (np.sqrt(2 * np.pi) * (deviation**2))) * np.exp(
+        -(((angle-phi_i)**2)/(2*deviation**2))
+    )
+
+def get_weight(particle, dM: float, angle: float, dist_deviation: float = 0.2, angle_deviation: float = 0.2):
+    return gauss_dist(particle, dM, angle, dist_deviation) * gauss_angle(particle, dM, angle, angle_deviation)
 
 # Main program #
 try:
@@ -142,7 +176,10 @@ try:
     velocity = 0.0 # cm/sec
     angular_velocity = 0.0 # radians/sec
 
-    # Initialize the robot (XXX: You do this)
+    if onRobot:
+        arlo = robot.Robot()
+    else:
+        arlo = None
 
     # Allocate space for world map
     world = np.zeros((500,500,3), dtype=np.uint8)
@@ -193,12 +230,22 @@ try:
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
         if not isinstance(objectIDs, type(None)):
             # List detected objects
+            id_to_dist_n_angles = {}
             for i in range(len(objectIDs)):
                 print("Object ID = ", objectIDs[i], ", Distance = ", dists[i], ", angle = ", angles[i])
+                id_to_dist_n_angles.setdefault(objectIDs[i], (np.inf, np.inf))
+                exist_dist, exist_angle = id_to_dist_n_angles[objectIDs[i]]
+                if dists[i] < exist_dist:
+                    id_to_dist_n_angles[objectIDs[i]] = (dists[i], angles[i])
                 # XXX: Do something for each detected object - remember, the same ID may appear several times
 
             # Compute particle weights
             # XXX: You do this
+            for p in particles:
+                w = 1
+                for obj_id, (dM, angle) in id_to_dist_n_angles.items():
+                    w *= get_weight(p, dM, angle)
+                p.setWeight(w)
 
             # Resampling
             # XXX: You do this
