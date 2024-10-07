@@ -7,6 +7,9 @@ import numpy as np
 import particle
 
 import camera
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
