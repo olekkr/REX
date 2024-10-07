@@ -144,7 +144,7 @@ def gauss_angle(particle, dM: float, angle: float, deviation: float = 0.2):
     e_theta_i = np.array([np.cos(theta),np.sin(theta)])
     e_hat_theta_i = np.array([-np.sin(theta),np.cos(theta)])
     e_l_i = np.array([lx-xi, ly-yi]) / di
-    phi_i = np.sign(np.dot(e_l_i, e_hat_theta_i)) * np.acos(np.dot(e_l_i, e_theta_i))
+    phi_i = np.sign(np.dot(e_l_i, e_hat_theta_i)) * np.arccos(np.dot(e_l_i, e_theta_i))
     # print(f"{e_l_i=},{e_hat_theta_i=},{np.dot(e_l_i, e_hat_theta_i)=},{np.sign(np.dot(e_l_i, e_hat_theta_i))},{e_theta_i},{np.dot(e_l_i, e_theta_i)},{np.acos(np.dot(e_l_i, e_theta_i))}")
     # print(phi_i)
     return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(
