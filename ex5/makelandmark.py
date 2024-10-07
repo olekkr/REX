@@ -1,6 +1,9 @@
 import cv2  # Import the OpenCV library
 import numpy as np
-
+try:
+    drawMarker = cv2.aruco.drawMarker
+except AttributeError:
+    drawMarker = cv2.aruco.generateImageMarker
 
 # TODO make this configurable from the command line using parser
 markerID = 10 # Try 1 - 4
@@ -32,7 +35,7 @@ arucoDict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
 # Draw marker
 startWidth = int(np.round((width-markerSize)/2))
 startHeight = int(np.round((height-markerSize)/2))
-landmarkImage[startHeight:int(startHeight+markerSize), startWidth:int(startWidth+markerSize)] = cv2.aruco.drawMarker(arucoDict, markerID, markerSize, 1)
+landmarkImage[startHeight:int(startHeight+markerSize), startWidth:int(startWidth+markerSize)] = drawMarker(arucoDict, markerID, markerSize, 1)
 cv2.putText(landmarkImage, str(markerID), (startWidth, startHeight - 60), cv2.FONT_HERSHEY_SIMPLEX, 2.0, (0,0,0), 2)
 
 
