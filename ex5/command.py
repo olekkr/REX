@@ -39,11 +39,11 @@ class Command:
 
         self.rotationTime = self.angle / ROTATIONAL_SPEED
         self.forwardTime = self.distance / FORWARD_SPEED
+        self.graceTime = 0.5
 
     # checks and updates controls on robot based on timestep
     # returns true if command has finished execution ... false if it has not.
-    def update_command_state(self, deadmove=False):
-        deadpower = 1 if deadmove is False else 0
+    def update_command_state(self):
         def rotation_command():
             self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
@@ -62,9 +62,11 @@ class Command:
         elif time.time() - self.startTime < self.rotationTime:
             rotation_command()
             return False
-
+        elif time.time() - self.startTime < self.rotationTime + self.graceTime:
+            self.robot.go_diff(0, 0, 1, 1)
+            return False
         # has not finished forward
-        elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
+        elif time.time() - self.startTime < self.rotationTime + self.graceTime + self.forwardTime:
             self.rotation_speed = 0
             self.velocity = ROTATIONAL_SPEED
             self.robot.go_diff(64, 64, 1, 1)
