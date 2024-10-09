@@ -69,7 +69,7 @@ landmarks = {
 }
 landmark_colors = [CRED, CGREEN]  # Colors used when drawing the landmarks
 
-goal = (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
+goal = np.array([sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2])
 
 
 def jet(x):

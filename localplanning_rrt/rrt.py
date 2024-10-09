@@ -239,8 +239,8 @@ class RRT:
                 return False
 
             # ADDED: To increase point size
-            if self.increase_point_density(p):
-                return False
+            # if self.increase_point_density(p):
+            #     return False
         return True
 
 
