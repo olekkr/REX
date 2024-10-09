@@ -47,9 +47,10 @@ class command:
             self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
             if self.angle > 0:
-                self.robot.diff(1, 0, 32, 32)
+                self.robot.go_diff(32, 32, 1, 0)
             else:
-                self.robot.diff(0, 1, 32, 32)
+                self.robot.go_diff(32, 32, 0, 1, )
+
         # has not started yet
         if self.startTime is None:
             self.startTime = time.time()
@@ -65,14 +66,14 @@ class command:
         elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
             self.rotation_speed = 0
             self.velocity = ROTATIONAL_SPEED
-            self.robot.diff(1, 1, 64, 64)
+            self.robot.go_diff(64, 64, 1, 1)
             return False
 
         # has finished rotation and forward
         else:
             self.rotation_speed = 0
             self.velocity = 0
-            self.robot.diff(1, 1, 0, 0)
+            self.robot.go_diff(0, 0, 1, 1,)
 
             return True
         # True means finished
@@ -84,8 +85,7 @@ class controlWrapper:
         self.robot = robot
         self.isArlo = isArlo
 
-    ## TODO: do this for all the commands diff etc...
-    def diff(self, l, r, L, R):
+    def go_diff(self, l, r, L, R):
         if self.isArlo:
             self.robot.go_diff(l, r, L, R)
         else:
