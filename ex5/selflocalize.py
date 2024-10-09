@@ -63,8 +63,8 @@ CBLACK = (0, 0, 0)
 # Landmarks.
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
 landmarks = {
-    4: (0.0, 0.0),  # Coordinates for landmark 1
-    7: (100.0, 0.0)  # Coordinates for landmark 2
+    1: (0.0, 0.0),  # Coordinates for landmark 1
+    2: (100.0, 0.0)  # Coordinates for landmark 2
 }
 landmarkIDs = list(landmarks)
 goal = np.array([50.0, 0.])
@@ -76,29 +76,42 @@ def normal(x, mu, sigma):
     return np.exp(-((x-mu)**2/(2.0*sigma**2)))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
-    acc_likelihood = 1
+    likelihood = 1
+
+    part_pos = np.array([particle.getX(), particle.getY()])
+
     for l_id, (m_dist, m_ang) in measurements.items():
-        # if observed l_id does not have known location - ignore ...
-        if not l_id in landmarks.keys():
-            print(f"alert:{l_id} seen and ignored")
-            continue  
+        # If observed landmark is not known, ignore it
+        if l_id not in landmarks.keys():
+            print(f"alert: {l_id} seen and ignored")
+            continue
 
-        part_pos = np.array([particle.getX(), particle.getY()])
-        land_pos = landmarks[l_id]
-
-        # the distance of particle from landmark
-        particle_dist = np.linalg.norm(part_pos - np.array(land_pos))
-        likelihood = normal(particle_dist - m_dist, 0, 10)
-        # angle from particle to landmark
-        particle_e =  np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
-        landmark_e = (land_pos - part_pos)/particle_dist
-        particle_theta = np.sign(np.dot(particle_e, landmark_e))*np.arccos(np.dot(particle_e, landmark_e))
         
-        likelihood *= normal(particle_theta - m_ang, 0, 1)
+        land_pos = np.array(landmarks[l_id])
 
-        # accumulate multiplicatively for every landmark
-        acc_likelihood *= likelihood
-    return acc_likelihood
+        # Distance from particle to landmark
+        particle_dist = np.linalg.norm(part_pos - land_pos)
+        likelihood *= normal(particle_dist - m_dist, 0, 10)
+
+        # Direction from particle to landmark (unit vector)
+        landmark_e = (land_pos - part_pos) / particle_dist
+
+        # Particle's heading as unit vector
+        particle_e = np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
+        ortho_particle_e = np.array([-np.sin(particle.getTheta()), np.cos(particle.getTheta())])  # Orthogonal vector
+
+        # Calculate the relative angle between particle's heading and the landmark
+        cos_theta = np.dot(landmark_e, particle_e)  # Cosine of the angle
+        particle_theta = np.arccos(np.clip(cos_theta, -1.0, 1.0))  # Ensure values stay within [-1, 1] for arccos
+
+        # Use the sign of the orthogonal dot product to determine the direction of the angle
+        sign = np.sign(np.dot(landmark_e, ortho_particle_e))
+        particle_theta *= sign
+
+        likelihood *= normal(particle_theta, m_ang, 0.5)
+
+
+    return likelihood
 
 def resample_particles(particles, num_particles):
     pmf = np.zeros(len(particles))
@@ -109,12 +122,12 @@ def resample_particles(particles, num_particles):
     for i in choices:
         new_arr.append(copy(particles[i]))
     return new_arr
-    
-    
+
+
 
 
 def jet(x):
-    """Colour map for drawing particles. This function determines the colour of 
+    """Colour map for drawing particles. This function determines the colour of
     a particle from its weight."""
     r = (x >= 3.0/8.0 and x < 5.0/8.0) * (4.0 * x - 3.0/2.0) + (x >= 5.0/8.0 and x < 7.0/8.0) + (x >= 7.0/8.0) * (-4.0 * x + 9.0/2.0)
     g = (x >= 1.0/8.0 and x < 3.0/8.0) * (4.0 * x - 1.0/2.0) + (x >= 3.0/8.0 and x < 5.0/8.0) + (x >= 5.0/8.0 and x < 7.0/8.0) * (-4.0 * x + 7.0/2.0)
@@ -146,7 +159,7 @@ def draw_world(est_pose, particles, world):
         y = ymax - (int(particle.getY() + offsetY))
         colour = jet(particle.getWeight() / max_weight)
         cv2.circle(world, (x,y), 2, colour, 2)
-        b = (int(particle.getX() + 15.0*np.cos(particle.getTheta()))+offsetX, 
+        b = (int(particle.getX() + 15.0*np.cos(particle.getTheta()))+offsetX,
                                      ymax - (int(particle.getY() + 15.0*np.sin(particle.getTheta()))+offsetY))
         cv2.line(world, (x,y), b, colour, 2)
 
@@ -158,7 +171,7 @@ def draw_world(est_pose, particles, world):
 
     # Draw estimated robot pose
     a = (int(est_pose.getX())+offsetX, ymax-(int(est_pose.getY())+offsetY))
-    b = (int(est_pose.getX() + 15.0*np.cos(est_pose.getTheta()))+offsetX, 
+    b = (int(est_pose.getX() + 15.0*np.cos(est_pose.getTheta()))+offsetX,
                                  ymax-(int(est_pose.getY() + 15.0*np.sin(est_pose.getTheta()))+offsetY))
     cv2.circle(world, a, 5, CMAGENTA, 2)
     cv2.line(world, a, b, CMAGENTA, 2)
@@ -168,7 +181,7 @@ def draw_world(est_pose, particles, world):
 def initialize_particles(num_particles):
     particles = []
     for i in range(num_particles):
-        # Random starting points. 
+        # Random starting points.
         p = particle.Particle(600.0*np.random.ranf() - 100.0, 600.0*np.random.ranf() - 250.0, np.mod(2.0*np.pi*np.random.ranf(), 2.0*np.pi), 1.0/num_particles)
         particles.append(p)
 
@@ -225,49 +238,49 @@ try:
         action = cv2.waitKey(10)
         if action == ord('q'): # Quit
             break
-    
+
         if not isRunningOnArlo():
             if action == ord('w'): # Forward
-                velocity += 4.0
+                velocity += 2.0
             elif action == ord('x'): # Backwards
-                velocity -= 4.0
+                velocity -= 2.0
             elif action == ord('s'): # Stop
                 velocity = 0.0
                 angular_velocity = 0.0
             elif action == ord('a'): # Left
-                angular_velocity += 0.2
+                angular_velocity += 0.1
             elif action == ord('d'): # Right
-                angular_velocity -= 0.2
+                angular_velocity -= 0.1
 
 
 
-        
+
         # Use motor controls to update particles
         # XXX: Make the robot drive
         # XXX: You do this
         for parti in particles:
             theta = parti.getTheta()
-            # unit vector pointing in the direction of the particle 
+            # unit vector pointing in the direction of the particle
             heading =  np.array([np.cos(theta), np.sin(theta)])
             # scale with velocity
             deltaXY = heading * velocity
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 10, 0.1)
+        particle.add_uncertainty(particles, 5, 0.5)
 
         # Fetch next frame
         colour = cam.get_next_frame()
-        
+
         # Detect objects
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
         if not isinstance(objectIDs, type(None)):
-            measurement = dict() 
+            measurement = dict()
             for i in range(len(objectIDs)):
                 if objectIDs[i] in measurement:
                       measurement[objectIDs[i]] += np.array([dists[i], angles[i]])/2
                       # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
-                else: 
+                else:
                     measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
 
 
@@ -275,7 +288,7 @@ try:
             for i, part in enumerate(particles):
                 part.setWeight(particle_likelihood(part, measurement))
             weights = np.array([part.getWeight() for part in particles], dtype=float)
-            
+
             # normalization step
             if sum(weights) != 0:
                 weights /= sum(weights)
@@ -293,18 +306,18 @@ try:
             cam.draw_aruco_objects(colour)
         else:
             # No observation - reset weights to uniform distribution
-            particle.add_uncertainty(particles, 10, 0.1)            
+            particle.add_uncertainty(particles, 10, 0.1)
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
-    
+
         est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
         est_position = np.array([est_pose.x, est_pose.y])
 
         distance = np.linalg.norm(est_position - goal)
         angle = np.arccos(np.dot((est_position / (sum(est_position))), goal / (sum(goal))))
 
-        print(f"ang:{angle}, dist: {distance}")         
+        # print(f"ang:{angle}, dist: {distance}")
         current_command = command.Command(arlo, distance, angle)
         current_command.update_command_state()
 
@@ -312,17 +325,17 @@ try:
         if showGUI:
             # Draw map
             draw_world(est_pose, particles, world)
-    
+
             # Show frame
             cv2.imshow(WIN_RF1, colour)
 
             # Show world
             cv2.imshow(WIN_World, world)
-    
-  
-finally: 
+
+
+finally:
     # Make sure to clean up even if an exception occurred
-    
+
     # Close all windows
     cv2.destroyAllWindows()
 
