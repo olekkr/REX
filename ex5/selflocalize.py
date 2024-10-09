@@ -270,7 +270,7 @@ try:
             rrt = RRT(
                 start=[est_pose.getX(), est_pose.getY()],
                 goal=goal,
-                robot_model=PointMassModel(-50, ),
+                robot_model=robot_model,
                 map=world,
             )
             path = rrt.planning(animation=False)
