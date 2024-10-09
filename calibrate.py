@@ -14,7 +14,7 @@ arlo = robot.Robot()
 
 
 # power=64 = sleep_s = 3.2 = 1 m = dist = 1
-def straight_move(dist=1, power=64, sleep_s=3.2):
+def straight_move(dist: float=1, power=64, sleep_s=3.2):
     print(f"moving {dist}m")
     print(arlo.go_diff(power, power, 1, 1))
     sleep(sleep_s * abs(dist))

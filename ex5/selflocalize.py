@@ -21,16 +21,26 @@ def isRunningOnArlo():
 
 
 if isRunningOnArlo():
-    sys.path.append("..")
+    import os
+    import sys
+
+    sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
-try:
-    import robot
-    import calibrate
-    onRobot = True
-except ImportError:
-    print("selflocalize.py: robot module not present - forcing not running on Arlo!")
-    onRobot = False
+if isRunningOnArlo():
+    try:
+        import robot
+        import calibrate
+        onRobot = True
+    except (ImportError, AttributeError):
+        onRobot = False
+        print("selflocalize.py: robot module not present - forcing not running on Arlo!")
+
+import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+import turtle_test
 
 
 
@@ -50,7 +60,7 @@ CBLACK = (0, 0, 0)
 landmarkIDs = [1, 4]
 landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
-    4: (300.0, 0.0)  # Coordinates for landmark 2
+    4: (100.0, 0.0)  # Coordinates for landmark 2
 }
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
@@ -236,7 +246,8 @@ try:
             elif action == ord('d'): # Right
                 angular_velocity -= 0.2
         else:
-            calibrate.straight_move()
+            calibrate.rotate_move(est_pose.getTheta()/(np.pi/2))
+            calibrate.straight_move(0.1)
         # for p in particles:
         #     vx, vy = calc_lengths_from_hypotenuse_and_angle(velocity, angular_velocity)
         #     particle.move_particle(p, vx, vy, angular_velocity)
@@ -272,11 +283,11 @@ try:
             # Compute particle weights
             # XXX: You do this
             # Add uncertainty line 4 of MCL algo
-            particle.add_uncertainty(particles, 5, 5)
+            particle.add_uncertainty(particles, 10, 0.1)
             for p in particles:
                 w = 1
                 for obj_id, (dM, angle) in id_to_dist_n_angles.items():
-                    w *= get_weight(p, dM, angle, dist_deviation=5, angle_deviation=5)
+                    w *= get_weight(p, dM, angle, dist_deviation=10, angle_deviation=0.1)
                 p.setWeight(w)
             # Resampling
             # XXX: You do this
