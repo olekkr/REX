@@ -5,11 +5,10 @@ from timeit import default_timer as timer
 
 import cv2
 import numpy as np
+import particle
 
 # own imports:
 # import scipy.stats as stats
-import numpy.stats as stats
-import particle
 from numpy import random
 
 import camera
@@ -61,7 +60,13 @@ landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
     2: (100.0, 0.0)  # Coordinates for landmark 2
 }
+goal = np.array([50.0, 0.])
+
+
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
+
+def normal(x, mu, sigma):
+    np.exp(-x**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
     acc_likelihood = 1
@@ -76,14 +81,13 @@ def particle_likelihood(particle, measurements):
 
         # the distance of particle from landmark
         particle_dist = np.linalg.norm(part_pos - np.array(land_pos))
-        likelihood = stats.norm.pdf(particle_dist - m_dist, 0, 10)
-        
+        likelihood = normal(particle_dist - m_dist, 0, 10)
         # angle from particle to landmark
         particle_e =  np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
         landmark_e = (land_pos - part_pos)/particle_dist
         particle_theta = np.sign(np.dot(particle_e, landmark_e))*np.arccos(np.dot(particle_e, landmark_e))
         
-        likelihood *= stats.norm.pdf(particle_theta - m_ang, 0, 1)
+        likelihood *= normal(particle_theta - m_ang, 0, 1)
 
         # accumulate multiplicatively for every landmark
         acc_likelihood *= likelihood
@@ -281,7 +285,15 @@ try:
 
     
         est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
-        
+        est_position = np.array([est_pose.x, est_pose.y])
+
+        distance = np.linalg.norm(est_position - goal)
+        angle = np.arccos(np.dot((est_position / (sum(est_position))), goal / (sum(goal))))
+
+        print(f"ang:{angle}, dist: {distance}")         
+        current_command = command.Command(arlo, distance, angle)
+        current_command.update_command_state()
+
 
         if showGUI:
             # Draw map
