@@ -6,6 +6,13 @@ import time
 from timeit import default_timer as timer
 import sys
 
+# own imports:
+import scipy.stats as stats
+from numpy import random
+from copy import copy
+
+# randomness:
+rng = random.default_rng()
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
@@ -46,15 +53,49 @@ CBLACK = (0, 0, 0)
 
 # Landmarks.
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
-landmarkIDs = [1, 4]
+landmarkIDs = [1, 2]
 landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
-    4: (300.0, 0.0)  # Coordinates for landmark 2
+    2: (100.0, 0.0)  # Coordinates for landmark 2
 }
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
+def particle_likelihood(particle, measurements):
+    acc_likelihood = 1
+    for l_id, (m_dist, m_ang) in measurements.items():
+        # if observed l_id does not have known location - ignore ...
+        if not l_id in landmarks.keys():
+            print(f"alert:{l_id} seen and ignored")
+            continue  
 
+        part_pos = np.array([particle.getX(), particle.getY()])
+        land_pos = landmarks[l_id]
 
+        # the distance of particle from landmark
+        particle_dist = np.linalg.norm(part_pos - np.array(land_pos))
+        likelihood = stats.norm.pdf(particle_dist - m_dist, 0, 10)
+        
+        # angle from particle to landmark
+        particle_e =  np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
+        landmark_e = (land_pos - part_pos)/particle_dist
+        particle_theta = np.sign(np.dot(particle_e, landmark_e))*np.arccos(np.dot(particle_e, landmark_e))
+        likelihood *= stats.norm.pdf(particle_theta - m_ang, 0, 1)
+
+        # accumulate multiplicatively for every landmark
+        acc_likelihood *= likelihood
+    return acc_likelihood
+
+def resample_particles(particles, num_particles):
+    pmf = np.empty(len(particles))
+    for i, p in enumerate(particles):
+        pmf[i] = p.getWeight()
+    choices = rng.choice(len(particles), num_particles, p=pmf)
+    new_arr = []
+    for i in choices:
+        new_arr.append(copy(particles[i]))
+    return new_arr
+    
+    
 
 
 def jet(x):
@@ -193,8 +234,7 @@ try:
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 0.1, 0.1)
-
+        particle.add_uncertainty(particles, 10, 0.1)
 
         # Fetch next frame
         colour = cam.get_next_frame()
@@ -202,16 +242,30 @@ try:
         # Detect objects
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
         if not isinstance(objectIDs, type(None)):
-            # List detected objects
+            measurement = dict() 
             for i in range(len(objectIDs)):
-                print("Object ID = ", objectIDs[i], ", Distance = ", dists[i], ", angle = ", angles[i])
-                # XXX: Do something for each detected object - remember, the same ID may appear several times
+                if objectIDs[i] in measurement:
+                      measurement[objectIDs[i]] += np.array([dists[i], angles[i]])/2
+                      # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
+                else: 
+                    measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
+
 
             # Compute particle weights
-            # XXX: You do this
+            weights = np.empty(len(particles))
+            for i, part in enumerate(particles):
+                weights[i] = particle_likelihood(part, measurement)
+            
+            # normalization step
+            weights /= sum(weights)
+            for part, w in zip(particles, weights):
+                part.setWeight(w)
+
+
 
             # Resampling
             # XXX: You do this
+            particles = resample_particles(particles, num_particles)
 
             # Draw detected objects
             cam.draw_aruco_objects(colour)

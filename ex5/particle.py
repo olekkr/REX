@@ -1,6 +1,8 @@
 import numpy as np
 import random_numbers as rn
 
+# own imports:
+from copy import copy
 
 class Particle(object):
     """Data structure for storing particle information (state and weight)"""
@@ -9,6 +11,9 @@ class Particle(object):
         self.y = y
         self.theta = np.mod(theta, 2.0*np.pi)
         self.weight = weight
+
+    def __copy__(self):
+        return type(self)(self.getX(), self.getY(), self.getTheta(), self.getWeight())
 
     def getX(self):
         return self.x
@@ -44,6 +49,8 @@ def estimate_pose(particles_list):
     sin_sum = 0.0
      
     for particle in particles_list:
+        w = particle.getWeight()
+
         x_sum += particle.getX()
         y_sum += particle.getY()
         cos_sum += np.cos(particle.getTheta())
