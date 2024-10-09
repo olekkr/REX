@@ -3,6 +3,7 @@ import sys
 import time
 from timeit import default_timer as timer
 
+import command
 import cv2
 import numpy as np
 import particle
@@ -63,7 +64,9 @@ landmarks = {
 }
 landmark_colors = [CRED, CGREEN]  # Colors used when drawing the landmarks
 
-goal = (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
+goal = np.array(
+    (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
+)
 
 
 def jet(x):
@@ -237,6 +240,7 @@ try:
         arlo = robot.Robot()
         robot_state = staterobot.StateRobot(2, arlo, particle.move_particle, particles)
         robot_model = PointMassModel([robot_state.robot_position])
+        try_goto_goal = False
     else:
         arlo = None
 
@@ -274,20 +278,32 @@ try:
                 angular_velocity -= 0.2
         else:
             rrt = RRT(
-                start=np.array([est_pose.getX(), est_pose.getY()]),
+                start=[est_pose.getX(), est_pose.getY()],
                 goal=goal,
                 robot_model=robot_model,
                 map=world,
             )
             path = rrt.planning(animation=False)
 
-            if path is not None:
-                path_from_start = path[::-1]
-                robot_state.setAngle(est_pose.getTheta())
-                robot_state.setPos((est_pose.getX(), est_pose.getY()))
-                robot_state.setCurrentPath(path_from_start)
-                while not robot_state.run_loop():
-                    pass
+            # Lasses:
+            # if path is not None:
+            #     path_from_start = path[::-1]
+            #     robot_state.setAngle(est_pose.getTheta())
+            #     robot_state.setPos((est_pose.getX(), est_pose.getY()))
+            #     robot_state.setCurrentPath(path_from_start)
+            #     while not robot_state.run_loop():
+            #         pass
+
+            if est_pose:
+                est_position = np.array([est_pose.getX(), est_pose.getY()])
+
+    
+                distance = np.linalg.norm(est_position - goal)
+                angle = np.dot((est_position / (sum(est_position))), goal / (sum(goal)))
+
+                print(f"ang:{angle}, dist: {distance}")            
+                current_command = command.Command(arlo, distance, angle)
+                current_command.update_command_state()
 
         for parti in particles:
             theta = parti.getTheta()
@@ -301,7 +317,6 @@ try:
         # Use motor controls to update particles
         # XXX: Make the robot drive
         # XXX: You do this
-        
 
         # Fetch next frame
         colour = cam.get_next_frame()

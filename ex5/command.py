@@ -29,9 +29,9 @@ ROTATIONAL_SPEED = get_rotate_p32_rad_s_velocity()
 FORWARD_SPEED = get_straight_p64_cm_s_velocity()
 
 
-class command:
+class Command:
     def __init__(self, robot, distance, angle):
-        self.robot = controlWrapper(robot, IS_ARLO)
+        self.robot = ControlWrapper(robot, IS_ARLO)
         self.distance = distance
         self.angle = angle
 
@@ -80,7 +80,7 @@ class command:
 
 
 # wraps robot for the purpose of interchangability with debug/Arlo
-class controlWrapper:
+class ControlWrapper:
     def __init__(self, robot, isArlo=False):
         self.robot = robot
         self.isArlo = isArlo
@@ -96,7 +96,7 @@ class controlWrapper:
 if __name__ == "__main__":
     # arlo = None
     arlo = robot.Robot()
-    c1 = command(arlo, 100, 3.1415 / 2)
+    c1 = Command(arlo, 100, 3.1415 / 2)
     while not c1.update_command_state():
         time.sleep(0.1)
         pass
