@@ -283,7 +283,7 @@ try:
             elif action == ord("d"):  # Right
                 angular_velocity -= 0.2
         else:
-            map_ = GridOccupancyMap(500, 500, 10)
+            map_ = GridOccupancyMap((0,0),(500, 500), 10)
             map_.grid = world
             rrt = RRT(
                 start=[est_pose.getX(), est_pose.getY()],
