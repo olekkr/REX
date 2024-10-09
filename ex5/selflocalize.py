@@ -1,15 +1,18 @@
-import cv2
-import particle
-import camera
-import numpy as np
-import time
-from timeit import default_timer as timer
 import sys
+import time
+from copy import copy
+from timeit import default_timer as timer
+
+import cv2
+import numpy as np
 
 # own imports:
-import scipy.stats as stats
+# import scipy.stats as stats
+import numpy.stats as stats
+import particle
 from numpy import random
-from copy import copy
+
+import camera
 
 # randomness:
 rng = random.default_rng()
@@ -79,6 +82,7 @@ def particle_likelihood(particle, measurements):
         particle_e =  np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
         landmark_e = (land_pos - part_pos)/particle_dist
         particle_theta = np.sign(np.dot(particle_e, landmark_e))*np.arccos(np.dot(particle_e, landmark_e))
+        
         likelihood *= stats.norm.pdf(particle_theta - m_ang, 0, 1)
 
         # accumulate multiplicatively for every landmark
@@ -271,11 +275,13 @@ try:
             cam.draw_aruco_objects(colour)
         else:
             # No observation - reset weights to uniform distribution
+            particle.add_uncertainty(particles, 10, 0.1)            
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
     
         est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
+        
 
         if showGUI:
             # Draw map
