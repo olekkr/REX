@@ -235,7 +235,13 @@ class RRT:
             return False
         for p in node.path:
             #print("checking", p)
-            if self.map.in_collision(np.array(p)).any():
+            in_collis = self.map.in_collision(np.array(p))
+            if len(in_collis) > 1:
+                in_collis_bool = in_collis.any()
+            else:
+                in_collis_bool = bool(in_collis)
+
+            if in_collis_bool:
                 return False
 
             # ADDED: To increase point size
