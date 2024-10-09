@@ -16,7 +16,7 @@ else:
 
 
 def get_straight_p64_cm_s_velocity():
-    time_1m = 3.2
+    time_1m = 2.5
     return 100 / time_1m
 
 
@@ -73,7 +73,7 @@ class command:
         else:
             self.rotation_speed = 0
             self.velocity = 0
-            self.robot.go_diff(0, 0, 1, 1,)
+            self.robot.go_diff(0, 0, 1, 1)
 
             return True
         # True means finished
@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # c2 = command(arlo, 1, -3.1415 / 2)
     # while not c2.update_command_state():
     #     pass
-    # 
+    #
     # c3 = command(arlo, 1, 3.1415)
     # while not c3.update_command_state():
     #     pass
