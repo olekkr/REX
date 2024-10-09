@@ -63,8 +63,8 @@ CBLACK = (0, 0, 0)
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
 landmarkIDs = [3,7]
 landmarks = {
-    1: (0.0, 0.0),  # Coordinates for landmark 1
-    2: (100.0, 0.0)  # Coordinates for landmark 2
+    3: (0.0, 0.0),  # Coordinates for landmark 1
+    7: (100.0, 0.0)  # Coordinates for landmark 2
 }
 goal = np.array([50.0, 0.])
 
