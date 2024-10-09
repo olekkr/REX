@@ -37,8 +37,11 @@ if isRunningOnArlo():
 
 
 try:
-    import robot
-    onRobot = True
+    if isRunningOnArlo():
+        import robot
+        onRobot = True
+    else:
+        onRobot = False
 except ImportError:
     print("selflocalize.py: robot module not present - forcing not running on Arlo!")
     onRobot = False
@@ -69,7 +72,7 @@ goal = np.array([50.0, 0.])
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
-    np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
+    return np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
     acc_likelihood = 1
@@ -195,6 +198,11 @@ try:
     angular_velocity = 0.0 # radians/sec
 
     # Initialize the robot (XXX: You do this)
+    if onRobot:
+        arlo = robot.Robot()
+        try_goto_goal = False
+    else:
+        arlo = None
 
     # Allocate space for world map
     world = np.zeros((500,500,3), dtype=np.uint8)
