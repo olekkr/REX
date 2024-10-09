@@ -271,9 +271,9 @@ try:
 
 
             # Compute particle weights
-            weights = np.empty(len(particles))
             for i, part in enumerate(particles):
-                weights[i] = particle_likelihood(part, measurement)
+                part.setWeight(particle_likelihood(part, measurement))
+            weights = np.array([part.getWeight() for part in particles])
             
             # normalization step
             if sum(weights) != 0:
