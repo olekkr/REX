@@ -100,7 +100,7 @@ def particle_likelihood(particle, measurements):
     return acc_likelihood
 
 def resample_particles(particles, num_particles):
-    pmf = np.empty(len(particles))
+    pmf = np.zeros(len(particles))
     for i, p in enumerate(particles):
         pmf[i] = p.getWeight()
     choices = rng.choice(len(particles), num_particles, p=pmf)
@@ -273,7 +273,7 @@ try:
             # Compute particle weights
             for i, part in enumerate(particles):
                 part.setWeight(particle_likelihood(part, measurement))
-            weights = np.array([part.getWeight() for part in particles])
+            weights = np.array([part.getWeight() ])
             
             # normalization step
             if sum(weights) != 0:
