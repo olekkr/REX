@@ -242,7 +242,7 @@ try:
     if onRobot:
         arlo = robot.Robot()
         robot_state = staterobot.StateRobot(2, arlo, particle.move_particle, particles)
-        robot_model = PointMassModel([robot_state.robot_position])
+        robot_model = PointMassModel([-0.1,0.1])
     else:
         arlo = None
 
