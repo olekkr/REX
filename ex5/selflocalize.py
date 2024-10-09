@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 from timeit import default_timer as timer
@@ -8,6 +9,11 @@ import particle
 
 import camera
 
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+from ex5 import staterobot
+from localplanning_rrt.robot_models import PointMassModel
+from localplanning_rrt.rrt import RRT
+
 # Flags
 showGUI = True  # Whether or not to open GUI windows
 onRobot = True  # Whether or not we are running on the Arlo robot
@@ -15,7 +21,7 @@ onRobot = True  # Whether or not we are running on the Arlo robot
 
 def isRunningOnArlo():
     """Return True if we are running on Arlo, otherwise False.
-      You can use this flag to switch the code from running on you laptop to Arlo - you need to do the programming here!
+    You can use this flag to switch the code from running on you laptop to Arlo - you need to do the programming here!
     """
     return onRobot
 
@@ -29,20 +35,13 @@ if isRunningOnArlo():
 
 if isRunningOnArlo():
     try:
-        import robot
         import calibrate
+        import robot
+
         onRobot = True
     except (ImportError, AttributeError):
         onRobot = False
         print("selflocalize.py: robot module not present - forcing not running on Arlo!")
-
-import os
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-import turtle_test
-
-
 
 
 # Some color constants in BGR format
@@ -60,22 +59,34 @@ CBLACK = (0, 0, 0)
 landmarkIDs = [1, 4]
 landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
-    4: (100.0, 0.0)  # Coordinates for landmark 2
+    4: (100.0, 0.0),  # Coordinates for landmark 2
 }
-landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
-
-
-
+goal = (50.0, 0.0)
+landmark_colors = [CRED, CGREEN]  # Colors used when drawing the landmarks
+# goal = (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
 
 
 def jet(x):
-    """Colour map for drawing particles. This function determines the colour of 
+    """Colour map for drawing particles. This function determines the colour of
     a particle from its weight."""
-    r = (x >= 3.0/8.0 and x < 5.0/8.0) * (4.0 * x - 3.0/2.0) + (x >= 5.0/8.0 and x < 7.0/8.0) + (x >= 7.0/8.0) * (-4.0 * x + 9.0/2.0)
-    g = (x >= 1.0/8.0 and x < 3.0/8.0) * (4.0 * x - 1.0/2.0) + (x >= 3.0/8.0 and x < 5.0/8.0) + (x >= 5.0/8.0 and x < 7.0/8.0) * (-4.0 * x + 7.0/2.0)
-    b = (x < 1.0/8.0) * (4.0 * x + 1.0/2.0) + (x >= 1.0/8.0 and x < 3.0/8.0) + (x >= 3.0/8.0 and x < 5.0/8.0) * (-4.0 * x + 5.0/2.0)
+    r = (
+        (x >= 3.0 / 8.0 and x < 5.0 / 8.0) * (4.0 * x - 3.0 / 2.0)
+        + (x >= 5.0 / 8.0 and x < 7.0 / 8.0)
+        + (x >= 7.0 / 8.0) * (-4.0 * x + 9.0 / 2.0)
+    )
+    g = (
+        (x >= 1.0 / 8.0 and x < 3.0 / 8.0) * (4.0 * x - 1.0 / 2.0)
+        + (x >= 3.0 / 8.0 and x < 5.0 / 8.0)
+        + (x >= 5.0 / 8.0 and x < 7.0 / 8.0) * (-4.0 * x + 7.0 / 2.0)
+    )
+    b = (
+        (x < 1.0 / 8.0) * (4.0 * x + 1.0 / 2.0)
+        + (x >= 1.0 / 8.0 and x < 3.0 / 8.0)
+        + (x >= 3.0 / 8.0 and x < 5.0 / 8.0) * (-4.0 * x + 5.0 / 2.0)
+    )
 
-    return (255.0*r, 255.0*g, 255.0*b)
+    return (255.0 * r, 255.0 * g, 255.0 * b)
+
 
 def draw_world(est_pose, particles, world):
     """Visualization.
@@ -88,7 +99,7 @@ def draw_world(est_pose, particles, world):
     # Constant needed for transforming from world coordinates to screen coordinates (flip the y-axis)
     ymax = world.shape[0]
 
-    world[:] = CWHITE # Clear background to white
+    world[:] = CWHITE  # Clear background to white
 
     # Find largest weight
     max_weight = 0
@@ -100,10 +111,12 @@ def draw_world(est_pose, particles, world):
         x = int(particle.getX() + offsetX)
         y = ymax - (int(particle.getY() + offsetY))
         colour = jet(particle.getWeight() / max_weight)
-        cv2.circle(world, (x,y), 2, colour, 2)
-        b = (int(particle.getX() + 15.0*np.cos(particle.getTheta()))+offsetX, 
-                                     ymax - (int(particle.getY() + 15.0*np.sin(particle.getTheta()))+offsetY))
-        cv2.line(world, (x,y), b, colour, 2)
+        cv2.circle(world, (x, y), 2, colour, 2)
+        b = (
+            int(particle.getX() + 15.0 * np.cos(particle.getTheta())) + offsetX,
+            ymax - (int(particle.getY() + 15.0 * np.sin(particle.getTheta())) + offsetY),
+        )
+        cv2.line(world, (x, y), b, colour, 2)
 
     # Draw landmarks
     for i in range(len(landmarkIDs)):
@@ -112,68 +125,81 @@ def draw_world(est_pose, particles, world):
         cv2.circle(world, lm, 5, landmark_colors[i], 2)
 
     # Draw estimated robot pose
-    a = (int(est_pose.getX())+offsetX, ymax-(int(est_pose.getY())+offsetY))
-    b = (int(est_pose.getX() + 15.0*np.cos(est_pose.getTheta()))+offsetX, 
-                                 ymax-(int(est_pose.getY() + 15.0*np.sin(est_pose.getTheta()))+offsetY))
+    a = (int(est_pose.getX()) + offsetX, ymax - (int(est_pose.getY()) + offsetY))
+    b = (
+        int(est_pose.getX() + 15.0 * np.cos(est_pose.getTheta())) + offsetX,
+        ymax - (int(est_pose.getY() + 15.0 * np.sin(est_pose.getTheta())) + offsetY),
+    )
     cv2.circle(world, a, 5, CMAGENTA, 2)
     cv2.line(world, a, b, CMAGENTA, 2)
-
 
 
 def initialize_particles(num_particles):
     particles = []
     for i in range(num_particles):
-        # Random starting points. 
-        p = particle.Particle(600.0*np.random.ranf() - 100.0, 600.0*np.random.ranf() - 250.0, np.mod(2.0*np.pi*np.random.ranf(), 2.0*np.pi), 1.0/num_particles)
+        # Random starting points.
+        p = particle.Particle(
+            600.0 * np.random.ranf() - 100.0,
+            600.0 * np.random.ranf() - 250.0,
+            np.mod(2.0 * np.pi * np.random.ranf(), 2.0 * np.pi),
+            1.0 / num_particles,
+        )
         particles.append(p)
 
     return particles
 
+
 def calc_lengths_from_hypotenuse_and_angle(hypotenuse, angle):
     """
     Calculate the lengths of the two sides of a right triangle given the hypotenuse and one angle.
-    
+
     This returns x distance and y distance.
     """
-    return (hypotenuse*np.cos(angle), hypotenuse*np.sin(angle))
+    return (hypotenuse * np.cos(angle), hypotenuse * np.sin(angle))
+
 
 def gauss_dist(particle, dM: float, angle: float, deviation: float = 1):
-
     lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
-    di = np.sqrt((lx - particle.getX())**2 + (ly - particle.getY())**2)
+    di = np.sqrt((lx - particle.getX()) ** 2 + (ly - particle.getY()) ** 2)
 
-    return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(
-        -(((dM-di)**2)/(2*deviation))
-    )
+    return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(-(((dM - di) ** 2) / (2 * deviation)))
+
 
 def gauss_angle(particle, dM: float, angle: float, deviation: float = 1):
-
     lx, ly = calc_lengths_from_hypotenuse_and_angle(dM, angle)
     theta = particle.getTheta()
     xi, yi = particle.getX(), particle.getY()
-    di = np.sqrt((lx - xi)**2 + (ly - yi)**2)
-    e_theta_i = np.array([np.cos(theta),np.sin(theta)])
-    e_hat_theta_i = np.array([-np.sin(theta),np.cos(theta)])
-    e_l_i = np.array([lx-xi, ly-yi]) / di
+    di = np.sqrt((lx - xi) ** 2 + (ly - yi) ** 2)
+    e_theta_i = np.array([np.cos(theta), np.sin(theta)])
+    e_hat_theta_i = np.array([-np.sin(theta), np.cos(theta)])
+    e_l_i = np.array([lx - xi, ly - yi]) / di
     phi_i = np.sign(np.dot(e_l_i, e_hat_theta_i)) * np.arccos(np.dot(e_l_i, e_theta_i))
     # print(f"{e_l_i=},{e_hat_theta_i=},{np.dot(e_l_i, e_hat_theta_i)=},{np.sign(np.dot(e_l_i, e_hat_theta_i))},{e_theta_i},{np.dot(e_l_i, e_theta_i)},{np.acos(np.dot(e_l_i, e_theta_i))}")
     # print(phi_i)
     return (1 / (np.sqrt(2 * np.pi) * (deviation))) * np.exp(
-        -(((angle-phi_i)**2)/(2*deviation))
+        -(((angle - phi_i) ** 2) / (2 * deviation))
     )
 
-def get_weight(particle, dM: float, angle: float, dist_deviation: float = 1, angle_deviation: float = 1):
+
+def get_weight(
+    particle, dM: float, angle: float, dist_deviation: float = 1, angle_deviation: float = 1
+):
     angle_gauss = gauss_angle(particle, dM, angle, angle_deviation)
     return gauss_dist(particle, dM, angle, dist_deviation) * angle_gauss
 
-def resample(particles, num_particles):
 
+def resample(particles, num_particles):
     sorted_particles = sorted(particles, key=lambda x: x.getWeight())
     weights = np.array([p.getWeight() for p in sorted_particles])
     if weights.sum() != 0:
         normalized_weights = weights / sum(weights)
-        
-        resampled_particles = [sorted_particles[resampled_idx] for resampled_idx in np.random.choice(np.arange(num_particles), num_particles, p=normalized_weights)]
+
+        resampled_particles = [
+            sorted_particles[resampled_idx]
+            for resampled_idx in np.random.choice(
+                np.arange(num_particles), num_particles, p=normalized_weights
+            )
+        ]
     else:
         resampled_particles = sorted_particles
 
@@ -182,7 +208,7 @@ def resample(particles, num_particles):
         sorted_particle.setY(resampled_particle.getY())
         sorted_particle.setTheta(resampled_particle.getTheta())
         sorted_particle.setWeight(resampled_particle.getWeight())
-    
+
 
 # Main program #
 try:
@@ -196,65 +222,73 @@ try:
         cv2.namedWindow(WIN_World)
         cv2.moveWindow(WIN_World, 500, 50)
 
-
     # Initialize particles
     num_particles = 1000
     particles = initialize_particles(num_particles)
 
-    est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
+    est_pose = particle.estimate_pose(particles)  # The estimate of the robots current pose
 
     # Driving parameters
-    velocity = 0.0 # cm/sec
-    angular_velocity = 0.0 # radians/sec
+    velocity = 0.0  # cm/sec
+    angular_velocity = 0.0  # radians/sec
+    current_angle = np.pi / 2
 
     if onRobot:
         arlo = robot.Robot()
+        robot_state = staterobot.StateRobot(2, arlo, particle.move_particle, particles)
+        robot_model = PointMassModel([robot_state.robot_position])
     else:
         arlo = None
 
     # Allocate space for world map
-    world = np.zeros((500,500,3), dtype=np.uint8)
+    world = np.zeros((500, 500, 3), dtype=np.uint8)
 
     # Draw map
     draw_world(est_pose, particles, world)
 
     print("Opening and initializing camera")
     if isRunningOnArlo():
-        #cam = camera.Camera(0, robottype='arlo', useCaptureThread=True)
-        cam = camera.Camera(0, robottype='arlo', useCaptureThread=False)
+        # cam = camera.Camera(0, robottype='arlo', useCaptureThread=True)
+        cam = camera.Camera(0, robottype="arlo", useCaptureThread=False)
     else:
-        #cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=True)
-        cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=False)
+        # cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=True)
+        cam = camera.Camera(0, robottype="macbookpro", useCaptureThread=False)
 
     while True:
-
         # Move the robot according to user input (only for testing)
         action = cv2.waitKey(10)
-        if action == ord('q'): # Quit
+        if action == ord("q"):  # Quit
             break
-    
+
         if not isRunningOnArlo():
-            if action == ord('w'): # Forward
+            if action == ord("w"):  # Forward
                 velocity += 4.0
-            elif action == ord('x'): # Backwards
+            elif action == ord("x"):  # Backwards
                 velocity -= 4.0
-            elif action == ord('s'): # Stop
+            elif action == ord("s"):  # Stop
                 velocity = 0.0
                 angular_velocity = 0.0
-            elif action == ord('a'): # Left
+            elif action == ord("a"):  # Left
                 angular_velocity += 0.2
-            elif action == ord('d'): # Right
+            elif action == ord("d"):  # Right
                 angular_velocity -= 0.2
         else:
-            calibrate.rotate_move(est_pose.getTheta()/(np.pi/2))
-            calibrate.straight_move(0.1)
-        # for p in particles:
-        #     vx, vy = calc_lengths_from_hypotenuse_and_angle(velocity, angular_velocity)
-        #     particle.move_particle(p, vx, vy, angular_velocity)
+            rrt = RRT(
+                start=np.array([est_pose.getX(), est_pose.getY()]),
+                goal=goal,
+                robot_model=robot_model,
+                map=world,
+            )
+            path = rrt.planning(animation=False)
+
+            if path is not None:
+                path_from_start = path[::-1]
+                robot_state.setCurrentPath(path_from_start)
+
         for parti in particles:
             theta = parti.getTheta()
-            # unit vector pointing in the direction of the particle 
-            heading =  np.array([np.cos(theta), np.sin(theta)])
+            # unit vector pointing in the direction of the particle
+            heading = np.array([np.cos(theta), np.sin(theta)])
             # scale with velocity
             deltaXY = heading * velocity
             # do the update
@@ -263,10 +297,9 @@ try:
         # XXX: Make the robot drive
         # XXX: You do this
 
-
         # Fetch next frame
         colour = cam.get_next_frame()
-        
+
         # Detect objects
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
         if not isinstance(objectIDs, type(None)):
@@ -292,35 +325,32 @@ try:
             # Resampling
             # XXX: You do this
             resample(particles, num_particles)
-            
 
             # Draw detected objects
             cam.draw_aruco_objects(colour)
         else:
             # No observation - reset weights to uniform distribution
             for p in particles:
-                p.setWeight(1.0/num_particles)
+                p.setWeight(1.0 / num_particles)
 
-    
-        est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
+        est_pose = particle.estimate_pose(particles)  # The estimate of the robots current pose
 
         if showGUI:
             # Draw map
             draw_world(est_pose, particles, world)
-    
+
             # Show frame
             cv2.imshow(WIN_RF1, colour)
 
             # Show world
             cv2.imshow(WIN_World, world)
-    
-  
-finally: 
+
+
+finally:
     # Make sure to clean up even if an exception occurred
-    
+
     # Close all windows
     cv2.destroyAllWindows()
 
     # Clean-up capture thread
     cam.terminateCaptureThread()
-

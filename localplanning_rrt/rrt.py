@@ -137,6 +137,7 @@ class RRT:
 
         return points
     
+    # There might be a bug if we use n > 0 lol 
     def increase_point_density(self, node, n=0.0):
         left = np.array([node[0] - n, node[1]])
         right = np.array([node[0] + n, node[1]])

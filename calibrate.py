@@ -1,6 +1,8 @@
 import sys
 from time import sleep
 
+import numpy as np
+
 import calculations
 import robot
 from constants import Constants
@@ -14,10 +16,34 @@ arlo = robot.Robot()
 
 
 # power=64 = sleep_s = 3.2 = 1 m = dist = 1
-def straight_move(dist: float=1, power=64, sleep_s=3.2):
+def get_straight_p64_cm_s_velocity():
+    sleep_1 = 3.2
+    return 100 / sleep_1
+
+
+def straight_p64_move(time_s: float):
+    print(f"moving {time_s} s")
+    print(arlo.go_diff(64, 64, 1, 1))
+    sleep(time_s)
+    print(arlo.stop())
+
+
+def straight_move(dist: float = 1, power=64, sleep_s=3.2):
     print(f"moving {dist}m")
     print(arlo.go_diff(power, power, 1, 1))
     sleep(sleep_s * abs(dist))
+    print(arlo.stop())
+
+
+def get_rotate_p32_rad_s_velocity():
+    sleep_360 = 7.3
+    return np.deg2rad(360 / sleep_360)
+
+
+def rotate_p32(time_s, mdir=(1, 0)):
+    power = 32
+    print(arlo.go_diff(power, power, *mdir))
+    sleep(time_s)
     print(arlo.stop())
 
 
