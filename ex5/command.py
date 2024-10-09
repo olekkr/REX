@@ -50,7 +50,7 @@ class command:
             if self.angle > 0:
                 self.robot.go_diff(32, 32, 1, 0)
             else:
-                self.robot.go_diff(32, 32, 0, 1, )
+                self.robot.go_diff(32, 32, 0, 1)
 
         # has not started yet
         if self.startTime is None:
