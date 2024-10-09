@@ -52,7 +52,7 @@ def rotate_p32(time_s, mdir=(1, 0)):
 def rotate_move_basic(power=32, sleep_s=7.3, mdir=(1, 0)):
 
     print(arlo.go_diff(power, power, *mdir))
-    sleep(sleep_s * abs(frac))
+    sleep(sleep_s )
 
     print(arlo.stop())
 
