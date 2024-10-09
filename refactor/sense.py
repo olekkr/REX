@@ -15,7 +15,23 @@ from constants import Constants
 
 if Constants.Robot.INCLUDE is False:
     straight_move = lambda dist: None
-    rotate_move = lambda frac: None
+    def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
+        sleep_s = sleep_360 / 4
+        
+        if frac == 0:
+            return
+        if frac < 0:
+            mdir = mdir[1], mdir[0]
+        if frac > 4 or frac <= -4:
+            frac %= 4
+        if frac > 2:
+            frac -= 2
+            frac = -frac
+        elif frac < -2:
+            frac += 2
+            frac = -frac
+        print(f"rotating {((sleep_s * frac)/sleep_360)*360}")
+
 else:
     from calibrate import rotate_move, straight_move
 from localplanning_rrt import grid_occ, robot_models
@@ -242,11 +258,12 @@ if __name__ == "__main__":
                     plt.show(block=False)
 
                     for angle, dist in angles_and_dist:
-                        input(f"rotate {angle}")
-                        rotate_move(frac=angle / 90)
+                        # input(f"rotate {angle}")
+                        print(f"rotate {angle}")
+                        actual_angle = rotate_move(frac=angle / 90)
                         print(f"move {dist}")
                         straight_move(dist)
-                        move_turtle(angle, dist)
-                        time.sleep(1)
-
+                        move_turtle(actual_angle, dist)
+                        # time.sleep(1)
+                    input("...")
                     exit()

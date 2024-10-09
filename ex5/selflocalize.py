@@ -21,11 +21,12 @@ def isRunningOnArlo():
 
 
 if isRunningOnArlo():
-    sys.path.append("../robot.py")
+    sys.path.append("..")
 
 
 try:
     import robot
+    import calibrate
     onRobot = True
 except ImportError:
     print("selflocalize.py: robot module not present - forcing not running on Arlo!")
@@ -157,7 +158,6 @@ def get_weight(particle, dM: float, angle: float, dist_deviation: float = 1, ang
 
 def resample(particles, num_particles):
 
-    particle.add_uncertainty(particles, 0.01, 0.01)
     sorted_particles = sorted(particles, key=lambda x: x.getWeight())
     weights = np.array([p.getWeight() for p in sorted_particles])
     if weights.sum() != 0:
@@ -235,10 +235,19 @@ try:
                 angular_velocity += 0.2
             elif action == ord('d'): # Right
                 angular_velocity -= 0.2
-
-
-
-        
+        else:
+            calibrate.straight_move()
+        # for p in particles:
+        #     vx, vy = calc_lengths_from_hypotenuse_and_angle(velocity, angular_velocity)
+        #     particle.move_particle(p, vx, vy, angular_velocity)
+        for parti in particles:
+            theta = parti.getTheta()
+            # unit vector pointing in the direction of the particle 
+            heading =  np.array([np.cos(theta), np.sin(theta)])
+            # scale with velocity
+            deltaXY = heading * velocity
+            # do the update
+            particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity)
         # Use motor controls to update particles
         # XXX: Make the robot drive
         # XXX: You do this
@@ -265,10 +274,11 @@ try:
             for p in particles:
                 w = 1
                 for obj_id, (dM, angle) in id_to_dist_n_angles.items():
-                    w *= get_weight(p, dM, angle, dist_deviation=0.8, angle_deviation=0.9)
+                    w *= get_weight(p, dM, angle, dist_deviation=0.5, angle_deviation=0.6)
                 p.setWeight(w)
             # Resampling
             # XXX: You do this
+            resample(particles, num_particles)
             
 
             # Draw detected objects
@@ -278,7 +288,6 @@ try:
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
-        resample(particles, num_particles)
     
         est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
 
