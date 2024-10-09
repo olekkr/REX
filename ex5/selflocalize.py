@@ -9,6 +9,8 @@ import cv2
 import numpy as np
 import particle
 
+import scipy
+
 # own imports:
 # import scipy.stats as stats
 from numpy import random
@@ -72,7 +74,8 @@ goal = np.array([50.0, 0.])
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
-    return np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
+    return scipy.stats.norm(x,mu,sigma)
+    # return np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
     acc_likelihood = 1
