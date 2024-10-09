@@ -49,6 +49,14 @@ def rotate_p32(time_s, mdir=(1, 0)):
 
 # power=32 = sleep_s = 7.3 = 360 deg = frac = 4
 # power=64 = sleep_s = 3.2 = 360 deg = frac = 4
+def rotate_move_basic(power=32, sleep_s=7.3, mdir=(1, 0)):
+
+    print(arlo.go_diff(power, power, *mdir))
+    sleep(sleep_s * abs(frac))
+
+    print(arlo.stop())
+
+
 def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
     sleep_s = sleep_360 / 4
     if frac == 0:
@@ -84,7 +92,7 @@ if __name__ == "__main__":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
             angle = float(input(f"time: "))
-            rotate_move(frac=1, power=power, sleep_s=angle)
+            rotate_move_basic(power=power, sleep_s=angle)
     elif mode == "2":
         for _ in range(10):
             time_sleep = float(input("time sleep: "))
