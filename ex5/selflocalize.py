@@ -21,7 +21,7 @@ from localplanning_rrt.rrt import RRT
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
-onRobot = False  # Whether or not we are running on the Arlo robot
+onRobot = True  # Whether or not we are running on the Arlo robot
 
 
 def isRunningOnArlo():
