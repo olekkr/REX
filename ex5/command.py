@@ -39,7 +39,6 @@ class command:
 
         self.rotationTime = self.angle / ROTATIONAL_SPEED
         self.forwardTime = self.distance / FORWARD_SPEED
-        print("NOT implemented")
 
     # checks and updates controls on robot based on timestep
     # returns true if command has finished execution ... false if it has not.
@@ -51,7 +50,6 @@ class command:
                 self.robot.diff(1, 0, 32, 32)
             else:
                 self.robot.diff(0, 1, 32, 32)
-
         # has not started yet
         if self.startTime is None:
             self.startTime = time.time()
@@ -96,15 +94,17 @@ class controlWrapper:
 
 # testing code
 if __name__ == "__main__":
+    # arlo = None
     arlo = robot.Robot()
-    c1 = command(arlo, 1, 3.1415 / 2)
+    c1 = command(arlo, 100, 3.1415 / 2)
     while not c1.update_command_state():
+        time.sleep(0.1)
         pass
 
-    c2 = command(arlo, 1, -3.1415 / 2)
-    while not c2.update_command_state():
-        pass
-    
-    c3 = command(arlo, 1, 3.1415)
-    while not c3.update_command_state():
-        pass
+    # c2 = command(arlo, 1, -3.1415 / 2)
+    # while not c2.update_command_state():
+    #     pass
+    # 
+    # c3 = command(arlo, 1, 3.1415)
+    # while not c3.update_command_state():
+    #     pass
