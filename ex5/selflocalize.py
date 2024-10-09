@@ -271,10 +271,12 @@ try:
 
             # Compute particle weights
             # XXX: You do this
+            # Add uncertainty line 4 of MCL algo
+            particle.add_uncertainty(particles, 5, 5)
             for p in particles:
                 w = 1
                 for obj_id, (dM, angle) in id_to_dist_n_angles.items():
-                    w *= get_weight(p, dM, angle, dist_deviation=0.5, angle_deviation=0.6)
+                    w *= get_weight(p, dM, angle, dist_deviation=5, angle_deviation=5)
                 p.setWeight(w)
             # Resampling
             # XXX: You do this
