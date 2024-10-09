@@ -42,7 +42,8 @@ class Command:
 
     # checks and updates controls on robot based on timestep
     # returns true if command has finished execution ... false if it has not.
-    def update_command_state(self):
+    def update_command_state(self, deadmove=False):
+        deadpower = 1 if deadmove is False else 0
         def rotation_command():
             self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
