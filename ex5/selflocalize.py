@@ -267,15 +267,7 @@ try:
             break
 
         if not isRunningOnArlo():
-            map_ = GridOccupancyMap(500, 500, 10)
-            map_.grid = world
-            rrt = RRT(
-                start=[est_pose.getX(), est_pose.getY()],
-                goal=goal,
-                robot_model=robot_model,
-                map=map_,
-            )
-            path = rrt.planning(animation=False)
+            
 
             print("pathmotherfucker", path)
 
@@ -291,11 +283,13 @@ try:
             elif action == ord("d"):  # Right
                 angular_velocity -= 0.2
         else:
+            map_ = GridOccupancyMap(500, 500, 10)
+            map_.grid = world
             rrt = RRT(
                 start=[est_pose.getX(), est_pose.getY()],
                 goal=goal,
                 robot_model=robot_model,
-                map=world,
+                map=map_,
             )
             path = rrt.planning(animation=False)
 
