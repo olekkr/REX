@@ -276,8 +276,8 @@ try:
             weights = np.array([part.getWeight() for part in particles])
             
             # normalization step
-            if sum(weights) != 0:
-                weights /= sum(weights)
+            # if sum(weights) != 0:
+            #     weights /= sum(weights)
             for part, w in zip(particles, weights):
                 part.setWeight(w)
 
