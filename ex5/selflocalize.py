@@ -278,8 +278,8 @@ try:
             # normalization step
             # if sum(weights) != 0:
             #     weights /= sum(weights)
-            for part, w in zip(particles, weights):
-                part.setWeight(w)
+            # for part, w in zip(particles, weights):
+            #     part.setWeight(w)
 
 
 
