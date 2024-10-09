@@ -16,6 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from ex5 import staterobot
 from localplanning_rrt.robot_models import PointMassModel
 from localplanning_rrt.rrt import RRT
+from localplanning_rrt.grid_occ import GridOccupancyMap
 
 
 
@@ -266,12 +267,13 @@ try:
             break
 
         if not isRunningOnArlo():
-            
+            map_ = GridOccupancyMap(500, 500, 10)
+            map_.grid = world
             rrt = RRT(
                 start=[est_pose.getX(), est_pose.getY()],
                 goal=goal,
                 robot_model=robot_model,
-                map=world,
+                map=map_,
             )
             path = rrt.planning(animation=False)
 
