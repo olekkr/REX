@@ -63,6 +63,9 @@ class Command:
             rotation_command()
             return False
         elif time.time() - self.startTime < self.rotationTime + self.graceTime:
+            print("grace")
+            self.rotation_speed = 0
+            self.velocity = 0
             self.robot.go_diff(0, 0, 1, 1)
             return False
         # has not finished forward
