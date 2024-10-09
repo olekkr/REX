@@ -236,7 +236,9 @@ class RRT:
         for p in node.path:
             #print("checking", p)
             in_collis = self.map.in_collision(np.array(p))
-            if len(in_collis) > 1:
+            if not hasattr(in_collis, "__len__"):
+                in_collis_bool = bool(in_collis)
+            elif len(in_collis) > 1:
                 in_collis_bool = in_collis.any()
             else:
                 in_collis_bool = bool(in_collis)
