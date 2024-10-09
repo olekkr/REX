@@ -9,7 +9,6 @@ import cv2
 import numpy as np
 import particle
 
-import scipy
 
 # own imports:
 # import scipy.stats as stats
@@ -63,19 +62,18 @@ CBLACK = (0, 0, 0)
 
 # Landmarks.
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
-landmarkIDs = [3,7]
 landmarks = {
-    3: (0.0, 0.0),  # Coordinates for landmark 1
+    4: (0.0, 0.0),  # Coordinates for landmark 1
     7: (100.0, 0.0)  # Coordinates for landmark 2
 }
+landmarkIDs = list(landmarks)
 goal = np.array([50.0, 0.])
 
 
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
-    return scipy.stats.norm(x,mu,sigma)
-    # return np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
+    return np.exp(-((x-mu)**2/(2.0*sigma**2)))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
     acc_likelihood = 1
@@ -276,13 +274,14 @@ try:
             # Compute particle weights
             for i, part in enumerate(particles):
                 part.setWeight(particle_likelihood(part, measurement))
-            weights = np.array([part.getWeight() for part in particles])
+            weights = np.array([part.getWeight() for part in particles], dtype=float)
             
             # normalization step
-            # if sum(weights) != 0:
-            #     weights /= sum(weights)
-            # for part, w in zip(particles, weights):
-            #     part.setWeight(w)
+            if sum(weights) != 0:
+                weights /= sum(weights)
+            for part, w in zip(particles, weights):
+                part.setWeight(w)
+
 
 
 
