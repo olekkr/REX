@@ -5,7 +5,6 @@ from copy import copy
 from timeit import default_timer as timer
 
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-import command
 import cv2
 import numpy as np
 import particle
@@ -15,6 +14,7 @@ import particle
 from numpy import random
 
 import camera
+from ex5 import command
 
 # randomness:
 rng = random.default_rng()
