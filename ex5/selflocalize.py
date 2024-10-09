@@ -343,7 +343,7 @@ try:
                 p.setWeight(w)
             # Resampling
             # XXX: You do this
-            resample(particles, num_particles)
+            #resample(particles, num_particles)
 
             # Draw detected objects
             cam.draw_aruco_objects(colour)
