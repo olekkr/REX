@@ -9,14 +9,19 @@ import particle
 
 import camera
 
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+
+
 from ex5 import staterobot
 from localplanning_rrt.robot_models import PointMassModel
 from localplanning_rrt.rrt import RRT
 
+
+
 # Flags
 showGUI = True  # Whether or not to open GUI windows
-onRobot = True  # Whether or not we are running on the Arlo robot
+onRobot = False  # Whether or not we are running on the Arlo robot
 
 
 def isRunningOnArlo():
@@ -35,7 +40,7 @@ if isRunningOnArlo():
 
 if isRunningOnArlo():
     try:
-        import calibrate
+        #import calibrate
         import robot
 
         onRobot = True
@@ -261,6 +266,17 @@ try:
             break
 
         if not isRunningOnArlo():
+            
+            rrt = RRT(
+                start=[est_pose.getX(), est_pose.getY()],
+                goal=goal,
+                robot_model=PointMassModel(-50, ),
+                map=world,
+            )
+            path = rrt.planning(animation=False)
+
+            print("pathmotherfucker", path)
+
             if action == ord("w"):  # Forward
                 velocity += 4.0
             elif action == ord("x"):  # Backwards
@@ -274,13 +290,14 @@ try:
                 angular_velocity -= 0.2
         else:
             rrt = RRT(
-                start=np.array([est_pose.getX(), est_pose.getY()]),
+                start=[est_pose.getX(), est_pose.getY()],
                 goal=goal,
                 robot_model=robot_model,
                 map=world,
             )
             path = rrt.planning(animation=False)
 
+            print("pathmotherfucker", path)
             if path is not None:
                 path_from_start = path[::-1]
                 robot_state.setAngle(est_pose.getTheta())
