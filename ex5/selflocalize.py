@@ -1,8 +1,11 @@
+import os
 import sys
 import time
 from copy import copy
 from timeit import default_timer as timer
 
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+import command
 import cv2
 import numpy as np
 import particle
@@ -66,7 +69,7 @@ goal = np.array([50.0, 0.])
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
-    np.exp(-x**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
+    np.exp((mu-x)**2/(2.0*sigma**2))/np.sqrt(2*np.pi*sigma**2)
 
 def particle_likelihood(particle, measurements):
     acc_likelihood = 1
