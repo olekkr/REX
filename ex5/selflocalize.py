@@ -59,11 +59,11 @@ CBLACK = (0, 0, 0)
 landmarkIDs = [1, 4]
 landmarks = {
     1: (0.0, 0.0),  # Coordinates for landmark 1
-    4: (100.0, 0.0),  # Coordinates for landmark 2
+    4: (200.0, 0.0),  # Coordinates for landmark 2
 }
-goal = (50.0, 0.0)
 landmark_colors = [CRED, CGREEN]  # Colors used when drawing the landmarks
-# goal = (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
+
+goal = (sum([x for x, y in landmarks.values()]) / 2, sum([y for x, y in landmarks.values()]) / 2)
 
 
 def jet(x):
@@ -283,7 +283,11 @@ try:
 
             if path is not None:
                 path_from_start = path[::-1]
+                robot_state.setAngle(est_pose.getTheta())
+                robot_state.setPos((est_pose.getX(), est_pose.getY()))
                 robot_state.setCurrentPath(path_from_start)
+                while not robot_state.run_loop():
+                    pass
 
         for parti in particles:
             theta = parti.getTheta()
@@ -293,9 +297,11 @@ try:
             deltaXY = heading * velocity
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity)
+
         # Use motor controls to update particles
         # XXX: Make the robot drive
         # XXX: You do this
+        
 
         # Fetch next frame
         colour = cam.get_next_frame()

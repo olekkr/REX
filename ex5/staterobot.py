@@ -61,6 +61,11 @@ class StateRobot:
 
     def run_loop(self):
         self.moveParticles()
+
+        if self.move_stop_time is None:
+            self.current_instruction = self.instructions[self.current_path_idx]
+        else:
+            self.ro
         if self.move_stop_time and time() >= self.move_stop_time:
             self.stop()
             self.current_path_idx += 1
@@ -69,7 +74,11 @@ class StateRobot:
                 or self.current_path_idx >= self.amnt_instruction_run
             ):
                 print("End of path")
+                return True
             self.current_instruction = self.instructions[self.current_path_idx]
+        if not self.current_path:
+            return True
+        return False
 
     @staticmethod
     def get_straight_p64_cm_s_velocity():

@@ -3,14 +3,12 @@ import time
 
 import numpy as np
 
-import robot
-
 if "PICAM" in os.environ:
-    PICAM = True
-else:
-    PICAM = False
+    import robot
 
-IS_ARLO = True
+    IS_ARLO = True
+else:
+    IS_ARLO = False
 
 
 def get_straight_p64_cm_s_velocity():
@@ -49,7 +47,7 @@ class command:
                 self.robot.diff(1, 0, 32, 32)
             else:
                 self.robot.diff(0, 1, 32, 32)
-        
+
         # has not started yet
         if self.startTime is None:
             self.startTime = time.time()
@@ -76,7 +74,6 @@ class command:
 
             return True
         # True means finished
-    
 
 
 # wraps robot for the purpose of interchangability with debug/Arlo
@@ -91,3 +88,19 @@ class controlWrapper:
             self.robot.diff(l, r, L, R)
         else:
             print(f"executing command diff({l, r, L, R}).")
+
+
+# testing code
+if __name__ == "__main__":
+    arlo = robot.Robot()
+    c1 = command(arlo, 1, 3.1415 / 2)
+    while not c1.update_command_state():
+        pass
+
+    c2 = command(arlo, 1, -3.1415 / 2)
+    while not c2.update_command_state():
+        pass
+    
+    c3 = command(arlo, 1, 3.1415)
+    while not c3.update_command_state():
+        pass
