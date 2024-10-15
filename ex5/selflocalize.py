@@ -15,7 +15,7 @@ import particle
 from numpy import random
 
 import camera
-from ex5 import command
+from command import Command
 
 # randomness:
 rng = random.default_rng()
@@ -63,8 +63,8 @@ CBLACK = (0, 0, 0)
 # Landmarks.
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
 landmarks = {
-    1: (0.0, 0.0),  # Coordinates for landmark 1
-    2: (100.0, 0.0)  # Coordinates for landmark 2
+    2: (0.0, 0.0),  # Coordinates for landmark 1
+    3: (100.0, 0.0)  # Coordinates for landmark 2
 }
 landmarkIDs = list(landmarks)
 goal = np.array([50.0, 0.])
@@ -74,6 +74,24 @@ landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
     return np.exp(-((x-mu)**2/(2.0*sigma**2)))/np.sqrt(2*np.pi*sigma**2)
+
+def polar_diff(src_x, src_theta, target_x):
+
+    # Distance from particle to landmark
+    particle_dist = np.linalg.norm(src_x - target_x)
+
+    # Direction from particle to landmark (unit vector)
+    landmark_e = (target_x - src_x) / particle_dist
+
+    # Particle's heading as unit vector
+    particle_e = np.array([np.cos(src_theta), np.sin(src_theta)])
+    ortho_particle_e = np.array([-np.sin(src_theta), np.cos(src_theta)])  # Orthogonal vector
+
+    # Calculate the relative angle between particle's heading and the landmark
+    particle_theta = (np.sign(np.dot(landmark_e, ortho_particle_e)) *
+        np.arccos(np.dot(landmark_e, particle_e)) )
+
+    return particle_dist, particle_theta
 
 def particle_likelihood(particle, measurements):
     likelihood = 1
@@ -89,26 +107,9 @@ def particle_likelihood(particle, measurements):
         
         land_pos = np.array(landmarks[l_id])
 
-        # Distance from particle to landmark
-        particle_dist = np.linalg.norm(part_pos - land_pos)
-        likelihood *= normal(particle_dist - m_dist, 0, 10)
-
-        # Direction from particle to landmark (unit vector)
-        landmark_e = (land_pos - part_pos) / particle_dist
-
-        # Particle's heading as unit vector
-        particle_e = np.array([np.cos(particle.getTheta()), np.sin(particle.getTheta())])
-        ortho_particle_e = np.array([-np.sin(particle.getTheta()), np.cos(particle.getTheta())])  # Orthogonal vector
-
-        # Calculate the relative angle between particle's heading and the landmark
-        cos_theta = np.dot(landmark_e, particle_e)  # Cosine of the angle
-        particle_theta = np.arccos(np.clip(cos_theta, -1.0, 1.0))  # Ensure values stay within [-1, 1] for arccos
-
-        # Use the sign of the orthogonal dot product to determine the direction of the angle
-        sign = np.sign(np.dot(landmark_e, ortho_particle_e))
-        particle_theta *= sign
-
-        likelihood *= normal(particle_theta, m_ang, 0.5)
+        dist, theta = polar_diff(part_pos, particle.getTheta(), land_pos)
+        likelihood *= normal(theta - m_ang, 0 , 0.5)
+        likelihood *= normal(dist - m_dist, 0, 10)
 
 
     return likelihood
@@ -117,6 +118,7 @@ def resample_particles(particles, num_particles):
     pmf = np.zeros(len(particles))
     for i, p in enumerate(particles):
         pmf[i] = p.getWeight()
+    # choice as indexes:
     choices = rng.choice(len(particles), num_particles, p=pmf)
     new_arr = []
     for i in choices:
@@ -176,7 +178,10 @@ def draw_world(est_pose, particles, world):
     cv2.circle(world, a, 5, CMAGENTA, 2)
     cv2.line(world, a, b, CMAGENTA, 2)
 
-
+def do_direct_path(source_pos, source_theta, goal_pos):
+    distance, theta = polar_diff( source_pos, source_theta, goal_pos)
+    return Command(arlo, distance, theta)
+    
 
 def initialize_particles(num_particles):
     particles = []
@@ -267,7 +272,7 @@ try:
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 5, 0.5)
+        particle.add_uncertainty(particles, 2, 0.25)
 
         # Fetch next frame
         colour = cam.get_next_frame()
@@ -278,7 +283,8 @@ try:
             measurement = dict()
             for i in range(len(objectIDs)):
                 if objectIDs[i] in measurement:
-                      measurement[objectIDs[i]] += np.array([dists[i], angles[i]])/2
+                      measurement[objectIDs[i]] += np.array([dists[i], angles[i]])
+                      measurement[objectIDs[i]] /= 2
                       # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
                 else:
                     measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
@@ -295,9 +301,6 @@ try:
             for part, w in zip(particles, weights):
                 part.setWeight(w)
 
-
-
-
             # Resampling
             # XXX: You do this
             particles = resample_particles(particles, num_particles)
@@ -310,17 +313,17 @@ try:
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
+        est_pose = particle.estimate_pose(particles) 
+        
+    
 
-        est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
-        est_position = np.array([est_pose.x, est_pose.y])
-
-        distance = np.linalg.norm(est_position - goal)
-        angle = np.arccos(np.dot((est_position / (sum(est_position))), goal / (sum(goal))))
-
-        # print(f"ang:{angle}, dist: {distance}")
-        current_command = command.Command(arlo, distance, angle)
-        current_command.update_command_state()
-
+        # we could do something more elaborate if we want to:
+        command = do_direct_path(
+            np.array([est_pose.getX(), est_pose.getY()]), 
+            est_pose.getTheta(), 
+            goal
+            )
+        command.update_command_state()
 
         if showGUI:
             # Draw map
