@@ -45,6 +45,12 @@ class Command:
     # returns true if command has finished execution ... false if it has not.
     def update_command_state(self):
         def rotation_command():
+            # if self.rotationTime - (time.time() - self.startTime) < self.graceTime:
+            #     # the case when rotation has not finished but within grace time 
+            #     # self.rotationTime = 0
+            #     self.rotationTime = time.time() - self.startTime
+            #     # redo the update now with 
+            #     return self.update_command_state()
             self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
             if self.angle > 0:
