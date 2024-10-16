@@ -43,6 +43,7 @@ class Command:
         self.rotationTime = self.angle / ROTATIONAL_SPEED
         self.forwardTime = self.distance / FORWARD_SPEED
         self.graceTime = 0.5
+        print(f"{np.rad2deg(self.angle)} degrees, {self.distance} cm")
 
     # checks and updates controls on robot based on timestep
     # returns true if command has finished execution ... false if it has not.
@@ -57,8 +58,6 @@ class Command:
             self.velocity = 0
             if self.angle > 0:
                 self.robot.go_diff(32, 32, 1, 0)
-
-                self.rotation_speed = ROTATIONAL_SPEED
             else:
                 self.robot.go_diff(32, 32, 0, 1)
                 self.rotation_speed = -ROTATIONAL_SPEED
@@ -99,7 +98,6 @@ class ControlWrapper:
     def go_diff(self, l, r, L, R):
         if self.isArlo:
             self.robot.go_diff(l, r, L, R)
-            print(f"executing command diff({l, r, L, R}).")
         else:
             print(f"executing command diff({l, r, L, R}).")
 

@@ -21,6 +21,7 @@ rng = random.default_rng()
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
+showPreview = False
 onRobot = True  # Whether or not we are running on the Arlo robot
 
 
@@ -62,11 +63,11 @@ CBLACK = (0, 0, 0)
 # Landmarks.
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
 landmarks = {
-    2: (0.0, 0.0),  # Coordinates for landmark 1
-    3: (200.0, 0.0)  # Coordinates for landmark 2
+    2: (0.0, 100.0),  # Coordinates for landmark 1
+    3: (200.0, 100.0)  # Coordinates for landmark 2
 }
 landmarkIDs = list(landmarks)
-goal = np.array([50.0, 0.])
+goal = np.array([100.0, 100.])
 
 
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
@@ -103,7 +104,8 @@ def particle_likelihood(particle, measurements):
             # print(f"alert: {l_id} seen and ignored")
             continue
         else:
-            print(f" {l_id} seen and good")
+            # print(f" {l_id} {m_dist} {np.rad2deg(m_ang)}")
+            pass
 
         
         land_pos = np.array(landmarks[l_id])
@@ -198,9 +200,10 @@ def initialize_particles(num_particles):
 try:
     if showGUI:
         # Open windows
-        WIN_RF1 = "Robot view"
-        cv2.namedWindow(WIN_RF1)
-        cv2.moveWindow(WIN_RF1, 50, 50)
+        if showPreview:
+            WIN_RF1 = "Robot view"
+            cv2.namedWindow(WIN_RF1)
+            cv2.moveWindow(WIN_RF1, 50, 50)
 
         WIN_World = "World view"
         cv2.namedWindow(WIN_World)
@@ -208,7 +211,7 @@ try:
 
 
     # Initialize particles
-    num_particles = 1000
+    num_particles = 300
     particles = initialize_particles(num_particles)
 
     est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
@@ -335,7 +338,8 @@ try:
             draw_world(est_pose, particles, world)
 
             # Show frame
-            cv2.imshow(WIN_RF1, colour)
+            if showPreview:
+                cv2.imshow(WIN_RF1, colour)
 
             # Show world
             cv2.imshow(WIN_World, world)
