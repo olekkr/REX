@@ -61,10 +61,13 @@ class StateRobot:
             self.start_grace_time = time()
         elif time() - self.start_grace_time > (time_to_grace or self.grace_time):
             self.start_grace_time = None
+            return True
+        return False
 
     def compute_next_action(self, dist, angle, found_ids):
-        if self.current_command is None or (self.current_command is not None and self.current_command.finished):
-            return self.grace()
+        if self.current_command is not None and self.current_command.finished:
+            if self.grace() is False:
+                return
         elif self.state == RobotState.is_processing:
             return self.grace(self.processing_time)
         if self.state == RobotState.following_path:
