@@ -74,10 +74,10 @@ goal = np.array([100.0, 100.])
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
 
 def normal(x, mu, sigma):
-    return np.exp(-((x-mu)**2/(2.0*sigma**2)))/np.sqrt(2*np.pi*sigma**2)
+    y =  np.exp(-((x-mu)**2/(2.0*sigma**2)))/np.sqrt(2*np.pi*sigma**2)
+    return y 
 
 def polar_diff(src_x, src_theta, target_x):
-
     # Distance from particle to landmark
     particle_dist = np.linalg.norm(src_x - target_x)
 
@@ -107,19 +107,17 @@ def particle_likelihood(particle, measurements):
         else:
             # print(f" {l_id} {m_dist} {np.rad2deg(m_ang)}")
             pass
-
         
         land_pos = np.array(landmarks[l_id])
 
         dist, theta = polar_diff(part_pos, particle.getTheta(), land_pos)
-        likelihood *= normal(theta - m_ang, 0 , 0.5)
-        likelihood *= normal(dist - m_dist, 0, 10)
-
+        likelihood *= normal(theta - m_ang, 0 , 0.25) + sys.float_info.min*2
+        likelihood *= normal(dist - m_dist, 0, 10)   + sys.float_info.min*2
 
     return likelihood
 
 def resample_particles(particles, num_particles):
-    pmf = np.zeros(len(particles))
+    pmf = np.zeros(len(particles), dtype=np.float64)
     for i, p in enumerate(particles):
         pmf[i] = p.getWeight()
     # choice as indexes:
@@ -212,7 +210,7 @@ try:
 
 
     # Initialize particles
-    num_particles = 300
+    num_particles = 600
     particles = initialize_particles(num_particles)
 
     est_pose = particle.estimate_pose(particles) # The estimate of the robots current pose
@@ -228,6 +226,9 @@ try:
         try_goto_goal = False
     else:
         arlo = None
+        robot_state = StateRobot(arlo, particles)
+
+        
 
     # Allocate space for world map
     world = np.zeros((500,500,3), dtype=np.uint8)
@@ -241,7 +242,7 @@ try:
         cam = camera.Camera(0, robottype='arlo', useCaptureThread=False)
     else:
         #cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=True)
-        cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=False)
+        cam = camera.Camera(0, robottype='frindo', useCaptureThread=False)
 
     i = 0
     while True:
@@ -279,13 +280,14 @@ try:
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 5, 0.5)
+        particle.add_uncertainty(particles, 2.5, 0.125)
 
         # Fetch next frame
         colour = cam.get_next_frame()
 
         # Detect objects
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
+        
         if not isinstance(objectIDs, type(None)):
             measurement = dict()
             for i in range(len(objectIDs)):
@@ -295,25 +297,29 @@ try:
                       # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
                 else:
                     measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
+        
+            #intersection between measurments and world model
+            useful_measurements = set(measurement).intersection(set(landmarkIDs))
 
+            if len(useful_measurements) != 0:
+                # Compute particle weights
+                weights = np.array(
+                    [particle_likelihood(part, measurement) 
+                    for part in particles], dtype=float
+                    )
 
-            # Compute particle weights
-            for i, part in enumerate(particles):
-                part.setWeight(particle_likelihood(part, measurement))
-            weights = np.array([part.getWeight() for part in particles], dtype=float)
+                # normalization step
+                if sum(weights) != 0:
+                    weights /= sum(weights)
+                for part, w in zip(particles, weights):
+                    part.setWeight(w)
 
-            # normalization step
-            if sum(weights) != 0:
-                weights /= sum(weights)
-            for part, w in zip(particles, weights):
-                part.setWeight(w)
+                # Resampling
+                # XXX: You do this
+                particles = resample_particles(particles, num_particles)
 
-            # Resampling
-            # XXX: You do this
-            particles = resample_particles(particles, num_particles)
-
-            # Draw detected objects
-            cam.draw_aruco_objects(colour)
+                # Draw detected objects
+                cam.draw_aruco_objects(colour)
         else:
             # No observation - reset weights to uniform distribution
             particle.add_uncertainty(particles, 10, 0.1)
@@ -341,11 +347,11 @@ try:
 
         if robot_state.current_command is not None:
             if hasattr(robot_state.current_command, "velocity"):
-                velocity = robot_state.current_command.velocity
+                velocity = robot_state.current_command.velocity/10
             else:
                 velocity = 0.0
             if hasattr(robot_state.current_command, "rotation_speed"):
-                angular_velocity = robot_state.current_command.rotation_speed
+                angular_velocity = robot_state.current_command.rotation_speed/10
             else:
                 angular_velocity = 0.0
 
