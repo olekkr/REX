@@ -103,6 +103,7 @@ class ControlWrapper:
     def go_diff(self, l, r, L, R):
         if self.isArlo:
             self.robot.go_diff(l, r, L, R)
+            print(f"executing command diff({l, r, L, R}).")
         else:
             print(f"executing command diff({l, r, L, R}).")
 

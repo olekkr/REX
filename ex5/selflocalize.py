@@ -8,14 +8,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import cv2
 import numpy as np
 import particle
-
+from command import Command
 
 # own imports:
 # import scipy.stats as stats
 from numpy import random
 
 import camera
-from command import Command
 
 # randomness:
 rng = random.default_rng()
@@ -101,8 +100,10 @@ def particle_likelihood(particle, measurements):
     for l_id, (m_dist, m_ang) in measurements.items():
         # If observed landmark is not known, ignore it
         if l_id not in landmarks.keys():
-            print(f"alert: {l_id} seen and ignored")
+            # print(f"alert: {l_id} seen and ignored")
             continue
+        else:
+            print(f" {l_id} seen and good")
 
         
         land_pos = np.array(landmarks[l_id])
