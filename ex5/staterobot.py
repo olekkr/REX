@@ -36,8 +36,8 @@ class StateRobot:
         self.next_command: Optional[Command] = None
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
-        self.grace_time = 2
-        self.processing_time = 10
+        self.grace_time = 1
+        self.processing_time = 7
         self.start_grace_time: Optional[float] = None
 
     def set_variance(self):
