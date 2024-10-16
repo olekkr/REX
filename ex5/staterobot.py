@@ -39,7 +39,7 @@ class StateRobot:
 
     def set_variance(self):
         mean_point = estimate_pose(self.particles)
-        self.variance = np.var([np.sqrt((p.getX() - mean_point.getX())+(p.getY() - mean_point.getY())) for p in self.particles]) / len(self.particles)
+        self.variance = np.var([np.sqrt((p.getX() - mean_point.getX())**2+(p.getY() - mean_point.getY())**2) for p in self.particles]) / len(self.particles)
         # self.variance = np.var([p.getWeight() for p in self.particles])
         if self.variance <= LOW_VARIANCE:
             self.variance_state = VarianceState.low_variance
