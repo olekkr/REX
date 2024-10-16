@@ -57,11 +57,11 @@ class StateRobot:
         if self.current_command is None or (self.current_command is not None and self.current_command.finished):
             if self.start_grace_time is None:
                 self.start_grace_time = time()
-            elif time() - self.start_grace_time > self.grace_time:
                 self.current_command = None
+                self.arlo.stop()
+            elif time() - self.start_grace_time > self.grace_time:
                 self.start_grace_time = None
             else:
-                self.arlo.stop()
                 return
         if self.state == RobotState.following_path:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
