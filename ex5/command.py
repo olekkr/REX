@@ -54,12 +54,14 @@ class Command:
             #     self.rotationTime = time.time() - self.startTime
             #     # redo the update now with 
             #     return self.update_command_state()
-            self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
             if self.angle > 0:
-                self.robot.go_diff(32, 32, 0, 1)
-            else:
                 self.robot.go_diff(32, 32, 1, 0)
+
+                self.rotation_speed = ROTATIONAL_SPEED
+            else:
+                self.robot.go_diff(32, 32, 0, 1)
+                self.rotation_speed = -ROTATIONAL_SPEED
 
         # has not started yet
         if self.startTime is None:
@@ -71,14 +73,8 @@ class Command:
         elif time.time() - self.startTime < self.rotationTime:
             rotation_command()
             return False
-        elif time.time() - self.startTime < self.rotationTime + self.graceTime:
-            print("grace")
-            self.rotation_speed = 0
-            self.velocity = 0
-            self.robot.go_diff(0, 0, 1, 1)
-            return False
         # has not finished forward
-        elif time.time() - self.startTime < self.rotationTime + self.graceTime + self.forwardTime:
+        elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
             self.rotation_speed = 0
             self.velocity = ROTATIONAL_SPEED
             self.robot.go_diff(64, 64, 1, 1)
