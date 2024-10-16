@@ -33,7 +33,10 @@ class Command:
     def __init__(self, robot, distance, angle):
         self.robot = ControlWrapper(robot, IS_ARLO)
         self.distance = distance
-        self.angle = angle
+        if angle > 2*np.pi:
+            self.angle = 2*np.py - angle 
+        else:
+            self.angle = angle
 
         self.startTime = None  # None means not started
 

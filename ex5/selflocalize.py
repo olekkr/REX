@@ -319,7 +319,6 @@ try:
     
         i += 1 
         if i % 100 == 0:
-            # we could do something more elaborate if we want to:
             command = do_direct_path(
                 np.array([est_pose.getX(), est_pose.getY()]), 
                 est_pose.getTheta(), 
