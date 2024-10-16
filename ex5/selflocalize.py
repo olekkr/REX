@@ -321,7 +321,6 @@ try:
         est_pose = particle.estimate_pose(particles) 
         
     
-        i += 1 
         if i % 100 == 0:
             command = do_direct_path(
                 np.array([est_pose.getX(), est_pose.getY()]), 
@@ -329,6 +328,7 @@ try:
                 goal
                 )
         command.update_command_state()
+        i += 1 
 
         velocity = command.velocity
         angular_velocity = command.rotation_speed
