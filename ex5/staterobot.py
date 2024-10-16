@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from command import Command
 from particle import Particle
 
-LOW_VARIANCE = 0.01
+LOW_VARIANCE = 0.0001
 SEARCH_DEGREE = 30
 
 class RobotState(Enum):
@@ -31,6 +31,7 @@ class StateRobot:
         self.variance_state = VarianceState.no_variance
         self.variance = np.inf
         self.current_command: Optional[Command] = None
+        self.next_command: Optional[Command] = None
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
         self.grace_time = 0.5
