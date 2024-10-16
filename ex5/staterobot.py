@@ -31,6 +31,7 @@ class StateRobot:
         self.variance_state = VarianceState.no_variance
         self.variance = np.inf
         self.current_command: Optional[Command] = None
+        self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
 
     def set_variance(self):
@@ -50,19 +51,21 @@ class StateRobot:
 
     def compute_next_action(self, dist, angle):
         if self.state == RobotState.following_path:
-            if self.current_command is not None and self.current_command.finished is False:
+            if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
             else:
                 self.current_command = Command(self.arlo, dist, angle)
+                self.command_robot_state = RobotState.following_path
         elif self.state == RobotState.is_checking:
-            if self.current_command is not None and self.current_command.finished is False:
+            if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
             else:
                 self.current_command = Command(self.arlo, 0, np.deg2rad(SEARCH_DEGREE))
+                self.command_robot_state = RobotState.is_checking
 
     def update(self, particles, dist, angle):
         self.particles = particles
         self.check_variance()
-        print(self.variance)
+        print("variance",self.variance, self.variance <= LOW_VARIANCE)
         self.compute_next_action(dist, angle)
 
