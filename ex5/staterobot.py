@@ -12,7 +12,7 @@ from command import Command
 from particle import Particle, estimate_pose
 
 LOW_VARIANCE = 0.01
-SEARCH_DEGREE = 30
+SEARCH_DEGREE = 10
 
 class RobotState(Enum):
     following_path = 0
@@ -34,7 +34,7 @@ class StateRobot:
         self.next_command: Optional[Command] = None
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
-        self.grace_time = 2
+        self.grace_time = 4
         self.start_grace_time: Optional[float] = None
 
     def set_variance(self):
