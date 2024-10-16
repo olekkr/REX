@@ -13,8 +13,8 @@ arlo = robot.Robot()
 # print(calculations.calc_travel_time(100, 64))
 
 
-# power=64 = sleep_s = 3.2 = 1 m = dist = 1
-def straight_move(dist=1, power=64, sleep_s=3.2):
+# power=64 = sleep_s = 2.5 = 1 m = dist = 1
+def straight_move(dist=1, power=64, sleep_s=2.5):
     print(f"moving {dist}m")
     print(arlo.go_diff(power, power, 1, 1))
     sleep(sleep_s * abs(dist))
