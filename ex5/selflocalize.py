@@ -289,14 +289,21 @@ try:
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
         
         if not isinstance(objectIDs, type(None)):
-            measurement = dict()
+
+            measurement = {}
             for i in range(len(objectIDs)):
-                if objectIDs[i] in measurement:
-                      measurement[objectIDs[i]] += np.array([dists[i], angles[i]])
-                      measurement[objectIDs[i]] /= 2
-                      # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
-                else:
-                    measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
+                measurement.setdefault(objectIDs[i], (np.inf, np.inf))
+                exist_dist, exist_angle = measurement[objectIDs[i]]
+                if dists[i] < exist_dist:
+                    measurement[objectIDs[i]] = (dists[i], angles[i])
+            # measurement = dict()
+            # for i in range(len(objectIDs)):
+            #     if objectIDs[i] in measurement:
+            #           measurement[objectIDs[i]] += np.array([dists[i], angles[i]])
+            #           measurement[objectIDs[i]] /= 2
+            #           # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
+            #     else:
+            #         measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
         
             #intersection between measurments and world model
             useful_measurements = set(measurement).intersection(set(landmarkIDs))
@@ -325,6 +332,7 @@ try:
             particle.add_uncertainty(particles, 10, 0.1)
             for p in particles:
                 p.setWeight(1.0/num_particles)
+            useful_measurements = set()
 
         est_pose = particle.estimate_pose(particles) 
         
@@ -343,7 +351,7 @@ try:
             goal
         )
 
-        robot_state.update(particles, distance, theta, set(objectIDs).intersection(landmarks.keys()) if objectIDs is not None else None)
+        robot_state.update(particles, distance, theta, useful_measurements)
 
         if robot_state.current_command is not None:
             if hasattr(robot_state.current_command, "velocity"):
