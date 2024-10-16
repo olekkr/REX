@@ -72,14 +72,14 @@ class Command:
         elif time.time() - self.startTime < self.rotationTime:
             rotation_command()
             return False
-        elif time.time() - self.startTime < self.rotationTime + self.graceTime:
+        elif time.time() - self.startTime < self.rotationTime:
             print("grace")
             self.rotation_speed = 0
             self.velocity = 0
             self.robot.go_diff(0, 0, 1, 1)
             return False
         # has not finished forward
-        elif time.time() - self.startTime < self.rotationTime + self.graceTime + self.forwardTime:
+        elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
             self.rotation_speed = 0
             self.velocity = ROTATIONAL_SPEED
             self.robot.go_diff(64, 64, 1, 1)
