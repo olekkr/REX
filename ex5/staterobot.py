@@ -76,7 +76,7 @@ class StateRobot:
         elif self.state == RobotState.is_checking:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
-            elif found_ids is not None:
+            elif found_ids is not None and len(found_ids) > 0:
                 self.state = RobotState.is_processing
             else:
                 self.current_command = Command(self.arlo, 0, np.deg2rad(SEARCH_DEGREE))
