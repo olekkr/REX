@@ -57,9 +57,6 @@ class StateRobot:
         elif self.state == RobotState.is_checking:
             if self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
-            elif self.current_command is not None and self.current_command.finished is True:
-                self.state = RobotState.following_path
-                self.current_command = Command(self.arlo, dist, angle)
             else:
                 self.current_command = Command(self.arlo, 0, np.deg2rad(SEARCH_DEGREE))
 
