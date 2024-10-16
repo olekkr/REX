@@ -76,7 +76,7 @@ class Command:
         # has not finished forward
         elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
             self.rotation_speed = 0
-            self.velocity = ROTATIONAL_SPEED
+            self.velocity = FORWARD_SPEED
             self.robot.go_diff(64, 64, 1, 1)
             return False
 
