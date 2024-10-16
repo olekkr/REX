@@ -77,11 +77,11 @@ class StateRobot:
             else:
                 self.current_command = Command(self.arlo, dist, angle)
                 self.command_robot_state = RobotState.following_path
+        elif self.state == RobotState.is_checking and found_ids is not None and len(found_ids) > 1:
+                self.state = RobotState.is_processing
         elif self.state == RobotState.is_checking:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
-            elif found_ids is not None and len(found_ids) > 1:
-                self.state = RobotState.is_processing
             else:
                 self.current_command = Command(self.arlo, 0, np.deg2rad(SEARCH_DEGREE))
                 self.command_robot_state = RobotState.is_checking
@@ -89,6 +89,6 @@ class StateRobot:
     def update(self, particles, dist, angle, found_ids):
         self.particles = particles
         self.check_variance()
-        print("variance",self.variance, self.variance_state, self.state, self.command_robot_state, (self.current_command.angle, self.current_command.distance, self.current_command.finished) if self.current_command is not None else None)
+        print("variance",self.variance, self.variance_state, self.state, self.command_robot_state, found_ids, (self.current_command.angle, self.current_command.distance, self.current_command.finished) if self.current_command is not None else None)
         self.compute_next_action(dist, angle, found_ids)
 
