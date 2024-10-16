@@ -13,7 +13,7 @@ from particle import Particle, estimate_pose
 
 LOW_VARIANCE = 0.1
 MEDIUM_VARIANCE = 0.5
-SEARCH_DEGREE = 30
+SEARCH_DEGREE = 20
 
 class RobotState(Enum):
     following_path = 0
