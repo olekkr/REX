@@ -277,7 +277,7 @@ try:
 
             # do the update
             particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 2, 0.25)
+        particle.add_uncertainty(particles, 5, 0.5)
 
         # Fetch next frame
         colour = cam.get_next_frame()
