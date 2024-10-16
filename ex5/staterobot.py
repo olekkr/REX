@@ -66,5 +66,6 @@ class StateRobot:
     def update(self, particles, dist, angle):
         self.particles = particles
         self.check_variance()
+        print(self.variance)
         self.compute_next_action(dist, angle)
 
