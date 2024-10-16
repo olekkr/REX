@@ -64,7 +64,7 @@ CBLACK = (0, 0, 0)
 # The robot knows the position of 2 landmarks. Their coordinates are in the unit centimeters [cm].
 landmarks = {
     2: (0.0, 0.0),  # Coordinates for landmark 1
-    3: (100.0, 0.0)  # Coordinates for landmark 2
+    3: (200.0, 0.0)  # Coordinates for landmark 2
 }
 landmarkIDs = list(landmarks)
 goal = np.array([50.0, 0.])
@@ -318,7 +318,7 @@ try:
         
     
         i += 1 
-        if i % 1000 == 0:
+        if i % 100 == 0:
             # we could do something more elaborate if we want to:
             command = do_direct_path(
                 np.array([est_pose.getX(), est_pose.getY()]), 
@@ -326,6 +326,9 @@ try:
                 goal
                 )
         command.update_command_state()
+
+        velocity = command.velocity
+        angular_velocity = command.rotation_speed
 
         if showGUI:
             # Draw map
