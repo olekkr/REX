@@ -43,6 +43,7 @@ class Command:
         self.rotationTime = self.angle / ROTATIONAL_SPEED
         self.forwardTime = self.distance / FORWARD_SPEED
         self.graceTime = 0.5
+        self.finished = False
         print(f"{np.rad2deg(self.angle)} degrees, {self.distance} cm")
 
     # checks and updates controls on robot based on timestep
@@ -85,7 +86,7 @@ class Command:
             self.rotation_speed = 0
             self.velocity = 0
             self.robot.go_diff(0, 0, 1, 1)
-
+            self.finished = True
             return True
         # True means finished
 

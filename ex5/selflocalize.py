@@ -13,6 +13,7 @@ from command import Command
 # own imports:
 # import scipy.stats as stats
 from numpy import random
+from staterobot import StateRobot
 
 import camera
 
@@ -223,6 +224,7 @@ try:
     # Initialize the robot (XXX: You do this)
     if onRobot:
         arlo = robot.Robot()
+        robot_state = StateRobot(arlo, particles)
         try_goto_goal = False
     else:
         arlo = None
@@ -322,16 +324,24 @@ try:
         
     
         i += 1 
-        if i % 100 == 0:
-            command = do_direct_path(
-                np.array([est_pose.getX(), est_pose.getY()]), 
-                est_pose.getTheta(), 
-                goal
-                )
-        command.update_command_state()
+        # if i % 100 == 0:
+        #     command = do_direct_path(
+        #         np.array([est_pose.getX(), est_pose.getY()]), 
+        #         est_pose.getTheta(), 
+        #         goal
+        #         )
+        # command.update_command_state()
+        distance, theta = polar_diff( 
+            np.array([est_pose.getX(), est_pose.getY()]), 
+            est_pose.getTheta(), 
+            goal
+        )
 
-        velocity = command.velocity
-        angular_velocity = command.rotation_speed
+        robot_state.update(particles, distance, theta)
+
+        if robot_state.current_command is not None:
+            velocity = robot_state.current_command.velocity
+            angular_velocity = robot_state.current_command.rotation_speed
 
         if showGUI:
             # Draw map
