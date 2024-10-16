@@ -34,7 +34,7 @@ class Command:
         self.robot = ControlWrapper(robot, IS_ARLO)
         self.distance = distance
         if angle > 2*np.pi:
-            self.angle = 2*np.py - angle 
+            self.angle = 2*np.pi - angle 
         else:
             self.angle = angle
 
@@ -57,9 +57,9 @@ class Command:
             self.rotation_speed = ROTATIONAL_SPEED
             self.velocity = 0
             if self.angle > 0:
-                self.robot.go_diff(32, 32, 1, 0)
-            else:
                 self.robot.go_diff(32, 32, 0, 1)
+            else:
+                self.robot.go_diff(32, 32, 1, 0)
 
         # has not started yet
         if self.startTime is None:
