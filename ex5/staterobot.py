@@ -33,6 +33,8 @@ class StateRobot:
         self.current_command: Optional[Command] = None
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
+        self.grace_time = 0.5
+        self.start_grace_time: Optional[float] = None
 
     def set_variance(self):
         
@@ -50,6 +52,14 @@ class StateRobot:
             self.state = RobotState.is_checking
 
     def compute_next_action(self, dist, angle):
+        if self.current_command is None or (self.current_command is not None and self.current_command.finished):
+            if self.start_grace_time is None:
+                self.start_grace_time = time()
+            elif time() - self.start_grace_time > self.grace_time:
+                self.current_command = None
+                self.start_grace_time = None
+            else:
+                return
         if self.state == RobotState.following_path:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
