@@ -337,7 +337,7 @@ try:
             goal
         )
 
-        robot_state.update(particles, distance, theta, objectIDs)
+        robot_state.update(particles, distance, theta, set(landmarkIDs).intersection(measurement.keys()))
 
         if robot_state.current_command is not None:
             if hasattr(robot_state.current_command, "velocity"):
