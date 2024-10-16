@@ -340,8 +340,14 @@ try:
         robot_state.update(particles, distance, theta)
 
         if robot_state.current_command is not None:
-            velocity = robot_state.current_command.velocity
-            angular_velocity = robot_state.current_command.rotation_speed
+            if hasattr(robot_state.current_command, "velocity"):
+                velocity = robot_state.current_command.velocity
+            else:
+                velocity = 0.0
+            if hasattr(robot_state.current_command, "rotation_speed"):
+                angular_velocity = robot_state.current_command.rotation_speed
+            else:
+                angular_velocity = 0.0
 
         if showGUI:
             # Draw map
