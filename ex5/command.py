@@ -30,15 +30,20 @@ FORWARD_SPEED = get_straight_p64_cm_s_velocity()
 
 
 class Command:
-    def __init__(self, robot, distance, angle):
+    def __init__(self, robot, distance, angle, lastCommand=None):
         self.robot = ControlWrapper(robot, IS_ARLO)
         self.distance = distance
         self.angle = angle
+        self.lastCommand = lastCommand
 
         self.startTime = None  # None means not started
 
-        self.rotationTime = self.angle / ROTATIONAL_SPEED
-        self.forwardTime = self.distance / FORWARD_SPEED
+        if lastCommand is None:
+            self.rotationTime = self.angle / ROTATIONAL_SPEED
+            self.forwardTime = self.distance / FORWARD_SPEED
+        else:
+            self.rotationTime = lastCommand.rotationTime
+            self.forwardTime = lastCommand
         self.graceTime = 0.5
 
     # checks and updates controls on robot based on timestep
@@ -67,12 +72,6 @@ class Command:
         # has not finished rotation
         elif time.time() - self.startTime < self.rotationTime:
             rotation_command()
-            return False
-        elif time.time() - self.startTime < self.rotationTime + self.graceTime:
-            print("grace")
-            self.rotation_speed = 0
-            self.velocity = 0
-            self.robot.go_diff(0, 0, 1, 1)
             return False
         # has not finished forward
         elif time.time() - self.startTime < self.rotationTime + self.graceTime + self.forwardTime:
