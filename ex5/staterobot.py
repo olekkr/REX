@@ -9,7 +9,7 @@ import numpy as np
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from command import Command
-from particle import Particle
+from particle import Particle, estimate_pose
 
 LOW_VARIANCE = 0.0000000000000000000000001
 SEARCH_DEGREE = 30
@@ -34,12 +34,13 @@ class StateRobot:
         self.next_command: Optional[Command] = None
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
-        self.grace_time = 0.5
+        self.grace_time = 2
         self.start_grace_time: Optional[float] = None
 
     def set_variance(self):
-        
-        self.variance = np.var([p.getWeight() for p in self.particles])
+        mean_point = estimate_pose(self.particles)
+        self.variance = np.var([np.sqrt((p.getX() - mean_point.getX())+(p.getY() - mean_point.getY())) for p in self.particles]) / len(self.particles)
+        # self.variance = np.var([p.getWeight() for p in self.particles])
         if self.variance <= LOW_VARIANCE:
             self.variance_state = VarianceState.low_variance
         else:
