@@ -337,7 +337,7 @@ try:
             goal
         )
 
-        robot_state.update(particles, distance, theta)
+        robot_state.update(particles, distance, theta, objectIDs)
 
         if robot_state.current_command is not None:
             if hasattr(robot_state.current_command, "velocity"):

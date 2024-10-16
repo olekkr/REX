@@ -12,11 +12,13 @@ from command import Command
 from particle import Particle, estimate_pose
 
 LOW_VARIANCE = 0.1
+MEDIUM_VARIANCE = 0.5
 SEARCH_DEGREE = 10
 
 class RobotState(Enum):
     following_path = 0
     is_checking = 1
+    is_processing = 2
 
 class VarianceState(Enum):
     low_variance = 0
@@ -35,6 +37,7 @@ class StateRobot:
         self.command_robot_state: RobotState = RobotState.is_checking
         self.arlo = arlo
         self.grace_time = 4
+        self.processing_time = 10
         self.start_grace_time: Optional[float] = None
 
     def set_variance(self):
@@ -53,16 +56,17 @@ class StateRobot:
         else:
             self.state = RobotState.is_checking
 
-    def compute_next_action(self, dist, angle):
+    def grace(self, time_to_grace: Optional[float] = None):
+        if self.start_grace_time is None:
+            self.start_grace_time = time()
+        elif time() - self.start_grace_time > (time_to_grace or self.grace_time):
+            self.start_grace_time = None
+
+    def compute_next_action(self, dist, angle, found_ids):
         if self.current_command is None or (self.current_command is not None and self.current_command.finished):
-            if self.start_grace_time is None:
-                self.start_grace_time = time()
-                self.current_command = None
-                self.arlo.stop()
-            elif time() - self.start_grace_time > self.grace_time:
-                self.start_grace_time = None
-            else:
-                return
+            return self.grace()
+        elif self.state == RobotState.is_processing:
+            return self.grace(self.processing_time)
         if self.state == RobotState.following_path:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
@@ -72,13 +76,15 @@ class StateRobot:
         elif self.state == RobotState.is_checking:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
+            elif found_ids is not None:
+                self.state = RobotState.is_processing
             else:
                 self.current_command = Command(self.arlo, 0, np.deg2rad(SEARCH_DEGREE))
                 self.command_robot_state = RobotState.is_checking
 
-    def update(self, particles, dist, angle):
+    def update(self, particles, dist, angle, found_ids):
         self.particles = particles
         self.check_variance()
         print("variance",self.variance, self.variance_state, self.state, self.command_robot_state, self.current_command.finished if self.current_command is not None else None)
-        self.compute_next_action(dist, angle)
+        self.compute_next_action(dist, angle, found_ids)
 
