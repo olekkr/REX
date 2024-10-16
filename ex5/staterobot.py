@@ -60,6 +60,7 @@ class StateRobot:
                 self.current_command = None
                 self.start_grace_time = None
             else:
+                self.arlo.stop()
                 return
         if self.state == RobotState.following_path:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
@@ -77,6 +78,6 @@ class StateRobot:
     def update(self, particles, dist, angle):
         self.particles = particles
         self.check_variance()
-        print("variance",self.variance, self.variance <= LOW_VARIANCE)
+        print("variance",self.variance, self.variance_state, self.state, self.command_robot_state)
         self.compute_next_action(dist, angle)
 
