@@ -21,6 +21,7 @@ rng = random.default_rng()
 
 # Flags
 showGUI = True  # Whether or not to open GUI windows
+showPreview = False
 onRobot = True  # Whether or not we are running on the Arlo robot
 
 
@@ -198,9 +199,10 @@ def initialize_particles(num_particles):
 try:
     if showGUI:
         # Open windows
-        # WIN_RF1 = "Robot view"
-        # cv2.namedWindow(WIN_RF1)
-        # cv2.moveWindow(WIN_RF1, 50, 50)
+        if showPreview:
+            WIN_RF1 = "Robot view"
+            cv2.namedWindow(WIN_RF1)
+            cv2.moveWindow(WIN_RF1, 50, 50)
 
         WIN_World = "World view"
         cv2.namedWindow(WIN_World)
@@ -335,7 +337,8 @@ try:
             draw_world(est_pose, particles, world)
 
             # Show frame
-            cv2.imshow(WIN_RF1, colour)
+            if showPreview:
+                cv2.imshow(WIN_RF1, colour)
 
             # Show world
             cv2.imshow(WIN_World, world)
