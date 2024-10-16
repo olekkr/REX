@@ -69,7 +69,8 @@ class StateRobot:
             if self.grace() is False:
                 return
         elif self.state == RobotState.is_processing:
-            return self.grace(self.processing_time)
+            if self.grace(self.processing_time) is False:
+                return
         if self.state == RobotState.following_path:
             if self.command_robot_state == self.state and self.current_command is not None and self.current_command.finished is False:
                 self.current_command.update_command_state()
@@ -88,6 +89,6 @@ class StateRobot:
     def update(self, particles, dist, angle, found_ids):
         self.particles = particles
         self.check_variance()
-        print("variance",self.variance, self.variance_state, self.state, self.command_robot_state, self.current_command.finished if self.current_command is not None else None)
+        print("variance",self.variance, self.variance_state, self.state, self.command_robot_state, (self.current_command.angle, self.current_command.distance, self.current_command.finished) if self.current_command is not None else None)
         self.compute_next_action(dist, angle, found_ids)
 
