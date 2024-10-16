@@ -67,7 +67,7 @@ landmarks = {
     3: (200.0, 0.0)  # Coordinates for landmark 2
 }
 landmarkIDs = list(landmarks)
-goal = np.array([50.0, 0.])
+goal = np.array([100.0, 0.])
 
 
 landmark_colors = [CRED, CGREEN] # Colors used when drawing the landmarks
