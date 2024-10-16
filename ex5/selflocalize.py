@@ -237,6 +237,7 @@ try:
         #cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=True)
         cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=False)
 
+    i = 0
     while True:
 
         # Move the robot according to user input (only for testing)
@@ -316,13 +317,14 @@ try:
         est_pose = particle.estimate_pose(particles) 
         
     
-
-        # we could do something more elaborate if we want to:
-        command = do_direct_path(
-            np.array([est_pose.getX(), est_pose.getY()]), 
-            est_pose.getTheta(), 
-            goal
-            )
+        i += 1 
+        if i % 1000 == 0:
+            # we could do something more elaborate if we want to:
+            command = do_direct_path(
+                np.array([est_pose.getX(), est_pose.getY()]), 
+                est_pose.getTheta(), 
+                goal
+                )
         command.update_command_state()
 
         if showGUI:
