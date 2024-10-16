@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from command import Command
 from particle import Particle
 
-LOW_VARIANCE = 0.0001
+LOW_VARIANCE = 0.0000000000000000000000001
 SEARCH_DEGREE = 30
 
 class RobotState(Enum):
