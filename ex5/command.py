@@ -58,6 +58,7 @@ class Command:
             self.velocity = 0
             if self.angle > 0:
                 self.robot.go_diff(32, 32, 1, 0)
+                self.rotation_speed = -ROTATIONAL_SPEED
             else:
                 self.robot.go_diff(32, 32, 0, 1)
                 self.rotation_speed = -ROTATIONAL_SPEED
