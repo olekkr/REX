@@ -332,7 +332,6 @@ try:
             particle.add_uncertainty(particles, 10, 0.1)
             for p in particles:
                 p.setWeight(1.0/num_particles)
-            useful_measurements = set()
 
         est_pose = particle.estimate_pose(particles) 
         
@@ -351,7 +350,7 @@ try:
             goal
         )
 
-        robot_state.update(particles, distance, theta, useful_measurements)
+        robot_state.update(particles, distance, theta, set(objectIDs).intersection(landmarks.keys()) if objectIDs is not None else None)
 
         if robot_state.current_command is not None:
             if hasattr(robot_state.current_command, "velocity"):
