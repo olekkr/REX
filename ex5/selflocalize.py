@@ -198,9 +198,9 @@ def initialize_particles(num_particles):
 try:
     if showGUI:
         # Open windows
-        WIN_RF1 = "Robot view"
-        cv2.namedWindow(WIN_RF1)
-        cv2.moveWindow(WIN_RF1, 50, 50)
+        # WIN_RF1 = "Robot view"
+        # cv2.namedWindow(WIN_RF1)
+        # cv2.moveWindow(WIN_RF1, 50, 50)
 
         WIN_World = "World view"
         cv2.namedWindow(WIN_World)
