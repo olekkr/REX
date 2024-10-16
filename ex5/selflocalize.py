@@ -104,7 +104,7 @@ def particle_likelihood(particle, measurements):
             # print(f"alert: {l_id} seen and ignored")
             continue
         else:
-            print(f" {l_id} seen and good")
+            print(f" {l_id} {m_dist} {np.rad2deg(m_ang)}")
 
         
         land_pos = np.array(landmarks[l_id])
