@@ -39,6 +39,16 @@ class Particle(object):
     def setWeight(self, val):
         self.weight = val
 
+    def move(self, dist, angle):
+        # Update the particle's orientation
+        self.theta += angle
+        # Normalize theta to be within [-pi, pi]
+        self.theta = (self.theta + np.pi) % (2 * np.pi) - np.pi
+
+        # Update the particle's position
+        self.x += dist * np.cos(self.theta)
+        self.y += dist * np.sin(self.theta)
+
 
 def estimate_pose(particles_list):
     """Estimate the pose from particles by computing the average position and orientation over all particles. 

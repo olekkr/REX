@@ -43,11 +43,11 @@ class Command:
         self.rotationTime = self.angle / ROTATIONAL_SPEED
         self.forwardTime = self.distance / FORWARD_SPEED
         self.graceTime = 0.5
-        print(f"{np.rad2deg(self.angle)} degrees, {self.distance} cm")
+        #print(f"{np.rad2deg(self.angle)} degrees, {self.distance} cm")
 
     # checks and updates controls on robot based on timestep
     # returns true if command has finished execution ... false if it has not.
-    def update_command_state(self):
+    def update_command_state(self, state):
         def rotation_command():
             # if self.rotationTime - (time.time() - self.startTime) < self.graceTime:
             #     # the case when rotation has not finished but within grace time 
@@ -62,32 +62,66 @@ class Command:
             else:
                 self.robot.go_diff(32, 32, 0, 1)
                 self.rotation_speed = -ROTATIONAL_SPEED
-
-        # has not started yet
-        if self.startTime is None:
-            self.startTime = time.time()
-            rotation_command()
-            return False
-
-        # has not finished rotation
-        elif time.time() - self.startTime < self.rotationTime:
-            rotation_command()
-            return False
-        # has not finished forward
-        elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
-            self.rotation_speed = 0
-            self.velocity = ROTATIONAL_SPEED
-            self.robot.go_diff(64, 64, 1, 1)
-            return False
-
-        # has finished rotation and forward
-        else:
-            self.rotation_speed = 0
+        if state == 'initialize':
+            if self.angle > 0:
+                self.robot.go_diff(32, 32, 1, 0)
+                self.rotation_speed = ROTATIONAL_SPEED
+            else:
+                self.robot.go_diff(32, 32, 0, 1)
+                self.rotation_speed = -ROTATIONAL_SPEED
             self.velocity = 0
-            self.robot.go_diff(0, 0, 1, 1)
+            
 
-            return True
-        # True means finished
+        elif state == 'searching':
+            self.robot.go_diff(32, 32, 1, 1)
+            self.velocity = FORWARD_SPEED
+            self.rotation_speed = 0
+            
+        elif state == 'forward':
+            self.robot.go_diff(32, 32, 1, 1)
+            self.velocity = FORWARD_SPEED
+            self.rotation_speed = 0
+            
+        elif state == 'selflocalize':
+            self.robot.go_diff(32, 32, 1, 1)
+            self.velocity = FORWARD_SPEED
+            self.rotation_speed = 0
+            
+        
+        self.robot.go_diff(62, 62, 1, 1)
+        self.velocity = FORWARD_SPEED
+        self.rotation_speed = 0
+        #time.sleep(self.forwardTime)
+        
+
+        # # has not started yet
+        # print(self.angle, self.distance)
+        # if self.startTime is None:
+        #     self.startTime = time.time()
+        #     rotation_command()
+        #     return False
+
+        # # has not finished rotation
+        # elif time.time() - self.startTime < self.rotationTime:
+        #     rotation_command()
+        #     #return False
+        
+
+        # # has not finished forward
+        # elif time.time() - self.startTime < self.rotationTime + self.forwardTime:
+        #     self.rotation_speed = 0
+        #     self.velocity = ROTATIONAL_SPEED
+        #     self.robot.go_diff(64, 64, 1, 1)
+        #     #return False
+
+        # # has finished rotation and forward
+        # else:
+        #     self.rotation_speed = 0
+        #     self.velocity = 0
+        #     self.robot.go_diff(0, 0, 1, 1)
+
+        #     #return True
+        # # True means finished
 
 
 # wraps robot for the purpose of interchangability with debug/Arlo
@@ -99,8 +133,8 @@ class ControlWrapper:
     def go_diff(self, l, r, L, R):
         if self.isArlo:
             self.robot.go_diff(l, r, L, R)
-        else:
-            print(f"executing command diff({l, r, L, R}).")
+        # else:
+        #     print(f"executing command diff({l, r, L, R}).")
 
 
 # testing code
@@ -109,7 +143,7 @@ if __name__ == "__main__":
     arlo = robot.Robot()
     c1 = Command(arlo, 100, 3.1415 / 2)
     while not c1.update_command_state():
-        time.sleep(0.1)
+        #time.sleep(0.1)
         pass
 
     # c2 = command(arlo, 1, -3.1415 / 2)

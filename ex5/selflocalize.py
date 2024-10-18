@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import states
 from copy import copy
 from timeit import default_timer as timer
 
@@ -19,10 +20,11 @@ import camera
 # randomness:
 rng = random.default_rng()
 
+
 # Flags
 showGUI = True  # Whether or not to open GUI windows
 showPreview = False
-onRobot = True  # Whether or not we are running on the Arlo robot
+onRobot = False  # Whether or not we are running on the Arlo robot
 
 
 def isRunningOnArlo():
@@ -34,7 +36,7 @@ def isRunningOnArlo():
 
 if isRunningOnArlo():
     # XXX: You need to change this path to point to where your robot.py file is located
-    sys.path.append("../../../../Arlo/python")
+    sys.path.append("../../../../Arlo/python3")
 
 
 try:
@@ -95,25 +97,18 @@ def polar_diff(src_x, src_theta, target_x):
 
 def particle_likelihood(particle, measurements):
     likelihood = 1
-
     part_pos = np.array([particle.getX(), particle.getY()])
-
     for l_id, (m_dist, m_ang) in measurements.items():
-        # If observed landmark is not known, ignore it
+        
         if l_id not in landmarks.keys():
-            # print(f"alert: {l_id} seen and ignored")
             continue
         else:
-            # print(f" {l_id} {m_dist} {np.rad2deg(m_ang)}")
             pass
 
-        
         land_pos = np.array(landmarks[l_id])
-
         dist, theta = polar_diff(part_pos, particle.getTheta(), land_pos)
-        likelihood *= normal(theta - m_ang, 0 , 0.5)
-        likelihood *= normal(dist - m_dist, 0, 10)
-
+        likelihood *= normal(theta - m_ang, 2, 0.5)
+        likelihood *= normal(dist - m_dist, 2, 10)
 
     return likelihood
 
@@ -127,8 +122,6 @@ def resample_particles(particles, num_particles):
     for i in choices:
         new_arr.append(copy(particles[i]))
     return new_arr
-
-
 
 
 def jet(x):
@@ -241,8 +234,18 @@ try:
         #cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=True)
         cam = camera.Camera(0, robottype='macbookpro', useCaptureThread=False)
 
+
+    noise = 0.5
+    noise_theta = 0.1
+
     i = 0
+    do_resample = True
+    landmark_seen = {2: False, 3: False}
+    state = 'initailize'
+
     while True:
+        
+        print("state: ", state, "landmark_seen: ", landmark_seen, "do_resample: ", do_resample)
 
         # Move the robot according to user input (only for testing)
         action = cv2.waitKey(10)
@@ -263,28 +266,22 @@ try:
                 angular_velocity -= 0.1
 
 
-
-
-        # Use motor controls to update particles
-        # XXX: Make the robot drive
-        # XXX: You do this
-        for parti in particles:
-            theta = parti.getTheta()
-            # unit vector pointing in the direction of the particle
-            heading =  np.array([np.cos(theta), np.sin(theta)])
-            # scale with velocity
-            deltaXY = heading * velocity
-
-            # do the update
-            particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity )
-        particle.add_uncertainty(particles, 5, 0.5)
-
-        # Fetch next frame
         colour = cam.get_next_frame()
-
-        # Detect objects
+        
         objectIDs, dists, angles = cam.detect_aruco_objects(colour)
+        # angle Right: -0.5 to left: 0.5
+
         if not isinstance(objectIDs, type(None)):
+            for parti in particles:
+
+                theta = parti.getTheta()
+                heading =  np.array([np.cos(theta), np.sin(theta)])
+                
+                deltaXY = heading #* velocity
+                
+                # do the update
+                particle.move_particle(parti, deltaXY[0], deltaXY[1], angular_velocity)
+
             measurement = dict()
             for i in range(len(objectIDs)):
                 if objectIDs[i] in measurement:
@@ -293,10 +290,16 @@ try:
                       # DISCLAIMER: if there exists more than 2 observations of the same objID the result is not the mean.
                 else:
                     measurement[objectIDs[i]] = np.array([dists[i], angles[i]])
+                
+                if objectIDs[i] in landmarks.keys():
+                    landmark_seen[objectIDs[i]] = True
 
+                # if objectIDs[i] == 2 or objectIDs[i] == 3:
+                #           seen[objectIDs[i]] = True
+            
 
             # Compute particle weights
-            for i, part in enumerate(particles):
+            for part in particles:
                 part.setWeight(particle_likelihood(part, measurement))
             weights = np.array([part.getWeight() for part in particles], dtype=float)
 
@@ -306,30 +309,37 @@ try:
             for part, w in zip(particles, weights):
                 part.setWeight(w)
 
-            # Resampling
-            # XXX: You do this
-            particles = resample_particles(particles, num_particles)
+            # Resamplinp
+            if do_resample:
+                particles = resample_particles(particles, num_particles)
+                do_resample = False
 
             # Draw detected objects
             cam.draw_aruco_objects(colour)
-        else:
-            # No observation - reset weights to uniform distribution
-            particle.add_uncertainty(particles, 10, 0.1)
+        # else:
+        #     # No observation - reset weights to uniform distribution
+            particle.add_uncertainty(particles, 1, 0.5)
             for p in particles:
                 p.setWeight(1.0/num_particles)
 
-        est_pose = particle.estimate_pose(particles) 
-        
-    
-        i += 1 
+
+        est_pose = particle.estimate_pose(particles)
+
         if i % 100 == 0:
             command = do_direct_path(
                 np.array([est_pose.getX(), est_pose.getY()]), 
                 est_pose.getTheta(), 
                 goal
                 )
-        command.update_command_state()
+        
+        state, landmark_seen, do_resample = states.setState(state, landmark_seen, do_resample)
+        particle.add_uncertainty(particles, noise, noise_theta)
 
+
+        command.update_command_state(state)
+
+        
+        i += 1
         velocity = command.velocity
         angular_velocity = command.rotation_speed
 
@@ -352,5 +362,4 @@ finally:
     cv2.destroyAllWindows()
 
     # Clean-up capture thread
-    cam.terminateCaptureThread()
-
+    #cam.terminateCaptureThread()
