@@ -33,6 +33,9 @@ class Command:
     def __init__(self, robot, distance, angle):
         self.robot = ControlWrapper(robot, IS_ARLO)
         self.distance = distance
+        angle -= np.pi / 2
+        if angle + np.pi / 2 > 0 and angle < 0:
+            self.rotationTime *= -1
         if angle > 2*np.pi:
             self.angle = 2*np.pi - angle 
         else:
