@@ -1,5 +1,6 @@
 import sys
 from time import sleep
+import time
 
 import calculations
 import robot
@@ -44,6 +45,20 @@ def rotate_move(frac=0.25, power=32, sleep_360=7.3, mdir=(1, 0)):
     print(arlo.stop())
 
 
+def calibrate_dist_from_sonar(delta_dist_mm=1000, power=64):
+    start_dist = arlo.read_front_ping_sensor()
+    start_time = time.time()
+    print(f"start dist: {start_dist}")
+    print(arlo.go_diff(power, power, 1, 1))
+    while start_dist - arlo.read_front_ping_sensor() < delta_dist_mm:
+        continue
+    stop_time = time.time()
+    print(arlo.stop())
+    print(f"end dist: {arlo.read_front_ping_sensor()}")
+    print("Time to move", delta_dist_mm, "mm:", stop_time - start_time, "s")
+
+
+
 def linear_descent(start_v: int, dist=1, dir=1):
     for i in range(start_v, 30, -1):
         print(arlo.go_diff(64, 64, dir, dir))
@@ -58,7 +73,7 @@ if __name__ == "__main__":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
             angle = float(input(f"time: "))
-            rotate_move(frac=1, power=power, sleep_s=angle)
+            rotate_move(frac=1, power=power, sleep_360=angle)
     elif mode == "2":
         for _ in range(10):
             time_sleep = float(input("time sleep: "))
@@ -66,7 +81,10 @@ if __name__ == "__main__":
             for _ in range(amnt):
                 straight_move(1, power=power, sleep_s=time_sleep)
                 sleep(1)
-    else:
+    elif mode == "3":
+        expected_move = int(input("dist (mm): "))
+        calibrate_dist_from_sonar(delta_dist_mm=expected_move,power=power)
+    elif mode == "4":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
             rotate_move(frac=frac)
