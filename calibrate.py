@@ -72,7 +72,7 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 if __name__ == "__main__":
     mode = input("1. Rotate\n2. Move\n3. Calibrate dist from sonar\n4. rotate_move def\n")
-    power = int(input("power: "))
+    power = int(input("power (default 64): ") or 64)
     if mode == "1":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
         for frac in fracs:
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 straight_move(1, power=power, sleep_s=time_sleep)
                 sleep(1)
     elif mode == "3":
-        expected_move = int(input("dist (mm): "))
+        expected_move = int(input("dist mm (default 1000): ") or 1000)
         calibrate_dist_from_sonar(delta_dist_mm=expected_move,power=power)
     elif mode == "4":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
