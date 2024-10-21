@@ -59,7 +59,21 @@ def calibrate_dist_from_sonar(delta_dist_mm=1000, power=64):
     print("Attempting to move backwards",delta_dist_mm,"mm")
     sleep(1)
     print(arlo.go_diff(power, power, 0, 0))
-    sleep(stop_time - start_time)
+    start_time_backwards = time.time()
+    while arlo.read_front_ping_sensor() < start_dist:
+        continue
+    stop_time_backwards = time.time()
+    print(arlo.stop())
+    print(f"end dist: {arlo.read_front_ping_sensor()}")
+    print("Time to move backwards", delta_dist_mm, "mm:", stop_time_backwards - start_time_backwards, "s")
+
+    while True:
+        input(f"Move forward {stop_time - start_time} s?")
+        print(arlo.go_diff(power, power, 1, 1))
+        sleep(stop_time - start_time)
+        input(f"Move backwards {stop_time_backwards - start_time_backwards} s?")
+        print(arlo.go_diff(power, power, 0, 0))
+        sleep(stop_time_backwards - start_time_backwards)
 
 
 
