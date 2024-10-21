@@ -67,7 +67,7 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 
 if __name__ == "__main__":
-    mode = input("1. Rotate\n2. Move\n3. rotate_move def\n")
+    mode = input("1. Rotate\n2. Move\nCalibrate dist from sonar\n4. rotate_move def\n")
     power = int(input("power: "))
     if mode == "1":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
