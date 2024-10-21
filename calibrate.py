@@ -71,9 +71,11 @@ def calibrate_dist_from_sonar(delta_dist_mm=1000, power=64):
         input(f"Move forward {stop_time - start_time} s?")
         print(arlo.go_diff(power, power, 1, 1))
         sleep(stop_time - start_time)
+        print(arlo.stop())
         input(f"Move backwards {stop_time_backwards - start_time_backwards} s?")
         print(arlo.go_diff(power, power, 0, 0))
         sleep(stop_time_backwards - start_time_backwards)
+        print(arlo.stop())
 
 
 
