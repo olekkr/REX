@@ -56,6 +56,9 @@ def calibrate_dist_from_sonar(delta_dist_mm=1000, power=64):
     print(arlo.stop())
     print(f"end dist: {arlo.read_front_ping_sensor()}")
     print("Time to move", delta_dist_mm, "mm:", stop_time - start_time, "s")
+    print("Attempting to move backwards",delta_dist_mm,"mm")
+    print(arlo.go_diff(power, power, 0, 0))
+    sleep(stop_time - start_time)
 
 
 
@@ -67,7 +70,7 @@ def linear_descent(start_v: int, dist=1, dir=1):
 
 
 if __name__ == "__main__":
-    mode = input("1. Rotate\n2. Move\nCalibrate dist from sonar\n4. rotate_move def\n")
+    mode = input("1. Rotate\n2. Move\n3. Calibrate dist from sonar\n4. rotate_move def\n")
     power = int(input("power: "))
     if mode == "1":
         fracs = [4, 2, 1, 0.5, 0.25, 0.125]
