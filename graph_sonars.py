@@ -76,3 +76,5 @@ arlo.go_diff(32,32,1,0)
 plt.show()
 
 arlo.stop()
+
+plt.show()
