@@ -74,3 +74,5 @@ arlo.go_diff(32,32,1,0)
 
 # Display the plot
 plt.show()
+
+arlo.stop()
