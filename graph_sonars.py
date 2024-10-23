@@ -68,7 +68,7 @@ def update(frame):
 
     return line1, line2, line3
 
-ani = FuncAnimation(fig, update, interval=100)
+ani = FuncAnimation(fig, update, interval=500)
 
 arlo.go_diff(32,32,1,0)
 
