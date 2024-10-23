@@ -70,5 +70,7 @@ def update(frame):
 
 ani = FuncAnimation(fig, update, interval=100)
 
+arlo.go_diff(32,32,1,0)
+
 # Display the plot
 plt.show()
